@@ -126,6 +126,46 @@
 
 </body>
 </html>
+import React, { useState } from "react";
+
+export default function App() {
+  // Theme aur Sound ka state
+  const [theme, setTheme] = useState("light");
+  const [sound, setSound] = useState(true);
+
+  // Functions
+  const handleThemeChange = () => {
+    setTheme(theme === "light" ? "dark" : "light");
+  };
+
+  const handleSoundChange = () => {
+    setSound(!sound);
+    if (!sound) {
+      let audio = new Audio("/click.mp3"); // ek sound file rakhna public folder me
+      audio.play();
+    }
+  };
+
+  return (
+    <div className={theme === "light" ? "bg-white text-black" : "bg-black text-white"}>
+      <h1 className="text-2xl font-bold">⚙ Settings Page</h1>
+
+      <div className="mt-4">
+        <label className="flex items-center gap-2">
+          <input type="checkbox" checked={theme === "dark"} onChange={handleThemeChange} />
+          Dark Mode
+        </label>
+      </div>
+
+      <div className="mt-4">
+        <label className="flex items-center gap-2">
+          <input type="checkbox" checked={sound} onChange={handleSoundChange} />
+          Sound On/Off
+        </label>
+      </div>
+    </div>
+  );
+}
 
  
   
