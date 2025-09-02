@@ -38,7 +38,79 @@
 </head>
 <body>
   <div class="gbg">GBG</div>
-  
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GBG Website</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #1a1a1a, #333, #111);
+      color: white;
+      text-align: center;
+    }
+
+    header {
+      background: rgba(0,0,0,0.8);
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+      color: #ffcc00;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 15px;
+      font-size: 18px;
+      transition: 0.3s;
+    }
+
+    nav a:hover {
+      color: #ffcc00;
+    }
+
+    .content {
+      margin-top: 100px;
+    }
+
+    .content h1 {
+      font-size: 50px;
+      color: #ffcc00;
+    }
+
+    .content p {
+      font-size: 22px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">GBG</div>
+    <nav>
+      <a href="#">Home</a>
+      <a href="#">Settings</a>
+      <a href="#">About</a>
+    </nav>
+  </header>
+
+  <div class="content">
+    <h1>Welcome to My Website</h1>
+    <p>This is Gulshan aka Gulu Bhai Gamer</p>
+  </div>
+</body>
+</html>
+
   <div class="welcome">Welcome My Website</div>
 </body>
 </html>
