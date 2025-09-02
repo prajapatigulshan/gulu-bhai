@@ -64,9 +64,25 @@
     </nav>
   </header>
 
-  <div class="content">
-    <h1>⚙ Settings Page</h1>
-    <p>Yaha tum future me options daal sakte ho jaise: theme, sound, account etc.</p>
+<div class="content">
+  <h1>⚙ Settings</h1>
+
+  <div class="setting">
+    <label for="theme">Theme:</label>
+    <select id="theme">
+      <option value="light">Light</option>
+      <option value="dark">Dark</option>
+    </select>
   </div>
-</body>
-</html>
+
+  <div class="setting">
+    <label for="sound">Sound:</label>
+    <input type="checkbox" id="sound" checked> Enable Sound
+  </div>
+
+  <div class="setting">
+    <label for="account">Account:</label>
+    <button onclick="alert('Account settings coming soon!')">Manage Account</button>
+  </div>
+</div>
+  
