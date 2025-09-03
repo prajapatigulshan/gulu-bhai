@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GBG Website</title>
+  <title>GBG SKINS </title>
 
   <!-- Google Site Verification -->
   <meta name="google-site-verification" content="google062168e3bbbd2888" />
@@ -138,3 +138,8 @@
   </div>
 </body>
 </html>
+// Apply saved theme
+window.addEventListener("load", () => {
+  const savedTheme = localStorage.getItem("theme") || "dark";
+  document.body.className = savedTheme;
+});
