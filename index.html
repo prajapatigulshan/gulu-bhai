@@ -51,16 +51,6 @@
       margin-top: 60px;
     }
 
-    .content h1 {
-      font-size: 50px;
-      color: #ffcc00;
-    }
-
-    .content p {
-      font-size: 22px;
-      margin-top: 10px;
-    }
-
     .options {
       display: flex;
       justify-content: center;
@@ -103,6 +93,19 @@
       transform: scale(1.05);
       background: rgba(255,255,255,0.2);
     }
+
+    /* Floating button */
+    #musicBtn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      padding: 12px;
+      background: #ffcc00;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 20px;
+    }
   </style>
 </head>
 <body>
@@ -141,11 +144,25 @@
   </div>
 
   <!-- Background music -->
-  <audio autoplay loop>
+  <audio id="bgMusic" loop>
     <source src="https://www.bensound.com/bensound-music/bensound-creativeminds.mp3" type="audio/mpeg">
   </audio>
+  <button id="musicBtn">▶</button>
 
   <script>
+    const music = document.getElementById("bgMusic");
+    const btn = document.getElementById("musicBtn");
+
+    btn.addEventListener("click", () => {
+      if (music.paused) {
+        music.play();
+        btn.textContent = "⏸";
+      } else {
+        music.pause();
+        btn.textContent = "▶";
+      }
+    });
+
     // Apply saved theme
     window.addEventListener("load", () => {
       const savedTheme = localStorage.getItem("theme") || "dark";
