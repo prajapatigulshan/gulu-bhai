@@ -11,6 +11,12 @@
       background: linear-gradient(135deg, #1a1a1a, #333, #111);
       color: white;
       text-align: center;
+      transition: background 0.5s, color 0.5s;
+    }
+
+    body.light {
+      background: white;
+      color: black;
     }
 
     header {
@@ -40,21 +46,45 @@
     }
 
     .content {
-      margin-top: 100px;
+      margin-top: 60px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
-    .content h1 {
-      font-size: 40px;
-      color: #ffcc00;
+    .setting {
+      margin: 20px 0;
+      padding: 15px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 8px;
     }
 
-    .content p {
-      font-size: 20px;
+    label {
+      font-size: 18px;
+      font-weight: bold;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    select, input[type="checkbox"], button {
+      padding: 8px;
+      font-size: 16px;
+    }
+
+    button {
       margin-top: 10px;
+      background: #ffcc00;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #ffaa00;
     }
   </style>
 </head>
-<body>
+<body class="dark">
   <header>
     <div class="logo">GBG</div>
     <nav>
@@ -64,102 +94,27 @@
     </nav>
   </header>
 
-<div class="content">
-  <h1>⚙ Settings</h1>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Settings</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f4f4;
-      padding: 20px;
-    }
-    h1 {
-      color: #333;
-    }
-    .setting {
-      margin: 15px 0;
-      padding: 10px;
-      background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: bold;
-    }
-    select, input[type="checkbox"] {
-      padding: 6px;
-      font-size: 14px;
-    }
-  </style>
-</head>
-<body>
-  <h1>⚙ Settings</h1>
+  <div class="content">
+    <h1>⚙ Settings Page</h1>
 
-  <div class="setting">
-    <label for="theme">Theme:</label>
-    <select id="theme">
-      <option>Light</option>
-      <option>Dark</option>
-    </select>
-  </div>
-
-  <div class="setting">
-    <label for="sound">Sound:</label>
-    <input type="checkbox" id="sound"> Enable Sound
-  </div>
-
-  <div class="setting">
-    <label for="account">Account:</label>
-    <select id="account">
-      <option>Guest</option>
-      <option>Login with Google</option>
-      <option>Login with Facebook</option>
-    </select>
-  </div>
-
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Settings Page</title>
-  <style>
-    body.light {
-      background: white;
-      color: black;
-    }
-    body.dark {
-      background: black;
-      color: white;
-    }
-    .settings {
-      padding: 20px;
-    }
-  </style>
-</head>
-<body class="light">
-  <h1>⚙ Settings Page</h1>
-
-  <div class="settings">
-    <label>
-      Theme:
+    <div class="setting">
+      <label for="themeSelect">Theme:</label>
       <select id="themeSelect">
-        <option value="light">Light</option>
         <option value="dark">Dark</option>
+        <option value="light">Light</option>
       </select>
-    </label>
-    <br><br>
-    <label>
-      <input type="checkbox" id="soundToggle"> Sound On
-    </label>
+    </div>
+
+    <div class="setting">
+      <label>
+        <input type="checkbox" id="soundToggle"> Enable Sound
+      </label>
+    </div>
+
+    <div class="setting">
+      <label>Account:</label>
+      <button onclick="loginGoogle()">Login with Google</button>
+    </div>
   </div>
 
   <audio id="clickSound">
@@ -182,10 +137,11 @@
         clickSound.play();
       }
     });
+
+    // Google Login Placeholder
+    function loginGoogle() {
+      alert("Google login setup baad me karenge (Firebase/Google API ke saath).");
+    }
   </script>
 </body>
 </html>
-
-
- 
-  
