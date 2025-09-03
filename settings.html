@@ -145,3 +145,17 @@
   </script>
 </body>
 </html>
+
+// Save theme preference
+themeSelect.addEventListener("change", () => {
+  document.body.className = themeSelect.value;
+  localStorage.setItem("theme", themeSelect.value);
+});
+
+// Load theme when page opens
+window.addEventListener("load", () => {
+  const savedTheme = localStorage.getItem("theme") || "dark";
+  document.body.className = savedTheme;
+  themeSelect.value = savedTheme;
+});
+ 
