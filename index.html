@@ -44,7 +44,7 @@
     }
 
     .content {
-      margin-top: 100px;
+      margin-top: 60px;
     }
 
     .content h1 {
@@ -55,6 +55,50 @@
     .content p {
       font-size: 22px;
       margin-top: 10px;
+    }
+
+    /* --- Options CSS --- */
+    .options {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 20px;
+      width: 200px;
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    .card img {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+    }
+
+    .card h2 {
+      margin: 15px 0;
+      color: #ffcc00;
+    }
+
+    .card a {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 12px;
+      background: #ffcc00;
+      color: black;
+      text-decoration: none;
+      border-radius: 6px;
+    }
+
+    .card:hover {
+      transform: scale(1.05);
+      background: rgba(255,255,255,0.2);
     }
   </style>
 </head>
@@ -71,30 +115,26 @@
   <div class="content">
     <h1>Welcome to My Website</h1>
     <p>This is Gulshan aka Gulu Bhai Gamer</p>
+
+    <div class="options">
+      <div class="card">
+        <img src="https://minecraft.wiki/images/Skin.png" alt="Skins">
+        <h2>Skins</h2>
+        <a href="skins.html">Explore Skins</a>
+      </div>
+
+      <div class="card">
+        <img src="https://minecraft.wiki/images/Village_map.png" alt="Maps">
+        <h2>Maps</h2>
+        <a href="maps.html">Explore Maps</a>
+      </div>
+
+      <div class="card">
+        <img src="https://minecraft.wiki/images/Crafting_Table_JE2_BE2.png" alt="Mods">
+        <h2>Mods</h2>
+        <a href="mods.html">Explore Mods</a>
+      </div>
+    </div>
   </div>
 </body>
 </html>
-<div class="content">
-  <h1>Welcome to My Website</h1>
-  <p>This is Gulshan aka Gulu Bhai Gamer</p>
-
-  <div class="options">
-    <div class="card">
-      <img src="https://minecraft.wiki/images/Skin.png" alt="Skins">
-      <h2>Skins</h2>
-      <a href="skins.html">Explore Skins</a>
-    </div>
-
-    <div class="card">
-      <img src="https://minecraft.wiki/images/Village_map.png" alt="Maps">
-      <h2>Maps</h2>
-      <a href="maps.html">Explore Maps</a>
-    </div>
-
-    <div class="card">
-      <img src="https://minecraft.wiki/images/Crafting_Table_JE2_BE2.png" alt="Mods">
-      <h2>Mods</h2>
-      <a href="mods.html">Explore Mods</a>
-    </div>
-  </div>
-</div>
