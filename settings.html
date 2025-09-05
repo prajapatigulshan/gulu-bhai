@@ -10,6 +10,8 @@
       font-family: Arial, sans-serif;
       background: linear-gradient(135deg, #1a1a1a, #333, #111);
       color: white;
+      text-align: center;
+      transition: background 0.5s, color 0.5s;
     }
 
     header {
@@ -38,46 +40,33 @@
       color: #ffcc00;
     }
 
-    .container {
-      max-width: 800px;
-      margin: 40px auto;
-      padding: 20px;
-      background: rgba(0,0,0,0.6);
-      border-radius: 10px;
+    .content {
+      margin-top: 50px;
     }
 
     h1 {
-      text-align: center;
+      font-size: 40px;
       color: #ffcc00;
-      margin-bottom: 20px;
     }
 
-    .setting-option {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px;
-      margin: 10px 0;
-      background: rgba(255,255,255,0.1);
-      border-radius: 8px;
+    .option {
+      margin: 20px;
     }
 
-    .setting-option label {
-      font-size: 18px;
-    }
-
-    .btn {
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      font-size: 16px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
       background: #ffcc00;
       color: black;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 16px;
+      transition: 0.3s;
     }
 
-    .btn:hover {
-      background: orange;
+    button:hover {
+      background: #ffaa00;
     }
   </style>
 </head>
@@ -91,82 +80,79 @@
     </nav>
   </header>
 
-  <div class="container">
+  <div class="content">
     <h1>⚙ Settings</h1>
 
     <!-- Theme -->
-    <div class="setting-option">
-      <label>Theme</label>
-      <select id="themeSelect">
-        <option value="dark">Dark</option>
-        <option value="light">Light</option>
-      </select>
+    <div class="option">
+      <h2>Theme</h2>
+      <button onclick="setTheme('dark')">🌙 Dark</button>
+      <button onclick="setTheme('light')">☀ Light</button>
     </div>
 
-    <!-- Sound -->
-    <div class="setting-option">
-      <label>Sound</label>
-      <button class="btn" id="soundToggle">Sound: ON</button>
-    </div>
-
-    <!-- Language -->
-    <div class="setting-option">
-      <label>Language</label>
-      <select id="langSelect">
-        <option value="en">English</option>
-        <option value="hi">हिंदी</option>
-      </select>
+    <!-- Music -->
+    <div class="option">
+      <h2>Music</h2>
+      <button onclick="playMusic()">▶ Play</button>
+      <button onclick="pauseMusic()">⏸ Pause</button>
     </div>
 
     <!-- Google Login -->
-    <div class="setting-option">
-      <label>Profile</label>
-      <button class="btn" onclick="googleLogin()">Login with Google</button>
+    <div class="option">
+      <h2>Login</h2>
+      <div id="g_id_onload"
+           data-client_id="561940078345-9sl2labkcp78h7k1d1n7sr4li81jh972.apps.googleusercontent.com"
+           data-context="signin"
+           data-ux_mode="popup"
+           data-callback="handleCredentialResponse"
+           data-auto_prompt="false">
+      </div>
+
+      <div class="g_id_signin" 
+           data-type="standard"
+           data-shape="rectangular"
+           data-theme="outline"
+           data-text="sign_in_with"
+           data-size="large"
+           data-logo_alignment="left">
+      </div>
     </div>
 
-    <!-- Logout / Delete -->
-    <div class="setting-option">
-      <label>Account</label>
-      <button class="btn" onclick="logout()">Logout</button>
-    </div>
   </div>
 
+  <!-- Music -->
+  <audio id="bgMusic" loop>
+    <source src="https://www2.cs.uic.edu/~i101/SoundFiles/StarWars60.wav" type="audio/wav">
+  </audio>
+
+  <!-- Google Identity API -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
   <script>
-    // Theme switcher
-    const themeSelect = document.getElementById("themeSelect");
-    themeSelect.addEventListener("change", function() {
-      if (this.value === "light") {
-        document.body.style.background = "linear-gradient(135deg, #fff, #ddd, #aaa)";
-        document.body.style.color = "black";
+    // Theme
+    function setTheme(mode) {
+      if (mode === 'light') {
+        document.body.style.background = "#f2f2f2";
+        document.body.style.color = "#111";
       } else {
         document.body.style.background = "linear-gradient(135deg, #1a1a1a, #333, #111)";
         document.body.style.color = "white";
       }
-    });
-
-    // Sound toggle
-    const soundBtn = document.getElementById("soundToggle");
-    let soundOn = true;
-    soundBtn.addEventListener("click", function() {
-      soundOn = !soundOn;
-      soundBtn.innerText = "Sound: " + (soundOn ? "ON" : "OFF");
-      // TODO: link to actual audio player
-    });
-
-    // Language selector
-    const langSelect = document.getElementById("langSelect");
-    langSelect.addEventListener("change", function() {
-      alert("Language changed to: " + this.value);
-    });
-
-    // Google login (demo placeholder)
-    function googleLogin() {
-      alert("Google Login setup करना बाकी है (OAuth Client ID लगाना पड़ेगा)");
     }
 
-    // Logout
-    function logout() {
-      alert("You have been logged out!");
+    // Music
+    const music = document.getElementById("bgMusic");
+    function playMusic() {
+      music.play();
+    }
+    function pauseMusic() {
+      music.pause();
+    }
+
+    // Google Login callback
+    function handleCredentialResponse(response) {
+      console.log("Encoded JWT ID token: " + response.credential);
+      alert("Google Login Successful ✅");
     }
   </script>
 </body>
