@@ -159,11 +159,11 @@
     const btn = document.getElementById("musicBtn");
 
     window.addEventListener("load", () => {
-      // Auto-start music (most browsers block, needs user click)
+      // Auto-start music 
       music.play().then(() => {
         btn.textContent = "⏸";
       }).catch(() => {
-        btn.textContent = "▶"; // will play on click
+        btn.textContent = "▶"; // 
       });
 
       // Load theme
@@ -223,3 +223,17 @@
 
 </body>
 </html>
+<audio id="bgMusic" autoplay loop>
+  <source src="music.mp3" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
+<script>
+  // जब page load हो और user कहीं भी click करे तो music play हो
+  document.addEventListener("click", function() {
+    let music = document.getElementById("bgMusic");
+    music.play().catch(() => {
+      console.log("Autoplay blocked, user interaction needed.");
+    });
+  });
+</script>
