@@ -3,26 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GBG Website</title>
-
+  <title>Settings - GBG</title>
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: url('https://images.unsplash.com/photo-1503264116251-35a269479413?auto=format&fit=crop&w=1200&q=80') no-repeat center center fixed;
-      background-size: cover;
+      background: linear-gradient(135deg, #1a1a1a, #333, #111);
       color: white;
-      text-align: center;
-      transition: background 0.5s, color 0.5s;
-    }
-
-    body.light {
-      background: #f5f5f5;
-      color: black;
     }
 
     header {
-      background: rgba(0,0,0,0.7);
+      background: rgba(0,0,0,0.8);
       padding: 15px;
       display: flex;
       justify-content: space-between;
@@ -47,64 +38,46 @@
       color: #ffcc00;
     }
 
-    .content {
-      margin-top: 60px;
-    }
-
-    .options {
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-      margin-top: 40px;
-      flex-wrap: wrap;
-    }
-
-    .card {
-      background: rgba(0,0,0,0.6);
-      border-radius: 12px;
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
       padding: 20px;
-      width: 200px;
+      background: rgba(0,0,0,0.6);
+      border-radius: 10px;
+    }
+
+    h1 {
       text-align: center;
-      transition: 0.3s;
-    }
-
-    .card img {
-      width: 100px;
-      height: 100px;
-      object-fit: contain;
-    }
-
-    .card h2 {
-      margin: 15px 0;
       color: #ffcc00;
+      margin-bottom: 20px;
     }
 
-    .card a {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 8px 12px;
+    .setting-option {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      margin: 10px 0;
+      background: rgba(255,255,255,0.1);
+      border-radius: 8px;
+    }
+
+    .setting-option label {
+      font-size: 18px;
+    }
+
+    .btn {
       background: #ffcc00;
       color: black;
-      text-decoration: none;
-      border-radius: 6px;
-    }
-
-    .card:hover {
-      transform: scale(1.05);
-      background: rgba(255,255,255,0.2);
-    }
-
-    /* Floating button */
-    #musicBtn {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      padding: 12px;
-      background: #ffcc00;
+      padding: 10px 20px;
       border: none;
-      border-radius: 50%;
+      border-radius: 6px;
       cursor: pointer;
-      font-size: 20px;
+      font-size: 16px;
+    }
+
+    .btn:hover {
+      background: orange;
     }
   </style>
 </head>
@@ -118,56 +91,83 @@
     </nav>
   </header>
 
-  <div class="content">
-    <h1>Welcome to My Website</h1>
-    <p>This is Gulshan aka Gulu Bhai Gamer</p>
+  <div class="container">
+    <h1>⚙ Settings</h1>
 
-    <div class="options">
-      <div class="card">
-        <img src="https://minecraft.wiki/images/Skin.png" alt="Skins">
-        <h2>Skins</h2>
-        <a href="skins.html">Explore Skins</a>
-      </div>
+    <!-- Theme -->
+    <div class="setting-option">
+      <label>Theme</label>
+      <select id="themeSelect">
+        <option value="dark">Dark</option>
+        <option value="light">Light</option>
+      </select>
+    </div>
 
-      <div class="card">
-        <img src="https://minecraft.wiki/images/Village_map.png" alt="Maps">
-        <h2>Maps</h2>
-        <a href="maps.html">Explore Maps</a>
-      </div>
+    <!-- Sound -->
+    <div class="setting-option">
+      <label>Sound</label>
+      <button class="btn" id="soundToggle">Sound: ON</button>
+    </div>
 
-      <div class="card">
-        <img src="https://minecraft.wiki/images/Crafting_Table_JE2_BE2.png" alt="Mods">
-        <h2>Mods</h2>
-        <a href="mods.html">Explore Mods</a>
-      </div>
+    <!-- Language -->
+    <div class="setting-option">
+      <label>Language</label>
+      <select id="langSelect">
+        <option value="en">English</option>
+        <option value="hi">हिंदी</option>
+      </select>
+    </div>
+
+    <!-- Google Login -->
+    <div class="setting-option">
+      <label>Profile</label>
+      <button class="btn" onclick="googleLogin()">Login with Google</button>
+    </div>
+
+    <!-- Logout / Delete -->
+    <div class="setting-option">
+      <label>Account</label>
+      <button class="btn" onclick="logout()">Logout</button>
     </div>
   </div>
 
-  <!-- Background music -->
-  <audio id="bgMusic" loop>
-    <source src="https://www.bensound.com/bensound-music/bensound-creativeminds.mp3" type="audio/mpeg">
-  </audio>
-  <button id="musicBtn">▶</button>
-
   <script>
-    const music = document.getElementById("bgMusic");
-    const btn = document.getElementById("musicBtn");
-
-    btn.addEventListener("click", () => {
-      if (music.paused) {
-        music.play();
-        btn.textContent = "⏸";
+    // Theme switcher
+    const themeSelect = document.getElementById("themeSelect");
+    themeSelect.addEventListener("change", function() {
+      if (this.value === "light") {
+        document.body.style.background = "linear-gradient(135deg, #fff, #ddd, #aaa)";
+        document.body.style.color = "black";
       } else {
-        music.pause();
-        btn.textContent = "▶";
+        document.body.style.background = "linear-gradient(135deg, #1a1a1a, #333, #111)";
+        document.body.style.color = "white";
       }
     });
 
-    // Apply saved theme
-    window.addEventListener("load", () => {
-      const savedTheme = localStorage.getItem("theme") || "dark";
-      document.body.className = savedTheme;
+    // Sound toggle
+    const soundBtn = document.getElementById("soundToggle");
+    let soundOn = true;
+    soundBtn.addEventListener("click", function() {
+      soundOn = !soundOn;
+      soundBtn.innerText = "Sound: " + (soundOn ? "ON" : "OFF");
+      // TODO: link to actual audio player
     });
+
+    // Language selector
+    const langSelect = document.getElementById("langSelect");
+    langSelect.addEventListener("change", function() {
+      alert("Language changed to: " + this.value);
+    });
+
+    // Google login (demo placeholder)
+    function googleLogin() {
+      alert("Google Login setup करना बाकी है (OAuth Client ID लगाना पड़ेगा)");
+    }
+
+    // Logout
+    function logout() {
+      alert("You have been logged out!");
+    }
   </script>
 </body>
 </html>
