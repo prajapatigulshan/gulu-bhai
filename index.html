@@ -98,7 +98,7 @@
       background: rgba(255,255,255,0.2);
     }
 
-    /* Floating button */
+    /* Floating music button */
     #musicBtn {
       position: fixed;
       bottom: 20px;
@@ -148,8 +148,8 @@
     </div>
   </div>
 
-  <!-- Background music -->
-  <audio id="bgMusic" autoplay loop muted>
+  <!-- Background Music -->
+  <audio id="bgMusic" loop>
     <source src="https://www.bensound.com/bensound-music/bensound-creativeminds.mp3" type="audio/mpeg">
   </audio>
   <button id="musicBtn">▶</button>
@@ -159,11 +159,14 @@
     const btn = document.getElementById("musicBtn");
 
     window.addEventListener("load", () => {
-      setTimeout(() => {
-        music.muted = false;
-        music.play();
+      // Auto-start music (most browsers block, needs user click)
+      music.play().then(() => {
         btn.textContent = "⏸";
-      }, 1000); // autoplay trick
+      }).catch(() => {
+        btn.textContent = "▶"; // will play on click
+      });
+
+      // Load theme
       const savedTheme = localStorage.getItem("theme") || "dark";
       document.body.className = savedTheme;
     });
@@ -178,5 +181,45 @@
       }
     });
   </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GBG Website - Login</title>
+</head>
+<body style="text-align:center; margin-top:100px;">
+
+  <h1>Welcome to GBG Website</h1>
+  <p>Login with your Google account to continue</p>
+
+  <!-- Google Sign-in button -->
+  <div id="g_id_onload"
+       data-client_id="561940078345-9sl2labkcp78h7k1d1n7sr4li81jh972.apps.googleusercontent.com"
+       data-login_uri="https://prajapatigulshan.github.io/gulu-bhai/"
+       data-auto_prompt="false">
+  </div>
+
+  <div class="g_id_signin"
+       data-type="standard"
+       data-size="large"
+       data-theme="outline"
+       data-text="sign_in_with"
+       data-shape="rectangular"
+       data-logo_alignment="left">
+  </div>
+
+  <!-- Script for Google Sign-In -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <script>
+    function handleCredentialResponse(response) {
+      console.log("Encoded JWT ID token: " + response.credential);
+      alert("Login successful!");
+    }
+  </script>
+
 </body>
 </html>
