@@ -42,6 +42,14 @@
       background:#ffcc00; border:none; border-radius:50%; cursor:pointer;
       font-size:20px;
     }
+    #userBox {
+      margin:20px auto;
+      padding:15px;
+      max-width:300px;
+      background:rgba(0,0,0,0.6);
+      border-radius:10px;
+    }
+    #userBox img { border-radius:50%; width:80px; height:80px; margin-top:10px; }
   </style>
 </head>
 <body>
@@ -92,6 +100,11 @@
   </div>
   <div class="g_id_signin" data-type="standard"></div>
 
+  <!-- Box to show logged in user info -->
+  <div id="userBox">
+    <p>Not Logged In</p>
+  </div>
+
   <script>
     const music = document.getElementById("bgMusic");
     const btn = document.getElementById("musicBtn");
@@ -111,10 +124,27 @@
     // Theme load
     document.body.className = localStorage.getItem("theme") || "dark";
 
+    // Decode JWT function
+    function decodeJwt(token) {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(jsonPayload);
+    }
+
     // Google Login callback
     function handleCredentialResponse(response) {
-      console.log("Google ID Token:", response.credential);
-      alert("Google Login Successful ✅");
+      const userData = decodeJwt(response.credential);
+      console.log("User Data:", userData);
+
+      const userBox = document.getElementById("userBox");
+      userBox.innerHTML = `
+        <h3>Welcome, ${userData.name} 👋</h3>
+        <p>Email: ${userData.email}</p>
+        <img src="${userData.picture}" alt="Profile">
+      `;
     }
   </script>
 </body>
