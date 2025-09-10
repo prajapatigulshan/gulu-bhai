@@ -83,20 +83,25 @@
   </audio>
   <button id="musicBtn">▶</button>
 
-  <!-- Google Sign-In -->
-  <div id="g_id_onload"
-       data-client_id="YOUR_GOOGLE_CLIENT_ID"
-       data-context="signin"
-       data-ux_mode="popup"
-       data-callback="handleCredentialResponse"
-       data-auto_prompt="false">
-  </div>
-  <div class="g_id_signin" data-type="standard"></div>
+  <!-- Google Sign-In Script -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <script>
-    const music = document.getElementById("bgMusic");
-    const btn = document.getElementById("musicBtn");
+<div id="g_id_onload"
+     data-client_id="561940078345-9sl2labkcp78h7k1d1n7sr4li81jh972.apps.googleusercontent.com"
+     data-login_uri="https://prajapatigulshan.github.io/gulu-bhai/"
+     data-auto_prompt="false">
+</div>
+
+<!-- Google Login Button -->
+<div class="g_id_signin"
+     data-type="standard"
+     data-size="large"
+     data-theme="outline"
+     data-text="sign_in_with"
+     data-shape="rect"
+     data-logo_alignment="left">
+</div>
+
 
     // Autoplay fix
     document.addEventListener("click", () => {
