@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About - GBG Website</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: url('https://images.unsplash.com/photo-1503264116251-35a269479413?auto=format&fit=crop&w=1200&q=80') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      text-align: center;
+      transition: background 0.5s, color 0.5s;
+    }
+    body.light { background:#f5f5f5; color:black; }
+    header {
+      background: rgba(0,0,0,0.7);
+      padding: 15px; display:flex; justify-content:space-between; align-items:center;
+      position:sticky; top:0;
+    }
+    .logo { font-size:28px; font-weight:bold; color:#ffcc00; }
+    nav a { color:white; margin:0 15px; text-decoration:none; font-size:18px; }
+    nav a:hover { color:#ffcc00; }
+    .content { margin-top:80px; padding:20px; }
+    h1 { color:#ffcc00; }
+    footer {
+      margin-top:60px; padding:20px; background:rgba(0,0,0,0.7);
+      font-size:18px;
+    }
+    footer a {
+      color:#ffcc00; text-decoration:none; font-weight:bold;
+    }
+    footer a:hover { text-decoration:underline; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">GBG</div>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="settings.html">Settings</a>
+      <a href="about.html">About</a>
+    </nav>
+  </header>
+
+  <div class="content">
+    <h1>About GBG</h1>
+    <p>Hello! 👋 My name is Gulshan aka <b>Gulu Bhai Gamer</b>.</p>
+    <p>This website is created to share Minecraft Skins, Maps, and Mods.</p>
+  </div>
+
+  <!-- Footer with Telegram -->
+  <footer>
+    📢 Join My Telegram Channel 👉 
+    <a href="https://t.me/GBG_Army_Official" target="_blank">t.me/GBG_Army_Official</a>
+  </footer>
+
+  <script>
+    // Theme load
+    document.body.className = localStorage.getItem("theme") || "dark";
+  </script>
+</body>
+</html>
