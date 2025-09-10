@@ -8,66 +8,28 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #1a1a1a, #333, #111);
+      background: url('https://images.unsplash.com/photo-1503264116251-35a269479413?auto=format&fit=crop&w=1200&q=80') no-repeat center center fixed;
+      background-size: cover;
       color: white;
       text-align: center;
       transition: background 0.5s, color 0.5s;
     }
-
+    body.light { background:#f5f5f5; color:black; }
     header {
-      background: rgba(0,0,0,0.8);
-      padding: 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      background: rgba(0,0,0,0.7);
+      padding: 15px; display:flex; justify-content:space-between; align-items:center;
+      position:sticky; top:0;
     }
-
-    .logo {
-      font-size: 28px;
-      font-weight: bold;
-      color: #ffcc00;
-    }
-
-    nav a {
-      color: white;
-      text-decoration: none;
-      margin: 0 15px;
-      font-size: 18px;
-      transition: 0.3s;
-    }
-
-    nav a:hover {
-      color: #ffcc00;
-    }
-
-    .content {
-      margin-top: 50px;
-    }
-
-    h1 {
-      font-size: 40px;
-      color: #ffcc00;
-    }
-
-    .option {
-      margin: 20px;
-    }
-
+    .logo { font-size:28px; font-weight:bold; color:#ffcc00; }
+    nav a { color:white; margin:0 15px; text-decoration:none; font-size:18px; }
+    nav a:hover { color:#ffcc00; }
+    .content { margin-top:60px; }
+    .setting-option { margin:20px 0; }
     button {
-      padding: 10px 20px;
-      margin: 10px;
-      font-size: 16px;
-      cursor: pointer;
-      border: none;
-      border-radius: 5px;
-      background: #ffcc00;
-      color: black;
-      transition: 0.3s;
+      padding:10px 20px; border:none; border-radius:6px;
+      background:#ffcc00; color:black; font-weight:bold; cursor:pointer;
     }
-
-    button:hover {
-      background: #ffaa00;
-    }
+    button:hover { background:#ffaa00; }
   </style>
 </head>
 <body>
@@ -81,78 +43,56 @@
   </header>
 
   <div class="content">
-    <h1>⚙ Settings</h1>
+    <h1>⚙ Settings Page</h1>
 
     <!-- Theme -->
-    <div class="option">
-      <h2>Theme</h2>
+    <div class="setting-option">
+      <h3>Theme</h3>
+      <button onclick="setTheme('light')">🌞 Light</button>
       <button onclick="setTheme('dark')">🌙 Dark</button>
-      <button onclick="setTheme('light')">☀ Light</button>
     </div>
 
     <!-- Music -->
-    <div class="option">
-      <h2>Music</h2>
-      <button onclick="playMusic()">▶ Play</button>
-      <button onclick="pauseMusic()">⏸ Pause</button>
+    <div class="setting-option">
+      <h3>Music</h3>
+      <button onclick="setMusic('on')">▶ ON</button>
+      <button onclick="setMusic('off')">⏸ OFF</button>
     </div>
 
     <!-- Google Login -->
-    <div class="option">
-      <h2>Login</h2>
+    <div class="setting-option">
+      <h3>Login</h3>
       <div id="g_id_onload"
-           data-client_id="561940078345-9sl2labkcp78h7k1d1n7sr4li81jh972.apps.googleusercontent.com"
-           data-context="signin"
-           data-ux_mode="popup"
-           data-callback="handleCredentialResponse"
-           data-auto_prompt="false">
+          data-client_id="YOUR_GOOGLE_CLIENT_ID"
+          data-context="signin"
+          data-ux_mode="popup"
+          data-callback="handleCredentialResponse"
+          data-auto_prompt="false">
       </div>
-
-      <div class="g_id_signin" 
-           data-type="standard"
-           data-shape="rectangular"
-           data-theme="outline"
-           data-text="sign_in_with"
-           data-size="large"
-           data-logo_alignment="left">
-      </div>
+      <div class="g_id_signin" data-type="standard"></div>
     </div>
-
   </div>
 
-  <!-- Music -->
-  <audio id="bgMusic" loop>
-    <source src="https://www2.cs.uic.edu/~i101/SoundFiles/StarWars60.wav" type="audio/wav">
-  </audio>
-
-  <!-- Google Identity API -->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
-
   <script>
-    // Theme
-    function setTheme(mode) {
-      if (mode === 'light') {
-        document.body.style.background = "#f2f2f2";
-        document.body.style.color = "#111";
-      } else {
-        document.body.style.background = "linear-gradient(135deg, #1a1a1a, #333, #111)";
-        document.body.style.color = "white";
-      }
+    // Theme Functions
+    function setTheme(theme) {
+      localStorage.setItem("theme", theme);
+      document.body.className = theme;
+    }
+    // Load saved theme
+    document.body.className = localStorage.getItem("theme") || "dark";
+
+    // Music Functions
+    function setMusic(state) {
+      localStorage.setItem("music", state);
+      alert("Music " + state + " selected! 🎵");
     }
 
-    // Music
-    const music = document.getElementById("bgMusic");
-    function playMusic() {
-      music.play();
-    }
-    function pauseMusic() {
-      music.pause();
-    }
-
-    // Google Login callback
+    // Google Login
     function handleCredentialResponse(response) {
-      console.log("Encoded JWT ID token: " + response.credential);
       alert("Google Login Successful ✅");
+      console.log("JWT: ", response.credential);
     }
   </script>
 </body>
