@@ -171,3 +171,94 @@
   </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GBG Website</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #222;
+      color: white;
+    }
+    header {
+      background: rgba(0,0,0,0.8);
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo { font-size: 24px; color: #ffcc00; font-weight: bold; }
+
+    /* Hamburger button */
+    .menu-btn {
+      font-size: 26px;
+      cursor: pointer;
+    }
+
+    /* Sidebar menu */
+    .sidebar {
+      height: 100%;
+      width: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: #111;
+      overflow-x: hidden;
+      transition: 0.4s;
+      padding-top: 60px;
+      z-index: 1000;
+    }
+    .sidebar a {
+      display: block;
+      color: white;
+      padding: 12px 25px;
+      text-decoration: none;
+      font-size: 20px;
+    }
+    .sidebar a:hover {
+      background: #575757;
+      color: #ffcc00;
+    }
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 25px;
+      font-size: 30px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="menu-btn" onclick="openMenu()">☰</div>
+    <div class="logo">GBG</div>
+  </header>
+
+  <!-- Sidebar -->
+  <div id="sidebar" class="sidebar">
+    <span class="close-btn" onclick="closeMenu()">×</span>
+    <a href="index.html">🏠 Home</a>
+    <a href="settings.html">⚙ Settings</a>
+    <a href="about.html">ℹ About</a>
+    <a href="skins.html">🎭 Skins</a>
+    <a href="maps.html">🗺 Maps</a>
+    <a href="mods.html">🔧 Mods</a>
+    <a href="contact.html">📞 Contact</a>
+    <a href="https://t.me/GBG_Army_Official" target="_blank">📢 Telegram</a>
+    <a href="https://www.instagram.com/gulu_bhai_gamer_01" target="_blank">📸 Instagram</a>
+  </div>
+
+  <script>
+    function openMenu() {
+      document.getElementById("sidebar").style.width = "250px";
+    }
+    function closeMenu() {
+      document.getElementById("sidebar").style.width = "0";
+    }
+  </script>
+</body>
+</html>
