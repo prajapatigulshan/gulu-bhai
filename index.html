@@ -192,73 +192,88 @@
       align-items: center;
     }
     .logo { font-size: 24px; color: #ffcc00; font-weight: bold; }
+<header>
+  <!-- Hamburger button -->
+  <div class="menu-btn" onclick="openMenu()">☰</div>
+  <!-- Logo -->
+  <div class="logo">GBG</div>
+</header>
 
-    /* Hamburger button */
-    .menu-btn {
-      font-size: 26px;
-      cursor: pointer;
-    }
+<!-- Sidebar -->
+<div id="sidebar" class="sidebar">
+  <span class="close-btn" onclick="closeMenu()">×</span>
+  <a href="index.html">🏠 Home</a>
+  <a href="settings.html">⚙ Settings</a>
+  <a href="about.html">ℹ About</a>
+  <a href="skins.html">🎭 Skins</a>
+  <a href="maps.html">🗺 Maps</a>
+  <a href="mods.html">🔧 Mods</a>
+  <a href="contact.html">📞 Contact</a>
+  <a href="https://t.me/GBG_Army_Official" target="_blank">📢 Telegram</a>
+  <a href="https://www.instagram.com/gulu_bhai_gamer_01" target="_blank">📸 Instagram</a>
+</div>
 
-    /* Sidebar menu */
-    .sidebar {
-      height: 100%;
-      width: 0;
-      position: fixed;
-      top: 0;
-      left: 0;
-      background-color: #111;
-      overflow-x: hidden;
-      transition: 0.4s;
-      padding-top: 60px;
-      z-index: 1000;
-    }
-    .sidebar a {
-      display: block;
-      color: white;
-      padding: 12px 25px;
-      text-decoration: none;
-      font-size: 20px;
-    }
-    .sidebar a:hover {
-      background: #575757;
-      color: #ffcc00;
-    }
-    .close-btn {
-      position: absolute;
-      top: 20px;
-      right: 25px;
-      font-size: 30px;
-      cursor: pointer;
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <div class="menu-btn" onclick="openMenu()">☰</div>
-    <div class="logo">GBG</div>
-  </header>
+<style>
+  header {
+    background: rgba(0,0,0,0.8);
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    position: fixed; /* 👈 fixed kar diya */
+    top: 0;          /* 👈 always top */
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+  }
+  .menu-btn {
+    font-size: 28px;
+    cursor: pointer;
+    margin-right: 20px;
+  }
+  .logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffcc00;
+  }
+  .sidebar {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.4s;
+    padding-top: 60px;
+    z-index: 1500;
+  }
+  .sidebar a {
+    display: block;
+    color: white;
+    padding: 12px 25px;
+    text-decoration: none;
+    font-size: 20px;
+  }
+  .sidebar a:hover {
+    background: #575757;
+    color: #ffcc00;
+  }
+  .close-btn {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    font-size: 30px;
+    cursor: pointer;
+  }
+</style>
 
-  <!-- Sidebar -->
-  <div id="sidebar" class="sidebar">
-    <span class="close-btn" onclick="closeMenu()">×</span>
-    <a href="index.html">🏠 Home</a>
-    <a href="settings.html">⚙ Settings</a>
-    <a href="about.html">ℹ About</a>
-    <a href="skins.html">🎭 Skins</a>
-    <a href="maps.html">🗺 Maps</a>
-    <a href="mods.html">🔧 Mods</a>
-    <a href="contact.html">📞 Contact</a>
-    <a href="https://t.me/GBG_Army_Official" target="_blank">📢 Telegram</a>
-    <a href="https://www.instagram.com/gulu_bhai_gamer_01" target="_blank">📸 Instagram</a>
-  </div>
+<script>
+  function openMenu() {
+    document.getElementById("sidebar").style.width = "250px";
+  }
+  function closeMenu() {
+    document.getElementById("sidebar").style.width = "0";
+  }
+</script>
 
-  <script>
-    function openMenu() {
-      document.getElementById("sidebar").style.width = "250px";
-    }
-    function closeMenu() {
-      document.getElementById("sidebar").style.width = "0";
-    }
-  </script>
-</body>
-</html>
+   
