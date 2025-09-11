@@ -1,1 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VIP Level System</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: white;
+      text-align: center;
+      padding: 40px;
+    }
+    .vip-box {
+      background: rgba(255, 204, 0, 0.2);
+      border: 2px solid #ffcc00;
+      padding: 20px;
+      border-radius: 12px;
+      width: 350px;
+      margin: auto;
+    }
+    input {
+      padding: 8px;
+      border-radius: 6px;
+      border: none;
+      margin: 8px;
+    }
+    button {
+      padding: 10px 15px;
+      border: none;
+      background: #ffcc00;
+      color: black;
+      font-weight: bold;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎖 VIP Level System</h1>
+
+  <div class="vip-box">
+    <p><b>Name:</b> <span id="userName">Guest</span></p>
+    <p><b>Region:</b> <span id="userRegion">Unknown</span></p>
+    <p><b>Current Points:</b> <span id="points">0</span></p>
+    <p><b>Your VIP Level:</b> <span id="vipLevel">1</span></p>
+
+    <input type="text" id="nameInput" placeholder="Enter your name">
+    <input type="text" id="regionInput" placeholder="Enter your region">
+    <br>
+    <input type="number" id="moneyInput" placeholder="Enter amount (₹)">
+    <button onclick="addMoney()">Add Money</button>
+    <button onclick="saveUser()">Save Profile</button>
+  </div>
+
+  <script>
+    let points = parseInt(localStorage.getItem("points")) || 0;
+    let userName = localStorage.getItem("userName") || "Guest";
+    let userRegion = localStorage.getItem("userRegion") || "Unknown";
+
+    function updateVIP() {
+      document.getElementById("points").innerText = points;
+
+      let vip = 1;
+      if (points > 1000) vip = "Max";
+      else if (points > 600) vip = 4;
+      else if (points > 300) vip = 3;
+      else if (points > 100) vip = 2;
+
+      document.getElementById("vipLevel").innerText = vip;
+
+      document.getElementById("userName").innerText = userName;
+      document.getElementById("userRegion").innerText = userRegion;
+
+      localStorage.setItem("points", points);
+      localStorage.setItem("userName", userName);
+      localStorage.setItem("userRegion", userRegion);
+    }
+
+    function addMoney() {
+      let money = parseInt(document.getElementById("moneyInput").value);
+      if (isNaN(money) || money <= 0) {
+        alert("Enter valid amount!");
+        return;
+      }
+      points += money * 5; // 1₹ = 5 points
+      updateVIP();
+    }
+
+    function saveUser() {
+      let nameInput = document.getElementById("nameInput").value.trim();
+      let regionInput = document.getElementById("regionInput").value.trim();
+
+      if (nameInput) userName = nameInput;
+      if (regionInput) userRegion = regionInput;
+
+      updateVIP();
+    }
+
+    // Auto load
+    updateVIP();
+  </script>
+</body>
+</html>
 
