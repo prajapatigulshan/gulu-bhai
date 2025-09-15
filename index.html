@@ -8,10 +8,20 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: #000;
       color: white;
       text-align: center;
       overflow-x: hidden;
+      height: 100vh;
+      background: linear-gradient(270deg, red, orange, yellow, green, cyan, blue, violet, red);
+      background-size: 1500% 1500%;
+      animation: bgRGB 30s ease infinite;
+    }
+
+    /* RGB Background Animation */
+    @keyframes bgRGB {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
 
     /* RGB Gradient Animation */
@@ -60,10 +70,6 @@
       margin-right: 20px;
       color: white;
     }
-    .logo {
-      font-size: 26px;
-      font-weight: bold;
-    }
     .logo span {
       font-size: 26px;
       font-weight: bold;
@@ -81,7 +87,7 @@
       position: fixed;
       top: 0;
       left: 0;
-      background-color: #111;
+      background-color: rgba(0,0,0,0.95);
       overflow-x: hidden;
       transition: 0.4s;
       padding-top: 60px;
@@ -95,15 +101,17 @@
       text-decoration: none;
       font-size: 20px;
       transition: 0.3s;
+      margin: 5px 0;
+      border-radius: 6px;
     }
     .sidebar a:hover {
       background: rgba(255,255,255,0.1);
-      color: #fff;
+      box-shadow: 0 0 15px #00ffc8;
       background-image: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-size: 400%;
-      animation: rgbMove 8s linear infinite;
+      animation: rgbMove 6s linear infinite;
     }
     .close-btn {
       position: absolute;
@@ -144,10 +152,7 @@
       box-shadow: 0 0 15px rgba(0,0,0,0.7);
     }
     .card img { width: 100px; height: 100px; }
-    .card h2 {
-      margin-top: 10px;
-      font-size: 1.3rem;
-    }
+    .card h2 { margin-top: 10px; }
     .card a {
       display: inline-block;
       margin-top: 10px;
@@ -300,4 +305,4 @@
     }
   </script>
 </body>
-</html>
+  </html>
