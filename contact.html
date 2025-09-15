@@ -3,80 +3,104 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Contact Us - Gulu Bhai Gamer</title>
+  <title>Contact Us - GBG</title>
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
       color: white;
       text-align: center;
-      padding: 20px;
       height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      align-items: center;
+      background: #000;
       overflow: hidden;
-      animation: bgChange 40s infinite;
-      background-size: 400% 400%;
     }
 
-    /* Background Animation with 5 styles */
-    @keyframes bgChange {
-      0% { background: linear-gradient(-45deg, #ff512f, #dd2476, #1e3c72, #2a5298); background-size: 400% 400%; background-position: 0% 50%; }
-      20% { background: linear-gradient(45deg, #00c6ff, #0072ff, #1e3c72, #2a5298); background-size: 400% 400%; background-position: 100% 50%; }
-      40% { background: linear-gradient(-90deg, #f12711, #f5af19, #ff512f, #dd2476); background-size: 400% 400%; background-position: 50% 0%; }
-      60% { background: linear-gradient(120deg, #12c2e9, #c471ed, #f64f59, #ff6ec4); background-size: 400% 400%; background-position: 50% 100%; }
-      80% { background: linear-gradient(-45deg, #0f0c29, #302b63, #24243e, #1e3c72); background-size: 400% 400%; background-position: 0% 50%; }
-      100% { background: linear-gradient(-45deg, #ff512f, #dd2476, #1e3c72, #2a5298); background-size: 400% 400%; background-position: 0% 50%; }
+    /* BACKGROUND ANIMATION (Neon Particles) */
+    .circle {
+      position: absolute;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,255,200,0.9), rgba(0,0,0,0));
+      animation: move 20s linear infinite;
+      mix-blend-mode: screen;
+    }
+    .circle:nth-child(1) { width: 300px; height: 300px; top: 10%; left: 15%; animation-duration: 18s; }
+    .circle:nth-child(2) { width: 200px; height: 200px; bottom: 20%; right: 10%; animation-duration: 22s; }
+    .circle:nth-child(3) { width: 400px; height: 400px; top: 50%; left: 60%; animation-duration: 25s; }
+    .circle:nth-child(4) { width: 150px; height: 150px; top: 70%; left: 30%; animation-duration: 20s; }
+    .circle:nth-child(5) { width: 250px; height: 250px; bottom: 10%; right: 40%; animation-duration: 28s; }
+
+    @keyframes move {
+      0% { transform: translateY(0) translateX(0); }
+      50% { transform: translateY(-50px) translateX(50px); }
+      100% { transform: translateY(0) translateX(0); }
     }
 
-    h1 { margin-bottom: 20px; }
+    h1 { margin-bottom: 10px; text-shadow: 0 0 15px #00ffc8; }
+    p { margin-bottom: 20px; text-shadow: 0 0 10px #00ffc8; }
 
-    /* Contact Form Styling */
+    /* CONTACT FORM */
     form {
-      background: rgba(0, 0, 0, 0.7);
-      padding: 20px;
+      background: rgba(0, 0, 0, 0.8);
+      padding: 25px;
       border-radius: 15px;
       max-width: 400px;
-      margin: auto;
-      box-shadow: 0px 0px 20px rgba(0,0,0,0.9);
+      width: 100%;
+      box-shadow: 0 0 20px #00ffc8;
       z-index: 1;
       position: relative;
+      border: 2px solid #00ffc8;
     }
     input, textarea {
       width: 100%;
-      padding: 10px;
-      margin: 10px 0;
+      padding: 12px;
+      margin: 12px 0;
       border-radius: 8px;
       border: none;
       outline: none;
+      background: #111;
+      color: white;
+      font-size: 14px;
+      box-shadow: inset 0 0 10px #00ffc8;
     }
     button {
-      padding: 10px 20px;
-      background: #ff0000;
-      color: white;
+      padding: 12px 25px;
+      background: #00ffc8;
+      color: black;
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
       cursor: pointer;
       font-weight: bold;
       transition: 0.3s;
+      font-size: 15px;
     }
     button:hover {
-      background: #cc0000;
+      background: #00ffaa;
       transform: scale(1.05);
+      box-shadow: 0 0 15px #00ffc8;
     }
   </style>
 </head>
 <body>
 
-  <h1>Contact Us</h1>
-  <p>Have questions or feedback? Send us a message!</p>
+  <!-- Neon Particles Background -->
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+
+  <h1>Contact GBG</h1>
+  <p>Have questions or feedback? Drop your message below 👇</p>
 
   <form action="https://formspree.io/f/mrbavpno" method="POST">
     <input type="text" name="name" placeholder="Your Name" required>
     <input type="email" name="email" placeholder="Your Email" required>
     <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
-    <button type="submit">Send</button>
+    <button type="submit">Send Message</button>
   </form>
 
 </body>
