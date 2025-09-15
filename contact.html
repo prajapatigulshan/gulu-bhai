@@ -6,12 +6,26 @@
   <title>Contact Us - Gulu Bhai Gamer</title>
   <style>
     body {
-      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      margin: 0;
       font-family: Arial, sans-serif;
       color: white;
       text-align: center;
       padding: 20px;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: linear-gradient(-45deg, #ff512f, #dd2476, #1e3c72, #2a5298);
+      background-size: 400% 400%;
+      animation: gradientBG 15s ease infinite;
     }
+
+    @keyframes gradientBG {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+
     h1 {
       margin-bottom: 20px;
     }
