@@ -8,7 +8,6 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      color: white;
       text-align: center;
       height: 100vh;
       display: flex;
@@ -17,9 +16,27 @@
       align-items: center;
       background: #000;
       overflow: hidden;
+      position: relative;
     }
 
-    /* Neon Particles Background */
+    /* GBG Logo Watermark */
+    .logo-watermark {
+      position: absolute;
+      font-size: 6rem;
+      font-weight: bold;
+      color: rgba(255,255,255,0.05);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 400%;
+      animation: rgbMove 15s linear infinite;
+    }
+
+    /* Neon Circles (Background Particles) */
     .circle {
       position: absolute;
       border-radius: 50%;
@@ -105,9 +122,8 @@
       animation: rgbMove 8s linear infinite;
       box-shadow: inset 0 0 15px #00ffc8;
     }
-    textarea {
-      resize: none;
-    }
+    textarea { resize: none; }
+
     button {
       padding: 12px 25px;
       background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
@@ -125,6 +141,40 @@
       transform: scale(1.05);
       box-shadow: 0 0 20px #00ffc8;
     }
+
+    /* Popup Message */
+    .popup {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: rgba(0,0,0,0.9);
+      padding: 15px 25px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 1rem;
+      z-index: 100;
+      border: 2px solid #00ffc8;
+      box-shadow: 0 0 20px #00ffc8;
+      background-image: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
+      background-size: 400%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rgbMove 8s linear infinite;
+    }
+
+    /* Footer */
+    footer {
+      position: absolute;
+      bottom: 10px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 400%;
+      animation: rgbMove 8s linear infinite;
+    }
   </style>
 </head>
 <body class="theme1">
@@ -136,10 +186,13 @@
   <div class="circle"></div>
   <div class="circle"></div>
 
+  <!-- Watermark -->
+  <div class="logo-watermark">GBG</div>
+
   <h1 class="rgb-text">Contact GBG</h1>
   <p class="rgb-text" style="font-size:1.2rem;">Have questions or feedback? Drop your message below 👇</p>
 
-  <form action="https://formspree.io/f/mrbavpno" method="POST">
+  <form id="contactForm">
     <label class="rgb-label">Your Name:</label>
     <input type="text" name="name" placeholder="Enter your name" required>
 
@@ -152,13 +205,48 @@
     <button type="submit">🚀 Send Message</button>
   </form>
 
+  <div id="popup" class="popup"></div>
+
+  <footer>© 2025 GBG (Gulu Bhai Gamer) | All Rights Reserved</footer>
+
   <script>
+    // Background theme auto-change
     let themeIndex = 1;
     setInterval(() => {
       themeIndex++;
       if(themeIndex > 5) themeIndex = 1;
       document.body.className = "theme" + themeIndex;
-    }, 8000); // theme auto-change every 8s
+    }, 8000);
+
+    // Popup Functionality
+    const form = document.getElementById("contactForm");
+    const popup = document.getElementById("popup");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      try {
+        let res = await fetch("https://formspree.io/f/mrbavpno", {
+          method: "POST",
+          body: formData,
+          headers: { 'Accept': 'application/json' }
+        });
+        if (res.ok) {
+          popup.textContent = "✅ Thanks! Your message has been sent to GBG!";
+          popup.style.display = "block";
+          setTimeout(()=> popup.style.display="none", 4000);
+          form.reset();
+        } else {
+          popup.textContent = "❌ Oops! Something went wrong, try again.";
+          popup.style.display = "block";
+          setTimeout(()=> popup.style.display="none", 4000);
+        }
+      } catch (err) {
+        popup.textContent = "❌ Network Error! Please try again.";
+        popup.style.display = "block";
+        setTimeout(()=> popup.style.display="none", 4000);
+      }
+    });
   </script>
 
 </body>
