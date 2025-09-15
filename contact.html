@@ -16,106 +16,11 @@
       flex-direction: column;
       justify-content: center;
       overflow: hidden;
-      transition: background 1s ease-in-out;
+      animation: bgChange 40s infinite;
+      background-size: 400% 400%;
     }
 
-    /* FORM STYLING */
-    form {
-      background: rgba(0, 0, 0, 0.6);
-      padding: 20px;
-      border-radius: 15px;
-      max-width: 400px;
-      margin: auto;
-      box-shadow: 0px 0px 20px rgba(0,0,0,0.8);
-      z-index: 1;
-      position: relative;
-    }
-    input, textarea {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 8px;
-      border: none;
-    }
-    button {
-      padding: 10px 20px;
-      background: #ff0000;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    button:hover {
-      background: #cc0000;
-    }
-
-    /* BACKGROUND STYLES */
-    .bg1 { background: linear-gradient(-45deg, #ff512f, #dd2476, #1e3c72, #2a5298); background-size: 400% 400%; animation: gradient 10s ease infinite; }
-    .bg2 { background: radial-gradient(circle, #ff0000, #000000); animation: pulse 5s infinite alternate; }
-    .bg3 { background: linear-gradient(270deg, #00f260, #0575e6, #ff512f); background-size: 600% 600%; animation: gradient 15s ease infinite; }
-    .bg4 { background: black; }
-    .bg4::before {
-      content: "";
-      position: absolute; top:0; left:0; right:0; bottom:0;
-      background: url('https://i.ibb.co/7QpKsCX/matrix.gif') center/cover no-repeat;
-      opacity: 0.6;
-      z-index: 0;
-    }
-    .bg5 { background: url('https://i.ibb.co/ZVh01dm/fire.gif') center/cover no-repeat; }
-    .bg6 { background: url('https://i.ibb.co/cFqZC3R/galaxy.gif') center/cover no-repeat; }
-    .bg7 { background: linear-gradient(45deg, #ff6ec4, #7873f5, #1fd1f9); background-size: 400% 400%; animation: gradient 12s ease infinite; }
-    .bg8 { background: url('https://i.ibb.co/XZC2Rtx/neon.gif') center/cover no-repeat; }
-    .bg9 { background: url('https://i.ibb.co/xMjR1xM/waves.gif') center/cover no-repeat; }
-    .bg10 { background: url('https://i.ibb.co/nC8ks0r/particles.gif') center/cover no-repeat; }
-
-    @keyframes gradient {
-      0% {background-position: 0% 50%;}
-      50% {background-position: 100% 50%;}
-      100% {background-position: 0% 50%;}
-    }
-    @keyframes pulse {
-      0% { background-size: 100% 100%; }
-      100% { background-size: 120% 120%; }
-    }
-
-    /* SWITCH BUTTON */
-    #switchBg {
-      margin-top: 20px;
-      padding: 8px 15px;
-      background: #00ffcc;
-      color: black;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      z-index: 1;
-      position: relative;
-    }
-  </style>
-</head>
-<body class="bg1">
-
-  <h1>Contact Us</h1>
-  <p>Have questions or feedback? Send us a message!</p>
-
-  <form action="https://formspree.io/f/mrbavpno" method="POST">
-    <input type="text" name="name" placeholder="Your Name" required>
-    <input type="email" name="email" placeholder="Your Email" required>
-    <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
-    <button type="submit">Send</button>
-  </form>
-
-  <button id="switchBg">🎮 Change Background</button>
-
-  <script>
-    let bgIndex = 1;
-    document.getElementById("switchBg").addEventListener("click", () => {
-      bgIndex++;
-      if(bgIndex > 10) bgIndex = 1;
-      document.body.className = "bg" + bgIndex;
-    });
-  </script>
-
-</body>
-</html>
+    /* Background animations */
+    @keyframes bgChange {
+      0% { background: linear-gradient(-45deg, #ff512f, #dd2476, #1e3c72, #2a5298); background-size: 400% 400%; background-position: 0% 50%; }
+      20% { background: linear-gradient(45deg, #00c6ff, #0072ff, #1e3c72, #2a5298); backgrou
