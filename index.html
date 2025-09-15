@@ -8,10 +8,37 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: url('https://images.unsplash.com/photo-1503264116251-35a269479413?auto=format&fit=crop&w=1200&q=80') no-repeat center center fixed;
-      background-size: cover;
+      background: #000;
       color: white;
       text-align: center;
+      overflow-x: hidden;
+    }
+
+    /* RGB Gradient Animation */
+    @keyframes rgbMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .rgb-text {
+      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 400%;
+      animation: rgbMove 8s linear infinite;
+      font-weight: bold;
+    }
+    .rgb-border {
+      border: 2px solid;
+      border-image: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red) 1;
+      animation: rgbMove 8s linear infinite;
+    }
+    .rgb-bg {
+      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
+      background-size: 400%;
+      animation: rgbMove 8s linear infinite;
+      color: black;
+      font-weight: bold;
     }
 
     /* HEADER FIXED TOP */
@@ -25,21 +52,26 @@
       left: 0;
       width: 100%;
       z-index: 1000;
+      box-shadow: 0 0 15px #00ffc8;
     }
-
-    /* HAMBURGER BUTTON */
     .menu-btn {
       font-size: 28px;
       cursor: pointer;
       margin-right: 20px;
       color: white;
     }
-
-    /* LOGO */
     .logo {
-      font-size: 24px;
+      font-size: 26px;
       font-weight: bold;
-      color: #ffcc00;
+    }
+    .logo span {
+      font-size: 26px;
+      font-weight: bold;
+      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 400%;
+      animation: rgbMove 8s linear infinite;
     }
 
     /* SIDEBAR MENU */
@@ -54,6 +86,7 @@
       transition: 0.4s;
       padding-top: 60px;
       z-index: 1500;
+      box-shadow: 0 0 25px #00ffc8;
     }
     .sidebar a {
       display: block;
@@ -61,10 +94,16 @@
       padding: 12px 25px;
       text-decoration: none;
       font-size: 20px;
+      transition: 0.3s;
     }
     .sidebar a:hover {
-      background: #575757;
-      color: #ffcc00;
+      background: rgba(255,255,255,0.1);
+      color: #fff;
+      background-image: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 400%;
+      animation: rgbMove 8s linear infinite;
     }
     .close-btn {
       position: absolute;
@@ -77,8 +116,17 @@
 
     /* PAGE CONTENT */
     .content {
-      margin-top: 100px; /* header ke niche jagah */
+      margin-top: 100px;
+      padding: 20px;
     }
+    .content h1 {
+      font-size: 2.5rem;
+    }
+    .content p {
+      font-size: 1.2rem;
+      margin-top: 10px;
+    }
+
     .options {
       display: flex;
       justify-content: center;
@@ -93,21 +141,25 @@
       width: 200px;
       text-align: center;
       transition: 0.3s;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      box-shadow: 0 0 15px rgba(0,0,0,0.7);
     }
     .card img { width: 100px; height: 100px; }
-    .card h2 { color: #ffcc00; }
+    .card h2 {
+      margin-top: 10px;
+      font-size: 1.3rem;
+    }
     .card a {
       display: inline-block;
       margin-top: 10px;
       padding: 8px 12px;
-      background: #ffcc00;
-      color: black;
       border-radius: 6px;
-      font-weight: bold;
       text-decoration: none;
+      transition: 0.3s;
     }
-    .card:hover { transform: scale(1.1); }
+    .card:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 25px #00ffc8;
+    }
 
     /* USER BOX */
     #userBox img {
@@ -115,6 +167,14 @@
       height: 80px;
       border-radius: 50%;
       margin-top: 10px;
+      box-shadow: 0 0 15px #00ffc8;
+    }
+    button.logout-btn {
+      margin-top: 10px;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -123,7 +183,7 @@
   <!-- HEADER -->
   <header>
     <div class="menu-btn" onclick="openMenu()">☰</div>
-    <div class="logo">GBG</div>
+    <div class="logo"><span>GBG</span></div>
   </header>
 
   <!-- SIDEBAR -->
@@ -143,29 +203,29 @@
 
   <!-- PAGE CONTENT -->
   <div class="content">
-    <h1>Welcome to My Website</h1>
-    <p>This is Gulshan aka Gulu Bhai Gamer</p>
+    <h1 class="rgb-text">Welcome to My Website</h1>
+    <p class="rgb-text">This is Gulshan aka Gulu Bhai Gamer</p>
 
     <div class="options">
-      <div class="card">
+      <div class="card rgb-border">
         <img src="https://minecraft.wiki/images/Skin.png" alt="Skins">
-        <h2>Skins</h2>
-        <a href="skins.html">Explore Skins</a>
+        <h2 class="rgb-text">Skins</h2>
+        <a href="skins.html" class="rgb-bg">Explore Skins</a>
       </div>
-      <div class="card">
+      <div class="card rgb-border">
         <img src="https://minecraft.wiki/images/Village_map.png" alt="Maps">
-        <h2>Maps</h2>
-        <a href="maps.html">Explore Maps</a>
+        <h2 class="rgb-text">Maps</h2>
+        <a href="maps.html" class="rgb-bg">Explore Maps</a>
       </div>
-      <div class="card">
+      <div class="card rgb-border">
         <img src="https://minecraft.wiki/images/Crafting_Table_JE2_BE2.png" alt="Mods">
-        <h2>Mods</h2>
-        <a href="mods.html">Explore Mods</a>
+        <h2 class="rgb-text">Mods</h2>
+        <a href="mods.html" class="rgb-bg">Explore Mods</a>
       </div>
-      <div class="card">
+      <div class="card rgb-border">
         <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="VIP">
-        <h2>VIP Level</h2>
-        <a href="vip.html">Check VIP</a>
+        <h2 class="rgb-text">VIP Level</h2>
+        <a href="vip.html" class="rgb-bg">Check VIP</a>
       </div>
     </div>
 
@@ -181,12 +241,11 @@
 
     <!-- USER INFO -->
     <div id="userBox" style="display:none; margin-top:20px;">
-      <h3 id="userName"></h3>
-      <p id="userEmail"></p>
+      <h3 id="userName" class="rgb-text"></h3>
+      <p id="userEmail" class="rgb-text"></p>
       <img id="userPic">
-      <button onclick="logout()" style="margin-top:10px; padding:8px 12px; background:red; color:white; border:none; border-radius:6px;">Logout</button>
+      <button onclick="logout()" class="logout-btn rgb-bg">Logout</button>
     </div>
-
   </div>
 
   <!-- Google Sign-In -->
