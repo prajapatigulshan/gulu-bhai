@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>GBG — Target Rush (Play → Earn Coins)</title>
+<style>
+  :root{
+    --bg:#080808;
+    --card: rgba(0,0,0,0.55);
+    --accent: linear-gradient(90deg,#ff004c,#ff8a00,#00ff99,#00d2ff,#7b5cff);
+  }
+  html,body{height:100%; margin:0; font-family:Inter,Arial,Helvetica,sans-serif; background:var(--bg); color:#fff}
+  .topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 18px;gap:12px;background:linear-gradient(90deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01));box-shadow:0 6px 18px rgba(0,0,0,0.6);position:sticky;top:0;z-index:50}
+  .brand{font-weight:900;background:var(--accent);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:400%;animation:rgbMove 8s linear infinite}
+  @keyframes rgbMove{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+  .wallet{display:flex;gap:10px;align-items:center}
+  .chip{background:rgba(255,255,255,0.04);padding:8px 12px;border-radius:8px;font-weight:700;display:flex;gap:8px;align-items:center}
+  .btn{padding:8px 12px;border-radius:8px;border:none;background:rgba(255,255,255,0.06);color:#fff;cursor:pointer;font-weight:800}
+  .btn.primary{background:var(--accent);color:#000}
+  .layout{display:grid;grid-template-columns:1fr 360px;gap:14px;padding:18px}
+  .card{background:var(--card);padding:12px;border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,0.6)}
+  canvas{width:100%;height:420px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:8px;display:block}
+  .controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .small{font-size:13px;padding:6px 10px}
+  .shop-item{display:flex;gap:8px;align-items:center;padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);margin-bottom:8px}
+  .skin-preview{width:64px;height:64px;border-radius:8px;background:#222;display:flex;align-items:center;justify-content:center;font-size:12px}
+  .muted{color:#bcd;font-size:13px}
+  .status{margin-top:8px;color:#cfc;font-weight:700}
+  .footer{margin-top:10px;color:#9ff;font-size:13px;text-align:center}
+  .leader{margin-top:8px}
+  .gold{background:linear-gradient(90deg,#ffd54f,#ffc107);padding:6px 10px;border-radius:8px;color:#000;font-weight:800}
+  /* responsive */
+  @media (max-width:920px){ .layout{grid-template-columns:1fr} canvas{height:320px} }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div style="display:flex;gap:12px;align-items:center">
+      <div class="brand">GBG • Target Rush</div>
+      <div class="muted">Play to earn coins — buy skins with Coins or Gold</div>
+    </div>
+
+    <div class="wallet">
+      <div class="chip">💰 <span id="coins">0</span></div>
+      <div class="chip gold">👑 <span id="gold">0</span></div>
+      <button id="subscribeNow" class="btn primary small">Subscribe (Mock)</button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div>
+      <div class="card">
+        <h3 style="margin:0">How to play</h3>
+        <p class="muted">Click the moving targets as fast as you can. Each hit gives coins. Avoid rapid auto-clicking — there is a small cooldown to prevent abuse. Daily bonus applied once per day when you open this page if subscribed.</p>
+
+        <canvas id="gameCanvas" width="800" height="420"></canvas>
+
+        <div class="controls">
+          <button id="startBtn" class="btn small">Start Game</button>
+          <button id="stopBtn" class="btn small">Stop</button>
+          <button id="claimDaily" class="btn small">Claim Daily</button>
+          <div style="margin-left:auto" class="muted">Time: <span id="timer">0</span>s • Score: <span id="score">0</span></div>
+        </div>
+
+        <div class="status" id="gameStatus">Idle</div>
+        <div class="leader card" id="leaderboard">
+          <h4 style="margin:6px 0">Local Leaderboard</h4>
+          <ol id="leadersList" style="padding-left:18px;margin:6px 0"></ol>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <h3 style="margin:0">Shop — Buy Skins</h3>
+        <p class="muted">Purchase with Coins or Gold. Owned skins stored locally.</p>
+        <div id="shopList" style="margin-top:8px"></div>
+        <div class="status" id="shopStatus"></div>
+      </div>
+
+    </div>
+
+    <div>
+      <div class="card">
+        <h3 style="margin:0">Player</h3>
+        <div style="display:flex;gap:12px;align-items:center;margin-top:8px">
+          <div id="selectedSkinPreview" class="skin-preview">NONE</div>
+          <div>
+            <div id="playerName" style="font-weight:800">Guest</div>
+            <div class="muted" id="playerEmail">Not logged</div>
+            <div style="margin-top:8px" class="controls">
+              <button id="loginMock" class="btn small">Mock Login</button>
+              <button id="logoutMock" class="btn small">Logout</button>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:10px" class="muted">Owned Items:</div>
+        <div id="ownedList" style="margin-top:8px"></div>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <h3 style="margin:0">Quick Info</h3>
+        <div class="muted" style="margin-top:8px">Coins per hit: <b id="perHit">5</b></div>
+        <div class="muted">Session duration: <b>60s</b></div>
+        <div style="margin-top:10px" class="muted">Notes: This is a demo. For real payments integrate Razorpay/Stripe server-side.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">GBG • Play → Earn • Keep it fair — client-side demo only</div>
+
+<script>
+/* ---------- STORAGE KEYS ---------- */
+const KEY_COINS = 'gbg_coins';
+const KEY_GOLD = 'gbg_gold';
+const KEY_OWNED = 'gbg_ownedSkins';
+const KEY_USER = 'gbg_user';
+const KEY_LEAD = 'gbg_leaderboard';
+
+/* ---------- INITIALIZE ---------- */
+function getNum(key, def=0){ return Number(localStorage.getItem(key) || def); }
+function setNum(key,val){ localStorage.setItem(key, String(Math.floor(val))); }
+function getObj(key, def){ try{ return JSON.parse(localStorage.getItem(key)) || def; }catch(e){ return def; } }
+function setObj(key,obj){ localStorage.setItem(key, JSON.stringify(obj)); }
+
+if(localStorage.getItem(KEY_COINS) === null) setNum(KEY_COINS, 0);
+if(localStorage.getItem(KEY_GOLD) === null) setNum(KEY_GOLD, 0);
+if(localStorage.getItem(KEY_OWNED) === null) setObj(KEY_OWNED, []);
+if(localStorage.getItem(KEY_LEAD) === null) setObj(KEY_LEAD, []);
+
+/* ---------- UI refs ---------- */
+const coinsEl = document.getElementById('coins');
+const goldEl = document.getElementById('gold');
+const scoreEl = document.getElementById('score');
+const timerEl = document.getElementById('timer');
+const gameStatus = document.getElementById('gameStatus');
+const perHitEl = document.getElementById('perHit');
+const shopListEl = document.getElementById('shopList');
+const ownedListEl = document.getElementById('ownedList');
+const selectedSkinPreview = document.getElementById('selectedSkinPreview');
+const leadersList = document.getElementById('leadersList');
+const pvCoins = () => { coinsEl.textContent = getNum(KEY_COINS); goldEl.textContent = getNum(KEY_GOLD); };
+
+/* ---------- GAME SETTINGS ---------- */
+let canvas = document.getElementById('gameCanvas');
+let ctx = canvas.getContext('2d');
+let running=false, score=0, timeLeft=60, timerInterval=null;
+let targets = [];
+let perHit = 5;
+perHitEl.textContent = perHit;
+
+/* scale canvas for devicePixelRatio */
+function resizeCanvas(){
+  const ratio = window.devicePixelRatio || 1;
+  canvas.width = Math.floor(canvas.clientWidth * ratio);
+  canvas.height = Math.floor(canvas.clientHeight * ratio);
+  ctx.setTransform(ratio,0,0,ratio,0,0);
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+/* spawn target */
+function spawnTarget(){
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  const r = 18 + Math.random()*30;
+  const t = {
+    x: Math.random()*(w-2*r)+r,
+    y: Math.random()*(h-2*r)+r,
+    r: r,
+    vx: (Math.random()*2-1)*1.2,
+    vy: (Math.random()*2-1)*1.2,
+    color: `hsl(${Math.random()*360},80%,60%)`,
+    life: 10000
+  };
+  targets.push(t);
+}
+
+/* game loop */
+function update(dt){
+  // move
+  for(let i=targets.length-1;i>=0;i--){
+    const T=targets[i];
+    T.x += T.vx * dt/16;
+    T.y += T.vy * dt/16;
+    // bounce
+    if(T.x < T.r || T.x > canvas.clientWidth - T.r) T.vx *= -1;
+    if(T.y < T.r || T.y > canvas.clientHeight - T.r) T.vy *= -1;
+  }
+}
+
+function draw(){
+  ctx.clearRect(0,0,canvas.clientWidth, canvas.clientHeight);
+  // draw targets
+  for(const T of targets){
+    ctx.beginPath();
+    const grd = ctx.createRadialGradient(T.x - T.r*0.3, T.y - T.r*0.3, T.r*0.1, T.x, T.y, T.r);
+    grd.addColorStop(0, '#fff');
+    grd.addColorStop(0.2, T.color);
+    grd.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = grd;
+    ctx.arc(T.x, T.y, T.r, 0, Math.PI*2);
+    ctx.fill();
+    ctx.closePath();
+  }
+}
+
+/* click handling with small anti-cheat: click cooldown per client */
+let lastClick = 0;
+canvas.addEventListener('click', (e)=>{
+  if(!running) return;
+  const now = Date.now();
+  // minimal cooldown 80ms between meaningful clicks
+  if(now - lastClick < 80) return;
+  lastClick = now;
+  const rect = canvas.getBoundingClientRect();
+  const x = (e.clientX - rect.left);
+  const y = (e.clientY - rect.top);
+  // find hit target (topmost)
+  for(let i=targets.length-1;i>=0;i--){
+    const T = targets[i];
+    const dx = x - T.x, dy = y - T.y;
+    if(dx*dx + dy*dy <= T.r*T.r){
+      // hit
+      targets.splice(i,1);
+      score += 1;
+      scoreEl.textContent = score;
+      addCoins(perHit);
+      // explosion particles (simple)
+      for(let p=0;p<6;p++){
+        // spawn small fading circle (we'll ignore complex implementation for perf)
+      }
+      updateLeaderboard(score);
+      if(getSetting('clickChant')==='on') speak('जय श्री राम');
+      break;
+    }
+  }
+});
+
+/* small speak */
+const synth = window.speechSynthesis;
+function speak(text){
+  if(!synth) return;
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'hi-IN';
+  u.rate = 1;
+  try{ synth.cancel(); synth.speak(u); }catch(e){}
+}
+
+/* game start/stop/timer */
+document.getElementById('startBtn').addEventListener('click', ()=>{
+  if(running) return;
+  running = true; score = 0; scoreEl.textContent = 0;
+  timeLeft = 60; timerEl.textContent = timeLeft;
+  gameStatus.textContent = 'Playing';
+  // spawn some initial
+  targets = [];
+  for(let i=0;i<6;i++) spawnTarget();
+  // spawn periodic
+  const spawnInterval = setInterval(()=>{ if(!running) clearInterval(spawnInterval); else spawnTarget(); }, 1200);
+  let last=Date.now();
+  function frame(){
+    if(!running) return;
+    const now = Date.now();
+    update(now - last);
+    draw();
+    last = now;
+    requestAnimationFrame(frame);
+  }
+  frame();
+  timerInterval = setInterval(()=>{
+    timeLeft--; timerEl.textContent = timeLeft;
+    if(timeLeft <= 0){ stopGame(); }
+  },1000);
+});
+
+document.getElementById('stopBtn').addEventListener('click', stopGame);
+function stopGame(){
+  if(!running) return;
+  running = false;
+  clearInterval(timerInterval);
+  gameStatus.textContent = 'Stopped. Score: ' + score;
+  // save score to leaderboard
+  pushLeaderboard({ name: (getObj(KEY_USER).name || 'Guest'), score: score, date: Date.now() });
+}
+
+/* daily claim (subscription gives gold daily; demo adds coins too) */
+document.getElementById('claimDaily').addEventListener('click', ()=>{
+  // ensure daily once per day
+  const last = localStorage.getItem('gbg_daily_ts');
+  const today = new Date().toISOString().slice(0,10);
+  if(last === today){
+    alert('Daily already claimed today.');
+    return;
+  }
+  localStorage.setItem('gbg_daily_ts', today);
+  // if subscribed (mock: gold>0) give gold bonus
+  const gold = getNum(KEY_GOLD);
+  if(gold > 0){
+    // compute daily gold as 10 (demo)
+    const addGold = 10;
+    setNum(KEY_GOLD, gold + addGold);
+    alert('Daily subscription bonus: +' + addGold + ' gold');
+  } else {
+    // non-subs get coin bonus
+    addCoins(30);
+    alert('Daily bonus: +30 coins');
+  }
+  pvCoins();
+});
+
+/* add coins helper */
+function addCoins(n){
+  const cur = getNum(KEY_COINS);
+  setNum(KEY_COINS, cur + n);
+  pvCoins();
+}
+
+/* ---------- SHOP ---------- */
+const SHOP_ITEMS = [
+  { id:'skin_red', name:'Crimson GBG', coins:300, gold:0, preview:'RED' },
+  { id:'skin_blue', name:'Azure GBG', coins:600, gold:0, preview:'BLUE' },
+  { id:'skin_gold', name:'Golden GBG', coins:0, gold:50, preview:'GOLD' },
+  { id:'skin_neon', name:'Neon GBG', coins:900, gold:20, preview:'NEON' },
+  { id:'badge_premium', name:'GBG Premium Badge', coins:0, gold:120, preview:'BADGE' }
+];
+
+function renderShop(){
+  shopListEl.innerHTML = '';
+  const owned = getObj(KEY_OWNED, []);
+  SHOP_ITEMS.forEach(it=>{
+    const div = document.createElement('div'); div.className='shop-item';
+    const pv = document.createElement('div'); pv.className='skin-preview'; pv.textContent = it.preview;
+    const info = document.createElement('div');
+    info.innerHTML = `<div style="font-weight:800">${it.name}</div>
+      <div class="muted">Price: ${it.coins>0?it.coins+' coins':''}${it.coins>0 && it.gold>0? '  /  ':''}${it.gold>0?it.gold+' gold':''}</div>`;
+    const actions = document.createElement('div'); actions.style.marginLeft='auto';
+    if(owned.includes(it.id)){
+      const btn = document.createElement('button'); btn.className='btn small'; btn.textContent='Owned';
+      btn.addEventListener('click', ()=>{ selectSkin(it.id); });
+      actions.appendChild(btn);
+    } else {
+      const btnC = document.createElement('button'); btnC.className='btn small'; btnC.textContent='Buy (Coins)';
+      btnC.addEventListener('click', ()=> buyWithCoins(it));
+      const btnG = document.createElement('button'); btnG.className='btn small'; btnG.textContent='Buy (Gold)';
+      btnG.addEventListener('click', ()=> buyWithGold(it));
+      actions.appendChild(btnC); actions.appendChild(btnG);
+    }
+    div.appendChild(pv); div.appendChild(info); div.appendChild(actions);
+    shopListEl.appendChild(div);
+  });
+  renderOwned();
+}
+
+function buyWithCoins(item){
+  const cur = getNum(KEY_COINS);
+  if(item.coins <= 0){ alert('This item cannot be bought with coins.'); return; }
+  if(cur < item.coins){ alert('Not enough coins.'); return; }
+  setNum(KEY_COINS, cur - item.coins);
+  const owned = getObj(KEY_OWNED, []);
+  owned.push(item.id); setObj(KEY_OWNED, owned);
+  shopStatus('Purchased ' + item.name);
+  pvCoins(); renderShop();
+}
+
+function buyWithGold(item){
+  const cur = getNum(KEY_GOLD);
+  if(item.gold <= 0){ alert('This item not priced in gold.'); return; }
+  if(cur < item.gold){ alert('Not enough gold.'); return; }
+  setNum(KEY_GOLD, cur - item.gold);
+  const owned = getObj(KEY_OWNED, []);
+  owned.push(item.id); setObj(KEY_OWNED, owned);
+  shopStatus('Purchased ' + item.name);
+  pvCoins(); renderShop();
+}
+
+function shopStatus(txt){ document.getElementById('shopStatus').textContent = txt; setTimeout(()=>document.getElementById('shopStatus').textContent='',2500); }
+
+function renderOwned(){
+  const owned = getObj(KEY_OWNED, []);
+  ownedListEl.innerHTML = '';
+  if(owned.length===0) ownedListEl.textContent = 'None';
+  else owned.forEach(id=>{
+    const it = SHOP_ITEMS.find(s=>s.id===id) || {name:id};
+    const div = document.createElement('div'); div.style.marginBottom='6px';
+    const sel = document.createElement('button'); sel.className='btn small'; sel.textContent='Select';
+    sel.addEventListener('click', ()=> selectSkin(id));
+    div.innerHTML = `<span style="margin-right:8px">${it.name}</span>`;
+    div.appendChild(sel);
+    ownedListEl.appendChild(div);
+  });
+  updateSelectedPreview();
+}
+
+/* select skin */
+function selectSkin(id){
+  setObj('gbg_selectedSkin', id);
+  updateSelectedPreview();
+  shopStatus('Selected '+ id);
+}
+function updateSelectedPreview(){
+  const sel = localStorage.getItem('gbg_selectedSkin') || 'NONE';
+  const it = SHOP_ITEMS.find(s=>s.id===sel);
+  selectedSkinPreview.textContent = it? it.preview : 'NONE';
+}
+
+/* ---------- Leaderboard local ---------- */
+function pushLeaderboard(record){
+  const list = getObj(KEY_LEAD, []);
+  list.push({name: record.name, score: record.score, ts: record.date || Date.now()});
+  list.sort((a,b)=>b.score - a.score);
+  setObj(KEY_LEAD, list.slice(0,10));
+  renderLeaders();
+}
+function renderLeaders(){
+  const list = getObj(KEY_LEAD, []);
+  leadersList.innerHTML = '';
+  list.forEach(it=>{
+    const li = document.createElement('li'); li.textContent = `${it.name}: ${it.score}`;
+    leadersList.appendChild(li);
+  });
+}
+
+/* ---------- Mock subscription to give gold ---------- */
+document.getElementById('subscribeNow').addEventListener('click', ()=>{
+  // open small modal-like confirm: pick plan (demo)
+  const plan = prompt('Choose plan: 1=Bronze(₹200→20gold), 2=Silver(₹500→60gold), 3=Gold(₹1000→150gold)','1');
+  if(!plan) return;
+  let add=0;
+  if(plan==='1') add=20;
+  else if(plan==='2') add=60;
+  else if(plan==='3') add=150;
+  else { alert('Invalid'); return; }
+  // In production, here call server & gateway. For demo, we just add gold.
+  const g = getNum(KEY_GOLD);
+  setNum(KEY_GOLD, g + add);
+  alert('Subscription mock successful. +' + add + ' gold credited');
+  pvCoins();
+});
+
+/* ---------- Mock login (simple) ---------- */
+document.getElementById('loginMock').addEventListener('click', ()=>{
+  const name = prompt('Enter your name','Gulshan');
+  if(!name) return;
+  const user = { name: name, email: name.toLowerCase().replace(/\s+/g,'')+'@example.com' };
+  setObj(KEY_USER, user);
+  document.getElementById('playerName').textContent = user.name;
+  document.getElementById('playerEmail').textContent = user.email;
+  shopStatus('Logged in as ' + user.name);
+});
+document.getElementById('logoutMock').addEventListener('click', ()=>{
+  localStorage.removeItem(KEY_USER);
+  document.getElementById('playerName').textContent = 'Guest';
+  document.getElementById('playerEmail').textContent = 'Not logged';
+  shopStatus('Logged out');
+});
+
+/* ---------- HELPERS ---------- */
+function getSetting(k){ return localStorage.getItem('gbg_'+k); } // used if integrated with main settings
+function setSetting(k,v){ localStorage.setItem('gbg_'+k, v); }
+
+/* ---------- INIT ---------- */
+pvCoins();
+renderShop();
+renderLeaders();
+updateSelectedPreview();
+
+/* ---------- applySettings hook (optional) ----------
+If you use the big settings system, it can call this to apply site-wide effects.
+*/
+function applySettingsFromStorageDemo(){
+  // sample: if click chant enabled, set behavior (we already check onInteraction)
+  // if settings stored, you can read them and adapt UI (colors, speed)
+}
+window.applySettingsFromStorage = applySettingsFromStorageDemo;
+
+</script>
+</body>
+</html>
