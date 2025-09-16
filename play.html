@@ -1,209 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GBG Parkour - Minecraft Style</title>
-  <style>
-    body {
-      margin: 0;
-      overflow: hidden;
-      background: #87CEEB;
-      font-family: Arial, sans-serif;
-    }
-    #score {
-      position: absolute;
-      top: 10px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 24px;
-      font-weight: bold;
-      color: #fff;
-      text-shadow: 2px 2px 5px #000;
-      z-index: 100;
-    }
-    canvas {
-      display: block;
-      margin: 0 auto;
-      background-color: #87CEEB;
-      border: 4px solid #fff;
-      box-shadow: 0 0 20px #00ffc8;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GBG Parkour</title>
+<style>
+  body {
+    margin: 0;
+    overflow: hidden;
+    background: linear-gradient(270deg, red, orange, yellow, green, cyan, blue, violet, red);
+    background-size: 1500% 1500%;
+    animation: bgRGB 30s ease infinite;
+  }
+  @keyframes bgRGB {
+    0% {background-position:0% 50%;}
+    50% {background-position:100% 50%;}
+    100% {background-position:0% 50%;}
+  }
+  canvas {
+    display: block;
+    margin: 0 auto;
+    background: #87CEEB;
+  }
+</style>
 </head>
 <body>
-
-<div id="score">Score: 0</div>
 <canvas id="gameCanvas" width="800" height="500"></canvas>
-
 <script>
-// Canvas setup
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
-// Images
-const playerImg = new Image();
-playerImg.src = 'https://i.imgur.com/8Km9tLL.png'; // Example Minecraft player
-const blockImg = new Image();
-blockImg.src = 'https://i.imgur.com/hX0bZyP.png'; // Example block
-const coinImg = new Image();
-coinImg.src = 'https://i.imgur.com/kVx9JkX.png'; // Coin image
+const GRAVITY = 0.5;
+const JUMP = -10;
 
-// Game variables
-const gravity = 0.8;
-let score = 0;
-const keys = {};
+let keys = {};
 
-// Player
-const player = {
-  x: 50,
-  y: 400,
-  width: 40,
-  height: 60,
-  velocityY: 0,
-  jumpPower: -15,
-  grounded: false
-};
-
-// Platform class
-class Platform {
-  constructor(x, y, width, height, img) {
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-    this.img = img;
-  }
-  draw() {
-    if (this.img.complete) {
-      ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
-    } else {
-      ctx.fillStyle = '#654321';
-      ctx.fillRect(this.x, this.y, this.width, this.height);
-    }
-  }
-}
-
-// Coin class
-class Coin {
-  constructor(x, y, img) {
-    this.x = x;
-    this.y = y;
-    this.width = 24;
-    this.height = 24;
-    this.collected = false;
-    this.img = img;
-  }
-  draw() {
-    if (!this.collected) {
-      if (this.img.complete) {
-        ctx.drawImage(this.img, this.x - this.width/2, this.y - this.height/2, this.width, this.height);
-      } else {
-        ctx.fillStyle = 'yellow';
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, 10, 0, Math.PI * 2);
-        ctx.fill();
-      }
-    }
-  }
-}
-
-// Platforms for parkour map
-const platforms = [
-  new Platform(0, 460, 800, 40, blockImg),
-  new Platform(150, 380, 100, 20, blockImg),
-  new Platform(300, 320, 100, 20, blockImg),
-  new Platform(450, 260, 100, 20, blockImg),
-  new Platform(600, 200, 100, 20, blockImg),
-  new Platform(750, 140, 50, 20, blockImg)
+// Map blocks (x, y, width, height, image)
+const blocks = [
+  {x: 0, y: 450, w: 200, h: 50, img: 'https://i.imgur.com/O3e7F5h.png'},
+  {x: 250, y: 400, w: 150, h: 50, img: 'https://i.imgur.com/O3e7F5h.png'},
+  {x: 450, y: 350, w: 150, h: 50, img: 'https://i.imgur.com/O3e7F5h.png'},
+  {x: 650, y: 300, w: 150, h: 50, img: 'https://i.imgur.com/O3e7F5h.png'},
 ];
 
-// Coins
+// Coins (x, y, collected, image)
 const coins = [
-  new Coin(200, 350, coinImg),
-  new Coin(350, 290, coinImg),
-  new Coin(500, 230, coinImg),
-  new Coin(650, 170, coinImg),
-  new Coin(780, 110, coinImg)
+  {x: 280, y: 370, collected:false, img:'https://i.imgur.com/3bX2rjv.png'},
+  {x: 480, y: 320, collected:false, img:'https://i.imgur.com/3bX2rjv.png'},
+  {x: 680, y: 270, collected:false, img:'https://i.imgur.com/3bX2rjv.png'},
 ];
 
-// Sounds
-const jumpSound = new Audio('https://www.soundjay.com/button/beep-07.wav');
-const coinSound = new Audio('https://www.soundjay.com/button/button-3.wav');
+// Player sprite
+const playerImg = new Image();
+playerImg.src = 'https://i.imgur.com/1X3eZ4s.png'; // small Minecraft-style character
+let player = {x:50, y:400, w:40, h:50, dx:0, dy:0, onGround:false};
 
-// Controls
-document.addEventListener('keydown', e => keys[e.code] = true);
-document.addEventListener('keyup', e => keys[e.code] = false);
+document.addEventListener('keydown', e=> keys[e.code] = true);
+document.addEventListener('keyup', e=> keys[e.code] = false);
 
-// Game loop
 function update() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-  // Player movement
-  if (keys['ArrowRight'] || keys['KeyD']) player.x += 5;
-  if (keys['ArrowLeft'] || keys['KeyA']) player.x -= 5;
+  // Horizontal movement
+  if(keys['ArrowRight']) player.dx = 5;
+  else if(keys['ArrowLeft']) player.dx = -5;
+  else player.dx = 0;
 
   // Jump
-  if ((keys['ArrowUp'] || keys['Space'] || keys['KeyW']) && player.grounded) {
-    player.velocityY = player.jumpPower;
-    player.grounded = false;
-    jumpSound.play();
+  if(keys['Space'] && player.onGround) {
+    player.dy = JUMP;
+    player.onGround = false;
   }
 
   // Gravity
-  player.velocityY += gravity;
-  player.y += player.velocityY;
+  player.dy += GRAVITY;
+  player.x += player.dx;
+  player.y += player.dy;
 
-  // Ground collision
-  player.grounded = false;
-  for (let p of platforms) {
-    if (player.x < p.x + p.width &&
-        player.x + player.width > p.x &&
-        player.y + player.height < p.y + 15 &&
-        player.y + player.height + player.velocityY > p.y) {
-      player.velocityY = 0;
-      player.y = p.y - player.height;
-      player.grounded = true;
+  // Collision
+  player.onGround = false;
+  blocks.forEach(block => {
+    if(player.x < block.x + block.w &&
+       player.x + player.w > block.x &&
+       player.y < block.y + block.h &&
+       player.y + player.h > block.y) {
+
+      // Collision from top
+      if(player.dy > 0 && player.y + player.h - player.dy <= block.y) {
+        player.y = block.y - player.h;
+        player.dy = 0;
+        player.onGround = true;
+      }
+      // Collision from bottom
+      else if(player.dy < 0 && player.y >= block.y + block.h - player.dy) {
+        player.y = block.y + block.h;
+        player.dy = 0;
+      }
+      // Side collisions
+      else if(player.dx > 0) player.x = block.x - player.w;
+      else if(player.dx < 0) player.x = block.x + block.w;
     }
-  }
+  });
 
-  // Draw platforms
-  for (let p of platforms) p.draw();
-
-  // Draw coins
-  for (let c of coins) {
-    if (!c.collected &&
-        player.x + player.width > c.x - c.width/2 &&
-        player.x < c.x + c.width/2 &&
-        player.y + player.height > c.y - c.height/2 &&
-        player.y < c.y + c.height/2) {
-      c.collected = true;
-      score += 10;
-      coinSound.play();
-      document.getElementById('score').innerText = 'Score: ' + score;
-    }
-    c.draw();
-  }
-
-  // Draw player
-  if (playerImg.complete) {
-    ctx.drawImage(playerImg, player.x, player.y, player.width, player.height);
-  } else {
-    ctx.fillStyle = 'red';
-    ctx.fillRect(player.x, player.y, player.width, player.height);
-  }
-
-  // Reset if fall
-  if (player.y > canvas.height) {
-    player.x = 50;
-    player.y = 400;
-    player.velocityY = 0;
-  }
-
-  requestAnimationFrame(update);
+  // Collect coins
+  coins.forEach(coin => {
+    if(!coin.collected &&
+       player.x < coin.x + 30 &&
+       player.x + player.w > coin.x &&
+       player.y < coin.y + 30 &&
+       player.y + player.h > coin.y) {
+         coin.collected = true;
+         // Coin sound
+         let audio = new Audio('https://freesound.org/data/previews/341/341695_3248244-lq.mp3');
+         audio.play();
+       }
+  });
 }
 
-update();
+function draw() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // Draw blocks
+  blocks.forEach(block => {
+    let img = new Image();
+    img.src = block.img;
+    ctx.drawImage(img, block.x, block.y, block.w, block.h);
+  });
+
+  // Draw coins
+  coins.forEach(coin => {
+    if(!coin.collected) {
+      let img = new Image();
+      img.src = coin.img;
+      ctx.drawImage(img, coin.x, coin.y, 30, 30);
+    }
+  });
+
+  // Draw player
+  ctx.drawImage(playerImg, player.x, player.y, player.w, player.h);
+
+  // Score
+  ctx.fillStyle = 'yellow';
+  ctx.font = '20px Arial';
+  let score = coins.filter(c => c.collected).length;
+  ctx.fillText(`Coins: ${score}`, 10, 30);
+}
+
+function gameLoop() {
+  update();
+  draw();
+  requestAnimationFrame(gameLoop);
+}
+gameLoop();
 </script>
 </body>
 </html>
