@@ -3,192 +3,216 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GBG Games Hub - Play</title>
+<title>GBG Parkour - Minecraft Style</title>
 <style>
+/* ===== BODY & BACKGROUND ===== */
 body {
-  margin:0;
-  font-family:Arial,sans-serif;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
   background: linear-gradient(270deg, red, orange, yellow, green, cyan, blue, violet, red);
-  background-size:1500% 1500%;
-  animation:bgRGB 30s ease infinite;
-  color:white;
-  overflow-x:hidden;
-  text-align:center;
+  background-size: 1500% 1500%;
+  animation: bgRGB 30s ease infinite;
+  color: white;
+  text-align: center;
 }
-@keyframes bgRGB{
-  0%{background-position:0% 50%;}
-  50%{background-position:100% 50%;}
-  100%{background-position:0% 50%;}
+@keyframes bgRGB {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
-@keyframes rgbMove{
-  0%{background-position:0% 50%;}
-  50%{background-position:100% 50%;}
-  100%{background-position:0% 50%;}
+@keyframes rgbMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
-.rgb-text{
+.rgb-text {
   background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   animation: rgbMove 8s linear infinite;
-  font-weight:bold;
+  font-weight: bold;
 }
-.header{
-  position:fixed; top:0;width:100%;background:rgba(0,0,0,0.85);padding:15px;box-shadow:0 0 15px #00ffc8;z-index:1000;
+.header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: rgba(0,0,0,0.85);
+  padding: 15px;
+  z-index: 1000;
+  box-shadow: 0 0 15px #00ffc8;
 }
-.logo span{
-  font-size:28px;font-weight:bold;background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  animation:rgbMove 8s linear infinite;
+.logo span {
+  font-size: 28px;
+  font-weight: bold;
+  background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: rgbMove 8s linear infinite;
 }
-.content{margin-top:100px;padding:20px;}
-.games-grid{display:flex;flex-wrap:wrap;justify-content:center;gap:20px;}
-.card{background:rgba(0,0,0,0.6);padding:15px;border-radius:12px;border:2px solid; border-image: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red) 1;transition:0.3s;}
-.card:hover{transform:scale(1.05);box-shadow:0 0 25px #00ffc8;}
-.card img{width:100px;height:100px;margin-bottom:10px;}
-.card h2{margin:10px 0;}
-.card a{display:inline-block;margin-top:5px;padding:6px 12px;border-radius:6px;text-decoration:none;color:black;font-weight:bold;background:linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);animation:rgbMove 6s linear infinite;}
-
-#coinDisplay{font-size:20px;margin-top:10px;}
-canvas{border:2px solid #00ffc8;margin-top:20px;background:#111;display:block;margin-left:auto;margin-right:auto;}
-button{margin-top:10px;padding:6px 12px;border-radius:6px;background:#00ffc8;color:black;font-weight:bold;border:none;cursor:pointer;}
+#coinDisplay {
+  font-size: 20px;
+  margin-top: 10px;
+}
+canvas {
+  border: 3px solid #00ffc8;
+  background: #111;
+  display: block;
+  margin: 20px auto;
+}
+button {
+  padding: 8px 15px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
+  color: black;
+  animation: rgbMove 6s linear infinite;
+}
 </style>
 </head>
 <body>
-
 <div class="header">
-  <div class="logo"><span>GBG Games Hub</span></div>
+  <div class="logo"><span>GBG Parkour</span></div>
   <div id="coinDisplay">💰 Coins: 0</div>
 </div>
-
-<div class="content">
-  <h1 class="rgb-text">🎮 Choose Your Game</h1>
-  <div class="games-grid" id="gamesGrid"></div>
-
-  <div class="game-container" id="gameContainer" style="display:none;">
-    <canvas id="gameCanvas" width="900" height="500"></canvas>
-    <div><button onclick="backToMenu()">⬅ Back to Games</button></div>
-  </div>
-</div>
-
+<canvas id="gameCanvas" width="1000" height="600"></canvas>
+<div style="text-align:center;"><button onclick="restartGame()">Restart Game</button></div>
 <script>
+// ===== COINS =====
 let coins = localStorage.getItem('coins') ? parseInt(localStorage.getItem('coins')) : 0;
-document.getElementById('coinDisplay').innerText='💰 Coins: '+coins;
+document.getElementById('coinDisplay').innerText = '💰 Coins: ' + coins;
 
-const games = [
-  {name:'Parkour Challenge', key:'parkour'},
-  {name:'PvP Arena', key:'pvp'},
-  {name:'Skyblock', key:'skyblock'},
-  {name:'Boat Race', key:'boat'}
-];
+// ===== CANVAS =====
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
 
-const gamesGrid = document.getElementById('gamesGrid');
-games.forEach(game=>{
-  let card=document.createElement('div');
-  card.className='card';
-  card.innerHTML=`<img src='https://minecraft.wiki/images/Skin.png' alt='${game.name}'><h2 class='rgb-text'>${game.name}</h2><a href='#' onclick="startGame('${game.key}')">Play Now</a>`;
-  gamesGrid.appendChild(card);
+// ===== PLAYER =====
+const player = {
+  x: 50,
+  y: 500,
+  width: 40,
+  height: 50,
+  vy: 0,
+  vx: 0,
+  jumping: false,
+  onGround: false,
+  sprite: new Image()
+};
+player.sprite.src = 'https://i.imgur.com/Lj8pH8I.png'; // Minecraft-style player sprite
+
+// ===== PLATFORMS =====
+let platforms = [];
+for(let i=0;i<15;i++){
+  let width = 100 + Math.random()*150;
+  let x = i===0 ? 0 : platforms[i-1].x + platforms[i-1].width + 50;
+  let y = 500 - Math.random()*250;
+  platforms.push({x, y, width, height:20});
+}
+
+// ===== COINS =====
+let gameCoins = [];
+platforms.forEach(p=>{
+  if(Math.random()<0.5){
+    gameCoins.push({x:p.x+p.width/2-10, y:p.y-30, collected:false});
+  }
 });
 
-const gameContainer=document.getElementById('gameContainer');
-const canvas=document.getElementById('gameCanvas');
-const ctx=canvas.getContext('2d');
+// ===== CONTROLS =====
+const keys = {};
+document.addEventListener('keydown', e=>{ keys[e.key] = true; });
+document.addEventListener('keyup', e=>{ keys[e.key] = false; });
 
-function backToMenu(){
-  gameContainer.style.display='none';
-  gamesGrid.style.display='flex';
-}
+// ===== SOUNDS =====
+const coinSound = new Audio('https://freesound.org/data/previews/341/341695_6249176-lq.mp3');
+const jumpSound = new Audio('https://freesound.org/data/previews/331/331912_3248244-lq.mp3');
+const fallSound = new Audio('https://freesound.org/data/previews/178/178046_3248244-lq.mp3');
 
-function startGame(gameKey){
-  gamesGrid.style.display='none';
-  gameContainer.style.display='block';
-  initGame(gameKey);
-}
-
-// --- Game Logic ---
-function initGame(gameKey){
+// ===== GAME LOOP =====
+function gameLoop(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  if(gameKey==='parkour'){parkourGame();}
-  else if(gameKey==='pvp'){pvpGame();}
-  else if(gameKey==='skyblock'){skyblockGame();}
-  else if(gameKey==='boat'){boatRace();}
-  else{ctx.fillStyle='white';ctx.font='30px Arial';ctx.fillText(gameKey+' coming soon!',200,250);}
-}
+  
+  // ===== PLAYER PHYSICS =====
+  player.vy += 0.8; // gravity
+  player.y += player.vy;
+  player.x += player.vx;
 
-// ----- Parkour Game -----
-function parkourGame(){
-  let player={x:50,y:400,width:30,height:50,vy:0,jumping:false,collectedCoin:false};
-  let platforms=[{x:0,y:450,width:200},{x:220,y:400,width:150},{x:400,y:350,width:100},{x:550,y:300,width:200},{x:800,y:400,width:100}];
-  let keys={};
+  // left/right
+  if(keys['ArrowRight']) player.vx = 5;
+  else if(keys['ArrowLeft']) player.vx = -5;
+  else player.vx = 0;
 
-  function update(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-    // Player movement
-    if(keys['ArrowRight']) player.x+=5;
-    if(keys['ArrowLeft']) player.x-=5;
-    player.vy+=0.8;
-    player.y+=player.vy;
-    player.jumping=false;
-
-    // Collision
-    platforms.forEach(p=>{
-      if(player.x+player.width>p.x && player.x<p.x+p.width && player.y+player.height>p.y && player.y+player.height<p.y+10){
-        player.y=p.y-player.height;
-        player.vy=0;
-        player.jumping=false;
-      }
-    });
-
-    // Draw platforms
-    ctx.fillStyle='gray';
-    platforms.forEach(p=>ctx.fillRect(p.x,p.y,p.width,10));
-
-    // Draw coins
-    ctx.fillStyle='gold';
-    if(!player.collectedCoin && player.x>800 && player.y<390){
-      coins+=10;
-      localStorage.setItem('coins',coins);
-      document.getElementById('coinDisplay').innerText='💰 Coins: '+coins;
-      player.collectedCoin=true;
-    }
-    ctx.beginPath();
-    ctx.arc(830,370,8,0,Math.PI*2);
-    ctx.fill();
-
-    // Draw player (head+body)
-    ctx.fillStyle='cyan';
-    ctx.fillRect(player.x,player.y,player.width,player.height); // body
-    ctx.fillStyle='blue';
-    ctx.fillRect(player.x,player.y-10,player.width,10); // head
-
-    requestAnimationFrame(update);
+  // jump
+  if(keys[' '] && player.onGround){
+    player.vy = -15;
+    player.jumping = true;
+    player.onGround = false;
+    jumpSound.play();
   }
-  update();
 
-  document.addEventListener('keydown',e=>{keys[e.key]=true;if(e.key===' ' && !player.jumping){player.vy=-15;player.jumping=true;}});
-  document.addEventListener('keyup',e=>{keys[e.key]=false;});
+  // ===== COLLISIONS =====
+  player.onGround = false;
+  platforms.forEach(p=>{
+    if(player.x + player.width > p.x && player.x < p.x + p.width && player.y + player.height > p.y && player.y + player.height < p.y + p.height + 10){
+      player.y = p.y - player.height;
+      player.vy = 0;
+      player.onGround = true;
+      player.jumping = false;
+    }
+  });
+
+  // ===== FALL DETECT =====n  if(player.y>canvas.height){
+    fallSound.play();
+    restartGame();
+  }
+
+  // ===== DRAW PLATFORMS =====
+  ctx.fillStyle='brown';
+  platforms.forEach(p=>ctx.fillRect(p.x,p.y,p.width,p.height));
+
+  // ===== DRAW COINS =====
+  gameCoins.forEach(c=>{
+    if(!c.collected){
+      ctx.fillStyle='yellow';
+      ctx.beginPath();
+      ctx.arc(c.x+10,c.y+10,10,0,Math.PI*2);
+      ctx.fill();
+      // check collect
+      if(player.x+player.width>c.x && player.x<c.x+20 && player.y+player.height>c.y && player.y<c.y+20){
+        c.collected=true;
+        coins+=10;
+        localStorage.setItem('coins',coins);
+        document.getElementById('coinDisplay').innerText = '💰 Coins: ' + coins;
+        coinSound.play();
+      }
+    }
+  });
+
+  // ===== DRAW PLAYER =====
+  ctx.drawImage(player.sprite, player.x, player.y, player.width, player.height);
+
+  requestAnimationFrame(gameLoop);
 }
 
-// ----- PvP Arena -----
-function pvpGame(){
-  ctx.fillStyle='white';
-  ctx.font='25px Arial';
-  ctx.fillText('PvP Arena Coming Soon!',250,250);
+function restartGame(){
+  player.x=50; player.y=500; player.vy=0;
+  platforms = [];
+  for(let i=0;i<15;i++){
+    let width = 100 + Math.random()*150;
+    let x = i===0 ? 0 : platforms[i-1].x + platforms[i-1].width + 50;
+    let y = 500 - Math.random()*250;
+    platforms.push({x, y, width, height:20});
+  }
+  gameCoins = [];
+  platforms.forEach(p=>{
+    if(Math.random()<0.5){
+      gameCoins.push({x:p.x+p.width/2-10, y:p.y-30, collected:false});
+    }
+  });
 }
 
-// ----- Skyblock -----
-function skyblockGame(){
-  ctx.fillStyle='white';
-  ctx.font='25px Arial';
-  ctx.fillText('Skyblock Coming Soon!',250,250);
-}
-
-// ----- Boat Race -----
-function boatRace(){
-  ctx.fillStyle='white';
-  ctx.font='25px Arial';
-  ctx.fillText('Boat Race Coming Soon!',250,250);
-}
+gameLoop();
 </script>
 </body>
 </html>
