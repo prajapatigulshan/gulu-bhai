@@ -53,10 +53,6 @@ body {
   margin-top: 100px;
   padding: 20px;
 }
-.game-container {
-  display: none;
-  margin-top: 20px;
-}
 .games-grid {
   display: flex;
   flex-wrap: wrap;
@@ -104,50 +100,55 @@ canvas {
   margin-top: 20px;
   background: #111;
 }
+/* Button */
+button {
+  margin-top: 10px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
+  animation: rgbMove 6s linear infinite;
+  color: black;
+}
 </style>
 </head>
 <body>
+
 <div class="header">
   <div class="logo"><span>GBG Games Hub</span></div>
   <div id="coinDisplay">💰 Coins: 0</div>
 </div>
+
 <div class="content">
   <h1 class="rgb-text">🎮 Choose Your Game</h1>
   <div class="games-grid" id="gamesGrid">
-    <!-- Cards will be injected by JS -->
+    <!-- Game cards will be injected by JS -->
   </div>
+
   <div class="game-container" id="gameContainer">
     <canvas id="gameCanvas" width="800" height="500"></canvas>
-    <div style="margin-top:10px;"><button onclick="backToMenu()">⬅ Back to Games</button></div>
+    <div><button onclick="backToMenu()">⬅ Back to Games</button></div>
   </div>
 </div>
+
 <script>
 let coins = localStorage.getItem('coins') ? parseInt(localStorage.getItem('coins')) : 0;
 document.getElementById('coinDisplay').innerText = '💰 Coins: ' + coins;
 
 const games = [
-  {name:'Parkour Challenge', key:'parkour'},
-  {name:'Survival Adventure', key:'survival'},
-  {name:'Skyblock', key:'skyblock'},
-  {name:'PvP Arena', key:'pvp'},
-  {name:'Maze Runner', key:'maze'},
-  {name:'Build Battle', key:'buildbattle'},
-  {name:'Hunger Games', key:'hunger'},
-  {name:'Speed Run', key:'speedrun'},
-  {name:'Hardcore Mode', key:'hardcore'},
-  {name:'Treasure Hunt', key:'treasure'},
-  {name:'Ender Dragon Fight', key:'enderdragon'},
-  {name:'Mob Battle', key:'mobbattle'},
-  {name:'Redstone Challenge', key:'redstone'},
-  {name:'Puzzle Maps', key:'puzzle'},
-  {name:'Creative Mode', key:'creative'}
+  {name:'Parkour Challenge', key:'parkour', img:'https://minecraft.wiki/images/Skin.png'},
+  {name:'PvP Arena', key:'pvp', img:'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'},
+  {name:'Boat Race', key:'boatrace', img:'https://cdn-icons-png.flaticon.com/512/3135/3135766.png'},
+  {name:'Skyblock', key:'skyblock', img:'https://minecraft.wiki/images/Crafting_Table_JE2_BE2.png'}
 ];
 
 const gamesGrid = document.getElementById('gamesGrid');
 games.forEach(game => {
   let card = document.createElement('div');
   card.className = 'card';
-  card.innerHTML = `<img src='https://minecraft.wiki/images/Skin.png' alt='${game.name}'><h2 class='rgb-text'>${game.name}</h2><a href='#' onclick="startGame('${game.key}')">Play Now</a>`;
+  card.innerHTML = `<img src='${game.img}' alt='${game.name}'><h2 class='rgb-text'>${game.name}</h2><a href='#' onclick="startGame('${game.key}')">Play Now</a>`;
   gamesGrid.appendChild(card);
 });
 
@@ -170,33 +171,35 @@ function initGame(gameKey){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   if(gameKey==='parkour'){
     parkourGame();
-  } else if(gameKey==='survival'){
-    survivalGame();
+  } else if(gameKey==='pvp'){
+    pvpArena();
+  } else if(gameKey==='boatrace'){
+    boatRace();
   } else if(gameKey==='skyblock'){
     skyblockGame();
   } else {
-    // placeholder for other games
     ctx.fillStyle='white';
     ctx.font='30px Arial';
     ctx.fillText(gameKey + ' coming soon!', 200, 250);
   }
 }
 
+// -------- PARKOUR CHALLENGE --------
 function parkourGame(){
-  let player = {x:50,y:400,width:30,height:30,vy:0,jumping:false};
+  let player = {x:50,y:400,width:30,height:30,vy:0,jumping:false,collectedCoin:false};
   let platforms = [{x:0,y:450,width:200},{x:220,y:400,width:150},{x:400,y:350,width:100},{x:550,y:300,width:200}];
   let keys = {};
 
   function update(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
 
-    // Player movement
     if(keys['ArrowRight']) player.x += 5;
     if(keys['ArrowLeft']) player.x -=5;
 
-    player.vy += 0.8; // gravity
+    player.vy += 0.8;
     player.y += player.vy;
     player.jumping=false;
+
     platforms.forEach(p=>{
       if(player.x + player.width>p.x && player.x<p.x+p.width && player.y+player.height>p.y && player.y+player.height<p.y+10){
         player.y=p.y-player.height;
@@ -205,15 +208,12 @@ function parkourGame(){
       }
     });
 
-    // Draw player
     ctx.fillStyle='cyan';
     ctx.fillRect(player.x,player.y,player.width,player.height);
 
-    // Draw platforms
     ctx.fillStyle='white';
     platforms.forEach(p=>ctx.fillRect(p.x,p.y,p.width,10));
 
-    // Check coin pickup
     if(!player.collectedCoin && player.x>580 && player.y<290){
       coins+=10;
       localStorage.setItem('coins',coins);
@@ -229,19 +229,141 @@ function parkourGame(){
   document.addEventListener('keyup',e=>{keys[e.key]=false;});
 }
 
-function survivalGame(){
-  ctx.fillStyle='green';
-  ctx.font='30px Arial';
-  ctx.fillText('Survival Game: Avoid enemies & collect coins',50,250);
-  // Future: Add enemies, player movement, coin collection
+// -------- PVP ARENA --------
+function pvpArena(){
+  let player = {x:100,y:400,width:30,height:30,vy:0,jumping:false,health:100};
+  let enemy = {x:600,y:400,width:30,height:30,health:100,direction:-1};
+  let platforms = [{x:0,y:450,width:800}];
+  let keys = {};
+  function update(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+
+    if(keys['ArrowRight']) player.x +=5;
+    if(keys['ArrowLeft']) player.x -=5;
+
+    player.vy += 0.8;
+    player.y += player.vy;
+    player.jumping=false;
+
+    platforms.forEach(p=>{
+      if(player.x + player.width>p.x && player.x<p.x+p.width && player.y+player.height>p.y && player.y+player.height<p.y+10){
+        player.y=p.y-player.height;
+        player.vy=0;
+        player.jumping=false;
+      }
+    });
+
+    // enemy movement
+    enemy.x += enemy.direction*2;
+    if(enemy.x<0 || enemy.x>canvas.width-enemy.width) enemy.direction*=-1;
+
+    // collision attack
+    if(Math.abs(player.x-enemy.x)<30 && Math.abs(player.y-enemy.y)<30){
+      enemy.health -=0.2;
+    }
+
+    ctx.fillStyle='cyan';
+    ctx.fillRect(player.x,player.y,player.width,player.height);
+    ctx.fillStyle='red';
+    ctx.fillRect(enemy.x,enemy.y,enemy.width,enemy.height);
+
+    // health bars
+    ctx.fillStyle='green';
+    ctx.fillRect(20,20,player.health*2,10);
+    ctx.fillStyle='red';
+    ctx.fillRect(canvas.width-220,20,enemy.health*2,10);
+
+    requestAnimationFrame(update);
+  }
+  update();
+
+  document.addEventListener('keydown',e=>{keys[e.key]=true;if(e.key===' ' && !player.jumping){player.vy=-15;player.jumping=true;}});
+  document.addEventListener('keyup',e=>{keys[e.key]=false;});
 }
 
-function skyblockGame(){
-  ctx.fillStyle='orange';
-  ctx.font='30px Arial';
-  ctx.fillText('Skyblock Game: Build & collect blocks!',50,250);
-  // Future: floating islands, block placement, coin
+// -------- BOAT RACE --------
+function boatRace(){
+  let boat = {x:50,y:450,width:50,height:20,speed:3};
+  let coinsArr = [{x:200,y:430,collected:false},{x:400,y:400,collected:false},{x:600,y:420,collected:false}];
+  let keys={};
+  function update(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    // boat movement
+    if(keys['ArrowUp']) boat.y -= boat.speed;
+    if(keys['ArrowDown']) boat.y += boat.speed;
+    if(keys['ArrowRight']) boat.x += boat.speed;
+    if(keys['ArrowLeft']) boat.x -= boat.speed;
+
+    // water track
+    ctx.fillStyle='#1E90FF';
+    ctx.fillRect(0,450,800,50);
+
+    ctx.fillStyle='orange';
+    ctx.fillRect(boat.x,boat.y,boat.width,boat.height);
+
+    // coins
+    coinsArr.forEach(c=>{
+      if(!c.collected && Math.abs(boat.x-c.x)<20 && Math.abs(boat.y-c.y)<20){
+        coins +=5;
+        localStorage.setItem('coins',coins);
+        document.getElementById('coinDisplay').innerText='💰 Coins: '+coins;
+        c.collected=true;
+      }
+      if(!c.collected){
+        ctx.fillStyle='yellow';
+        ctx.beginPath();
+        ctx.arc(c.x,c.y,8,0,Math.PI*2);
+        ctx.fill();
+      }
+    });
+
+    requestAnimationFrame(update);
+  }
+  update();
+
+  document.addEventListener('keydown',e=>{keys[e.key]=true;});
+  document.addEventListener('keyup',e=>{keys[e.key]=false;});
 }
+
+// -------- SKYBLOCK GAME --------
+function skyblockGame(){
+  let player = {x:400,y:300,width:30,height:30,vy:0,jumping:false};
+  let blocks = [{x:350,y:400,width:100,height:20}];
+  let keys={};
+  function update(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    // gravity
+    player.vy += 0.8;
+    player.y += player.vy;
+    player.jumping=false;
+
+    // collision
+    blocks.forEach(b=>{
+      if(player.x + player.width>b.x && player.x<b.x+b.width && player.y+player.height>b.y && player.y+player.height<b.y+10){
+        player.y=b.y-player.height;
+        player.vy=0;
+        player.jumping=false;
+      }
+    });
+
+    if(keys['ArrowRight']) player.x +=5;
+    if(keys['ArrowLeft']) player.x -=5;
+    if(keys[' ']){if(!player.jumping){player.vy=-15;player.jumping=true;}}
+
+    ctx.fillStyle='white';
+    blocks.forEach(b=>ctx.fillRect(b.x,b.y,b.width,b.height));
+    ctx.fillStyle='cyan';
+    ctx.fillRect(player.x,player.y,player.width,player.height);
+
+    requestAnimationFrame(update);
+  }
+  update();
+
+  document.addEventListener('keydown',e=>{keys[e.key]=true;});
+  document.addEventListener('keyup',e=>{keys[e.key]=false;});
+}
+
 </script>
+
 </body>
 </html>
