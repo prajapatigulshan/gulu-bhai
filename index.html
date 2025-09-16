@@ -309,3 +309,19 @@
 <script>
   if(window.applySettingsFromStorage) applySettingsFromStorage();
 </script>
+<!-- TOP BAR -->
+<div class="topbar">
+  <h2 id="coinDisplay">💰 Coins: 0</h2>
+  <button class="subscribe-btn" onclick="subscribeNow()">⭐ Subscribe</button>
+</div>
+
+<script>
+  // Load coins (future use ke liye)
+  let coins = localStorage.getItem("coins") ? parseInt(localStorage.getItem("coins")) : 0;
+  document.getElementById("coinDisplay").innerText = "💰 Coins: " + coins;
+
+  // Subscribe Button (demo)
+  function subscribeNow() {
+    alert("🚀 Subscription Coming Soon with Real Payment Gateway!");
+  }
+</script>
