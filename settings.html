@@ -1,197 +1,604 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About - GBG</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>GBG Settings - Pro Panel</title>
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      color: white;
-      text-align: center;
-      background: linear-gradient(270deg, red, orange, yellow, green, cyan, blue, violet, red);
-      background-size: 1500% 1500%;
-      animation: bgRGB 30s ease infinite;
-      position: relative;
-      overflow: hidden;
+    :root{
+      --bg:#000;
+      --card-bg: rgba(0,0,0,0.6);
+      --accent: linear-gradient(90deg, #ff004c, #ff8a00, #ffe600, #00ff99, #00d2ff, #7b5cff);
+      --accent-fast: linear-gradient(90deg, #ff004c, #00d2ff, #7b5cff);
     }
-
-    /* Watermark */
-    body::before {
-      content: "GBG";
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 15rem;
-      font-weight: bold;
-      color: rgba(255,255,255,0.05);
-      text-shadow: 0 0 40px rgba(0,255,200,0.3);
-      pointer-events: none;
-      z-index: 0;
+    html,body{height:100%; margin:0; font-family:Inter,Arial,Helvetica,sans-serif; background:var(--bg); color:#fff}
+    .wrap{max-width:1200px; margin:24px auto; padding:20px;}
+    h1{font-size:28px; margin:0 0 8px}
+    p.lead{color:#cdd; margin-top:4px}
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+      gap:14px; margin-top:18px;
     }
-
-    /* RGB Background Animation */
-    @keyframes bgRGB {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    .card{
+      background:var(--card-bg);
+      border-radius:12px;
+      padding:14px;
+      box-shadow:0 8px 30px rgba(0,0,0,0.6);
+      border:2px solid rgba(255,255,255,0.03);
+      position:relative;
+      overflow:hidden;
     }
-
-    /* RGB Text */
-    @keyframes rgbMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    .card .title{font-weight:700; font-size:15px; margin-bottom:8px}
+    .muted{color:#bfc; font-size:13px; margin-bottom:8px}
+    /* RGB Buttons / Toggles */
+    .controls{display:flex; gap:8px; flex-wrap:wrap}
+    .btn{
+      padding:8px 12px; border-radius:8px; cursor:pointer; border:none; font-weight:700;
+      background:rgba(255,255,255,0.06); color:#fff; transition:all .18s; box-shadow: inset 0 -6px 18px rgba(0,0,0,0.25);
     }
-    .rgb-text {
-      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-size: 400%;
-      animation: rgbMove 8s linear infinite;
-      font-weight: bold;
-      position: relative;
-      z-index: 1;
+    .btn.small{padding:6px 8px; font-size:13px}
+    .toggle-on{ background: var(--accent); color:black; }
+    .toggle-off{ background: rgba(255,255,255,0.06); color:#ddd; border:1px solid rgba(255,255,255,0.03);}
+    .range{width:100%}
+    .status{font-size:13px;color:#cfc; margin-top:8px}
+    /* header row */
+    .topbar{display:flex; align-items:center; justify-content:space-between; gap:12px}
+    .top-left{}
+    .applyHint{font-size:13px; color:#bcd}
+    /* preview area */
+    .preview{
+      margin-top:18px;
+      padding:14px;
+      border-radius:10px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      display:flex; gap:12px; align-items:center; justify-content:space-between;
     }
-    .rgb-border {
-      border: 2px solid;
-      border-image: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red) 1;
-      animation: rgbMove 8s linear infinite;
-      border-radius: 12px;
-      position: relative;
-      z-index: 1;
+    .preview .box{width:48%; padding:12px; border-radius:8px; background:rgba(0,0,0,0.5)}
+    .small-muted{color:#bdb; font-size:13px}
+    /* footer */
+    footer{margin-top:20px; text-align:center; color:#9ff; opacity:0.9}
+    /* RGB text styles for headings in page */
+    .rgbTitle{
+      background: var(--accent);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-size:400%;
+      animation: rgbShift 8s linear infinite;
+      font-weight:900;
+      letter-spacing:1px;
     }
-
-    header {
-      background: rgba(0,0,0,0.85);
-      padding: 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 0 15px #00ffc8;
-    }
-    .logo span {
-      font-size: 26px;
-      font-weight: bold;
-      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-size: 400%;
-      animation: rgbMove 8s linear infinite;
-    }
-    nav a {
-      color: white;
-      margin: 0 15px;
-      text-decoration: none;
-      font-size: 18px;
-      position: relative;
-      z-index: 1;
-    }
-    nav a:hover {
-      background-image: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: rgbMove 6s linear infinite;
-    }
-
-    .content {
-      margin-top: 50px;
-      padding: 20px;
-      max-width: 900px;
-      margin-left: auto;
-      margin-right: auto;
-      position: relative;
-      z-index: 1;
-    }
-
-    .profile-pic {
-      width: 150px;
-      height: 150px;
-      border-radius: 50%;
-      box-shadow: 0 0 20px #00ffc8;
-      margin-bottom: 20px;
-    }
-
-    .fun-facts {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      flex-wrap: wrap;
-      margin-top: 30px;
-    }
-    .fact {
-      background: rgba(0,0,0,0.7);
-      padding: 15px;
-      width: 200px;
-      border-radius: 12px;
-      box-shadow: 0 0 15px #00ffc8;
-    }
-
-    footer {
-      margin-top: 40px;
-      padding: 15px;
-      background: rgba(0,0,0,0.85);
-      font-size: 14px;
-      box-shadow: 0 0 15px #00ffc8;
-      position: relative;
-      z-index: 1;
+    @keyframes rgbShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    /* Mobile tweaks */
+    @media (max-width:520px){
+      .preview{flex-direction:column}
+      .preview .box{width:100%}
     }
   </style>
 </head>
 <body>
-
-  <!-- HEADER -->
-  <header>
-    <div class="logo"><span>GBG</span></div>
-    <nav>
-      <a href="index.html">🏠 Home</a>
-      <a href="about.html">ℹ About</a>
-      <a href="contact.html">📞 Contact</a>
-    </nav>
-  </header>
-
-  <!-- CONTENT -->
-  <div class="content">
-    <h1 class="rgb-text">About GBG</h1>
-    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="GBG" class="profile-pic rgb-border">
-
-    <p class="rgb-text">
-      Hi 👋 I’m <b>Gulshan</b> aka <b>Gulu Bhai Gamer (GBG)</b>.  
-      I love Minecraft, Gaming, and building my GBG Army 🚀  
-      This website is made for gamers who want free Skins, Mods, Maps, and full gaming vibes 🔥
-    </p>
-
-    <h2 class="rgb-text">🎯 My Mission</h2>
-    <p class="rgb-text">
-      To create the best community of gamers, share awesome content, and make GBG Army stronger 💀⚡
-    </p>
-
-    <h2 class="rgb-text">✨ Fun Facts</h2>
-    <div class="fun-facts">
-      <div class="fact rgb-border">
-        <h3 class="rgb-text">🎮 Game</h3>
-        <p>Minecraft Forever</p>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="top-left">
+        <h1 class="rgbTitle">GBG Settings — Pro Panel</h1>
+        <p class="lead">40 useful RGB options — each saves to localStorage and applies across pages.</p>
       </div>
-      <div class="fact rgb-border">
-        <h3 class="rgb-text">🌈 Motto</h3>
-        <p>Respect + Gaming + Brotherhood</p>
+      <div class="applyHint">Settings apply immediately. Other pages must include <code>applySettingsFromStorage()</code> (snippet below).</div>
+    </div>
+
+    <!-- PREVIEW -->
+    <div class="preview card" id="previewArea">
+      <div class="box" id="previewLeft">
+        <div style="font-weight:800; font-size:18px" id="previewTitle">GBG Preview</div>
+        <div class="small-muted" id="previewSub">See live changes here (theme, watermark, particles, font-size...)</div>
       </div>
-      <div class="fact rgb-border">
-        <h3 class="rgb-text">⚡ Goal</h3>
-        <p>Grow the GBG Army</p>
+      <div class="box" id="previewRight">
+        <div style="margin-bottom:8px"><strong>Audio:</strong> <span id="previewAudio">Off</span></div>
+        <div style="margin-bottom:8px"><strong>Particles:</strong> <span id="previewParticles">Off</span></div>
+        <div style="margin-bottom:8px"><strong>Watermark:</strong> <span id="previewWatermark">Hidden</span></div>
       </div>
     </div>
+
+    <!-- GRID OF OPTIONS -->
+    <div class="grid" id="grid">
+
+      <!-- THEME & DISPLAY (1) -->
+      <div class="card">
+        <div class="title">Theme & Display — (1 to 10)</div>
+        <div class="muted">Pick site theme, watermark, particles and font size controls.</div>
+        <div class="controls">
+          <button class="btn btn-toggle" data-key="theme" data-value="light">Light</button>
+          <button class="btn btn-toggle" data-key="theme" data-value="dark">Dark</button>
+          <button class="btn btn-toggle" data-key="theme" data-value="rgb">RGB</button>
+          <button class="btn btn-toggle" data-key="theme" data-value="neon">Neon</button>
+          <button class="btn btn-small btn-small-left small" id="fontPlus">Font +</button>
+          <button class="btn btn-small small" id="fontMinus">Font -</button>
+        </div>
+        <div style="height:10px"></div>
+        <div class="controls">
+          <button class="btn btn-toggle" data-key="watermark" data-value="show">Show Watermark</button>
+          <button class="btn btn-toggle" data-key="watermark" data-value="hide">Hide Watermark</button>
+          <button class="btn btn-toggle" data-key="particles" data-value="show">Show Particles</button>
+          <button class="btn btn-toggle" data-key="particles" data-value="hide">Hide Particles</button>
+        </div>
+        <div class="status" id="statusTheme">Current: <span id="curTheme">rgb</span> • Font: <span id="curFont">16px</span></div>
+      </div>
+
+      <!-- MUSIC & SOUND (2) -->
+      <div class="card">
+        <div class="title">Music & Sound — (11 to 20)</div>
+        <div class="muted">Background music and sound FX</div>
+        <div class="controls">
+          <button class="btn btn-toggle" data-key="music" data-value="on">Music ON</button>
+          <button class="btn btn-toggle" data-key="music" data-value="off">Music OFF</button>
+          <button class="btn btn-toggle" data-key="sfx" data-value="on">SFX ON</button>
+          <button class="btn btn-toggle" data-key="sfx" data-value="off">SFX OFF</button>
+        </div>
+        <div style="height:10px"></div>
+        <div>
+          <label class="muted">Volume</label>
+          <input class="range" type="range" id="volumeRange" min="0" max="1" step="0.01" />
+        </div>
+        <div style="height:8px"></div>
+        <div class="controls">
+          <button class="btn small" id="volPlus">Vol +</button>
+          <button class="btn small" id="volMinus">Vol -</button>
+        </div>
+        <div class="status">Volume: <span id="curVol">0.5</span></div>
+      </div>
+
+      <!-- ACCOUNT & PRIVACY (3) -->
+      <div class="card">
+        <div class="title">Account & Privacy — (21 to 30)</div>
+        <div class="muted">Login and privacy toggles (mock login available)</div>
+        <div class="controls">
+          <button class="btn" id="btnGoogleLogin">Google Login</button>
+          <button class="btn" id="btnLogout">Logout</button>
+        </div>
+        <div style="height:10px"></div>
+        <div class="controls">
+          <button class="btn btn-toggle" data-key="saveLogin" data-value="on">Save Login ON</button>
+          <button class="btn btn-toggle" data-key="saveLogin" data-value="off">Save Login OFF</button>
+          <button class="btn btn-toggle" data-key="showEmail" data-value="on">Show Email ON</button>
+          <button class="btn btn-toggle" data-key="showEmail" data-value="off">Show Email OFF</button>
+        </div>
+        <div style="height:10px"></div>
+        <div class="controls">
+          <button class="btn btn-toggle" data-key="profilePic" data-value="on">Profile Pic ON</button>
+          <button class="btn btn-toggle" data-key="profilePic" data-value="off">Profile Pic OFF</button>
+          <button class="btn btn-toggle" data-key="dataSave" data-value="on">Data Save ON</button>
+          <button class="btn btn-toggle" data-key="dataSave" data-value="off">Data Save OFF</button>
+        </div>
+        <div class="status" id="acctStatus">Logged: <span id="loggedState">no</span></div>
+      </div>
+
+      <!-- WEBSITE FEATURES (4) -->
+      <div class="card">
+        <div class="title">Website Features — (31 to 40)</div>
+        <div class="muted">Toggles for various site features</div>
+        <div class="controls">
+          <button class="btn btn-toggle" data-key="chatBox" data-value="enable">Enable Chat</button>
+          <button class="btn btn-toggle" data-key="chatBox" data-value="disable">Disable Chat</button>
+          <button class="btn btn-toggle" data-key="popupAlerts" data-value="enable">Enable Alerts</button>
+          <button class="btn btn-toggle" data-key="popupAlerts" data-value="disable">Disable Alerts</button>
+        </div>
+
+        <div style="height:10px"></div>
+        <div class="controls">
+          <button class="btn btn-toggle" data-key="downloadMgr" data-value="enable">Enable DownloadMgr</button>
+          <button class="btn btn-toggle" data-key="downloadMgr" data-value="disable">Disable DownloadMgr</button>
+          <button class="btn btn-toggle" data-key="skinsPreview" data-value="enable">Skins Auto Preview</button>
+          <button class="btn btn-toggle" data-key="skinsPreview" data-value="disable">Skins Auto Preview Off</button>
+        </div>
+
+        <div style="height:10px"></div>
+        <div class="controls">
+          <button class="btn btn-toggle" data-key="gameUI" data-value="enable">Game Mode UI</button>
+          <button class="btn btn-toggle" data-key="gameUI" data-value="disable">Normal UI</button>
+        </div>
+
+        <div class="status" id="featStatus">Chat: <span id="chatState">off</span> • Alerts: <span id="alertsState">on</span></div>
+      </div>
+
+      <!-- EXTRA (preview helpers) -->
+      <div class="card">
+        <div class="title">Helpers & Utilities</div>
+        <div class="muted">Quick actions</div>
+        <div class="controls">
+          <button class="btn" id="exportBtn">Export Settings</button>
+          <button class="btn" id="importBtn">Import Settings</button>
+          <button class="btn" id="resetBtn">Reset All</button>
+        </div>
+        <div class="status" id="exportStatus"></div>
+      </div>
+
+    </div>
+
+    <footer>
+      <div style="margin-top:12px">Settings saved to localStorage · Works across pages if they call <code>applySettingsFromStorage()</code></div>
+      <div style="margin-top:6px; font-size:13px; color:#bcd">© 2025 GBG · Gulu Bhai Gamer</div>
+    </footer>
   </div>
 
-  <!-- FOOTER -->
-  <footer>
-    <p class="rgb-text">© 2025 GBG | Made with ❤️ by Gulshan</p>
-  </footer>
+  <!-- SCRIPTS -->
+  <script>
+    /*****************************************************************
+     * GBG Settings Panel (40 options)
+     * - Saves each option to localStorage under keys below
+     * - Applies a live preview on this page
+     * - Use applySettingsFromStorage() on other pages to read & apply
+     *****************************************************************/
 
+    // default settings
+    const DEFAULTS = {
+      theme: 'rgb',         // light | dark | rgb | neon
+      fontSize: 16,         // px
+      watermark: 'show',    // show | hide
+      particles: 'show',    // show | hide
+
+      // audio
+      music: 'off',         // on | off
+      sfx: 'on',            // on | off
+      volume: 0.50,         // 0.0 - 1.0
+
+      // account/privacy
+      logged: 'no',
+      userName: '',
+      userEmail: '',
+      saveLogin: 'off',
+      showEmail: 'on',
+      profilePic: 'on',
+      dataSave: 'on',
+
+      // features
+      chatBox: 'disable',
+      popupAlerts: 'enable',
+      downloadMgr: 'enable',
+      skinsPreview: 'enable',
+      gameUI: 'disable'
+    };
+
+    // helper to get/set
+    function getSetting(k){
+      const v = localStorage.getItem('gbg_'+k);
+      if(v===null) return DEFAULTS[k];
+      try { return JSON.parse(v); } catch(e){ return v; }
+    }
+    function setSetting(k, v){
+      localStorage.setItem('gbg_'+k, (typeof v==='string')? v : JSON.stringify(v));
+      // dispatch storage event pattern for same tab listeners
+      window.dispatchEvent(new Event('gbg_settings_changed'));
+    }
+
+    // initialize missing defaults
+    Object.keys(DEFAULTS).forEach(k => {
+      if(localStorage.getItem('gbg_'+k) === null){
+        setSetting(k, DEFAULTS[k]);
+      }
+    });
+
+    // Elements
+    const btnToggles = document.querySelectorAll('.btn-toggle');
+    const curThemeEl = document.getElementById('curTheme');
+    const curFontEl = document.getElementById('curFont');
+    const statusTheme = document.getElementById('statusTheme');
+    const previewTitle = document.getElementById('previewTitle');
+    const previewAudio = document.getElementById('previewAudio');
+    const previewParticles = document.getElementById('previewParticles');
+    const previewWatermark = document.getElementById('previewWatermark');
+    const curVol = document.getElementById('curVol');
+    const volumeRange = document.getElementById('volumeRange');
+    const loggedState = document.getElementById('loggedState');
+    const chatState = document.getElementById('chatState');
+    const alertsState = document.getElementById('alertsState');
+    const exportStatus = document.getElementById('exportStatus');
+
+    // audio context for clicks / notifications
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    let masterGain = audioCtx.createGain();
+    masterGain.gain.value = getSetting('volume') || 0.5;
+    masterGain.connect(audioCtx.destination);
+
+    function playBeep(vol=0.07, freq=880, time=0.06){
+      // only play if sfx enabled
+      if(getSetting('sfx')!=='on') return;
+      const g = audioCtx.createGain();
+      g.gain.value = vol * (getSetting('volume') || 0.5);
+      g.connect(masterGain);
+      const o = audioCtx.createOscillator();
+      o.type = 'sine';
+      o.frequency.value = freq;
+      o.connect(g);
+      o.start();
+      setTimeout(()=>{ o.stop(); g.disconnect(); }, time*1000);
+    }
+
+    // initial UI setup
+    function updateUI(){
+      // theme & font
+      const theme = getSetting('theme');
+      const fsize = getSetting('fontSize');
+      curThemeEl.textContent = theme;
+      curFontEl.textContent = fsize + 'px';
+      document.documentElement.style.fontSize = (fsize || 16) + 'px';
+
+      // audio
+      const musicOn = getSetting('music') === 'on';
+      previewAudio.textContent = musicOn ? 'On' : 'Off';
+      curVol.textContent = (getSetting('volume') || 0.5).toFixed(2);
+      volumeRange.value = getSetting('volume') || 0.5;
+      masterGain.gain.value = getSetting('volume') || 0.5;
+
+      // watermark/particles
+      previewParticles.textContent = getSetting('particles') === 'show' ? 'On' : 'Off';
+      previewWatermark.textContent = getSetting('watermark') === 'show' ? 'Shown' : 'Hidden';
+
+      // account
+      loggedState.textContent = getSetting('logged');
+      // features
+      chatState.textContent = getSetting('chatBox') === 'enable' ? 'on' : 'off';
+      alertsState.textContent = getSetting('popupAlerts') === 'enable' ? 'on' : 'off';
+    }
+
+    // attach toggles
+    btnToggles.forEach(btn=>{
+      btn.addEventListener('click', e=>{
+        const key = btn.dataset.key;
+        const value = btn.dataset.value;
+        setSetting(key, value);
+        playBeep(0.06, 600, 0.05);
+        updateUI();
+        applyPreview(); // immediate preview
+      });
+    });
+
+    // font size controls
+    document.getElementById('fontPlus').addEventListener('click', ()=>{
+      let f = getSetting('fontSize') || 16; f = Math.min(22, f+1);
+      setSetting('fontSize', f); updateUI(); applyPreview(); playBeep();
+    });
+    document.getElementById('fontMinus').addEventListener('click', ()=>{
+      let f = getSetting('fontSize') || 16; f = Math.max(12, f-1);
+      setSetting('fontSize', f); updateUI(); applyPreview(); playBeep();
+    });
+
+    // volume controls
+    document.getElementById('volPlus').addEventListener('click', ()=>{
+      let v = Number(getSetting('volume')||0.5); v = Math.min(1, +(v+0.05).toFixed(2));
+      setSetting('volume', v); updateUI(); playBeep(0.08,1200,0.05);
+    });
+    document.getElementById('volMinus').addEventListener('click', ()=>{
+      let v = Number(getSetting('volume')||0.5); v = Math.max(0, +(v-0.05).toFixed(2));
+      setSetting('volume', v); updateUI(); playBeep(0.05,400,0.04);
+    });
+    volumeRange.addEventListener('input', (e)=>{
+      const v = Number(e.target.value); setSetting('volume', v); updateUI();
+    });
+
+    // Google login (mock + real hook)
+    document.getElementById('btnGoogleLogin').addEventListener('click', ()=>{
+      // If Google Sign-in is used on site, here you'd call real login.
+      // For now do a mock login so settings panel works offline:
+      const mockUser = { name: 'Gulshan (GBG)', email: 'prajapatigulshan499@gmail.com', picture: '' };
+      setSetting('logged', 'yes'); setSetting('userName', mockUser.name); setSetting('userEmail', mockUser.email);
+      if(getSetting('saveLogin')==='on'){ localStorage.setItem('gbg_saved_user', JSON.stringify(mockUser)); }
+      updateUI(); playBeep(0.08,900,0.06);
+      alert('Mock Google login done (for demo). Real sign-in integration can be added.');
+    });
+    document.getElementById('btnLogout').addEventListener('click', ()=>{
+      setSetting('logged', 'no'); setSetting('userName',''); setSetting('userEmail','');
+      localStorage.removeItem('gbg_saved_user'); updateUI(); playBeep(0.05,300,0.05);
+    });
+
+    // export / import / reset
+    document.getElementById('exportBtn').addEventListener('click', ()=>{
+      const exportObj = {};
+      Object.keys(DEFAULTS).forEach(k => exportObj[k] = getSetting(k));
+      const blob = new Blob([JSON.stringify(exportObj, null, 2)], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'gbg-settings.json'; a.click();
+      URL.revokeObjectURL(url);
+      exportStatus.textContent = 'Exported';
+      setTimeout(()=> exportStatus.textContent = '', 2500);
+      playBeep(0.06,1200,0.06);
+    });
+
+    document.getElementById('importBtn').addEventListener('click', async ()=>{
+      const input = document.createElement('input'); input.type='file'; input.accept='.json';
+      input.onchange = async (e) => {
+        const f = e.target.files[0];
+        if(!f) return;
+        const txt = await f.text();
+        try{
+          const obj = JSON.parse(txt);
+          Object.keys(obj).forEach(k => {
+            setSetting(k, obj[k]);
+          });
+          updateUI(); applyPreview(); playBeep(0.08,1000,0.06);
+          alert('Imported settings!');
+        }catch(err){ alert('Invalid file'); }
+      };
+      input.click();
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', ()=>{
+      if(!confirm('Reset ALL GBG settings to default?')) return;
+      Object.keys(DEFAULTS).forEach(k => localStorage.removeItem('gbg_'+k));
+      // reinitialize defaults
+      Object.keys(DEFAULTS).forEach(k => setSetting(k, DEFAULTS[k]));
+      updateUI(); applyPreview(); playBeep(0.08,400,0.06);
+      alert('Settings reset to defaults');
+    });
+
+    // apply preview visuals on this page
+    function applyPreview(){
+      // theme -> modify body classes / styles
+      const theme = getSetting('theme');
+      document.body.style.background = (theme==='dark')? '#070707'
+        : (theme==='light')? 'linear-gradient(180deg,#f7f7f9,#e9e9ec)'
+        : (theme==='neon')? 'linear-gradient(270deg,#0f0c29,#302b63,#24243e)'
+        : 'linear-gradient(270deg, #ff004c, #ff8a00, #ffe600, #00ff99, #00d2ff, #7b5cff)';
+      // font size
+      const f = (getSetting('fontSize') || 16) + 'px';
+      document.documentElement.style.fontSize = f;
+
+      // watermark
+      const wm = getSetting('watermark') === 'show';
+      // add watermark element if show
+      let wmEl = document.getElementById('gbg_watermark');
+      if(wm && !wmEl){
+        wmEl = document.createElement('div');
+        wmEl.id='gbg_watermark';
+        wmEl.textContent='GBG';
+        Object.assign(wmEl.style, {
+          position:'fixed', left:'50%', top:'48%', transform:'translate(-50%,-50%)',
+          fontSize:'10rem', color:'rgba(255,255,255,0.03)', zIndex:0, pointerEvents:'none',
+          textAlign:'center', textShadow:'0 0 40px rgba(0,255,200,0.08)'
+        });
+        document.body.appendChild(wmEl);
+      } else if(!wm && wmEl){ wmEl.remove(); }
+
+      // particles (simple circles)
+      const partsOn = getSetting('particles') === 'show';
+      if(partsOn) addParticles(); else removeParticles();
+
+      // audio preview toggle
+      previewAudio.textContent = getSetting('music') === 'on' ? 'On' : 'Off';
+      // watermark preview
+      previewWatermark.textContent = wm ? 'Shown' : 'Hidden';
+    }
+
+    // particle management
+    let particlesActive=false;
+    function addParticles(){
+      if(particlesActive) return;
+      particlesActive=true;
+      for(let i=0;i<6;i++){
+        const d=document.createElement('div');
+        d.className='gbg_particle';
+        d.style.position='fixed';
+        d.style.borderRadius='50%';
+        d.style.pointerEvents='none';
+        d.style.zIndex=0;
+        d.style.opacity='0.7';
+        const size = (80+Math.random()*260)|0;
+        d.style.width=size+'px'; d.style.height=size+'px';
+        d.style.left=(Math.random()*100)+'%';
+        d.style.top=(Math.random()*100)+'%';
+        d.style.mixBlendMode='screen';
+        // color based on theme
+        const theme=getSetting('theme');
+        let c='rgba(0,255,200,0.25)';
+        if(theme==='neon') c='rgba(125,0,255,0.18)';
+        if(theme==='dark') c='rgba(0,180,255,0.12)';
+        if(theme==='light') c='rgba(0,0,0,0.06)';
+        if(theme==='rgb') c='rgba(255,80,120,0.18)';
+        d.style.background = `radial-gradient(circle, ${c}, rgba(0,0,0,0))`;
+        d.style.transition='transform 6s linear, left 6s linear, top 6s linear';
+        document.body.appendChild(d);
+        animateParticle(d);
+      }
+    }
+    function animateParticle(el){
+      function mv(){
+        if(!document.body.contains(el)) return;
+        el.style.left = (Math.random()*100)+'%';
+        el.style.top = (Math.random()*100)+'%';
+        el.style.transform = `scale(${0.5 + Math.random()*1.2})`;
+        setTimeout(mv, 4000 + (Math.random()*4000));
+      }
+      mv();
+    }
+    function removeParticles(){
+      particlesActive=false;
+      document.querySelectorAll('.gbg_particle').forEach(e=>e.remove());
+    }
+
+    // apply settings to other pages - function to include on other pages
+    /* Usage: paste this function into other pages (index, about, contact, skins...)
+       or include a small script tag that calls applySettingsFromStorage() on load.
+    */
+    function applySettingsFromStorage(){
+      try{
+        // theme
+        const theme = getSetting('theme');
+        document.documentElement.style.fontFamily = 'Inter, Arial, Helvetica, sans-serif';
+        document.documentElement.style.color = (theme==='light')? '#000' : '#fff';
+        if(theme==='light'){ document.body.style.background = '#f7f7f9'; }
+        else if(theme==='dark'){ document.body.style.background = '#070707'; }
+        else if(theme==='neon'){ document.body.style.background = 'linear-gradient(270deg,#0f0c29,#302b63,#24243e)'; }
+        else { document.body.style.background = 'linear-gradient(270deg,#ff004c,#ff8a00,#00d2ff)'; }
+
+        // font size
+        const f = (getSetting('fontSize')||16) + 'px'; document.documentElement.style.fontSize = f;
+
+        // watermark
+        if(getSetting('watermark')==='show'){
+          if(!document.getElementById('gbg_watermark')){
+            const w=document.createElement('div');
+            w.id='gbg_watermark'; w.textContent='GBG';
+            Object.assign(w.style,{position:'fixed',left:'50%',top:'48%',transform:'translate(-50%,-50%)',fontSize:'10rem',color:'rgba(255,255,255,0.03)',pointerEvents:'none',zIndex:0});
+            document.body.appendChild(w);
+          }
+        } else { const w=document.getElementById('gbg_watermark'); if(w) w.remove(); }
+
+        // particles
+        if(getSetting('particles')==='show'){ if(typeof addParticles === 'function') addParticles(); }
+        else if(typeof removeParticles === 'function') removeParticles();
+
+        // audio: play background music if requested (simple beep loop or real audio tag if provided)
+        if(getSetting('music') === 'on'){ // try to play an embedded audio with id 'bgMusic' if exists
+          const a = document.getElementById('bgMusic');
+          if(a){ a.volume = Number(getSetting('volume')||0.5); if(a.paused) { a.play().catch(()=>{}); } }
+        } else {
+          const a = document.getElementById('bgMusic'); if(a) { try{ a.pause(); }catch(e){} }
+        }
+
+        // chat box toggle (example element .gbg-chat)
+        if(getSetting('chatBox') === 'enable'){
+          if(!document.querySelector('.gbg-chat')){
+            const chat = document.createElement('div'); chat.className='gbg-chat';
+            Object.assign(chat.style,{position:'fixed',right:'16px',bottom:'16px',width:'260px',height:'320px',background:'rgba(0,0,0,0.6)',borderRadius:'10px',zIndex:9999,boxShadow:'0 10px 30px rgba(0,0,0,0.6)',color:'#fff',padding:'8px'});
+            chat.innerHTML = '<div style="font-weight:700;margin-bottom:6px">GBG Chat</div><div style="font-size:13px;opacity:0.85">Community chat disabled in demo.</div>';
+            document.body.appendChild(chat);
+          }
+        } else {
+          document.querySelectorAll('.gbg-chat').forEach(n=>n.remove());
+        }
+
+        // show profile/email controls: add small user badge if logged
+        if(getSetting('logged') === 'yes'){
+          const name = getSetting('userName') || 'GBG User';
+          let badge = document.getElementById('gbg_user_badge');
+          if(!badge){
+            badge = document.createElement('div'); badge.id='gbg_user_badge';
+            Object.assign(badge.style,{position:'fixed',left:'16px',bottom:'16px',background:'rgba(0,0,0,0.6)',padding:'8px 10px',borderRadius:'8px',zIndex:9999});
+            document.body.appendChild(badge);
+          }
+          badge.innerHTML = `<div style="font-weight:700">${name}</div>` + (getSetting('showEmail')==='on' ? `<div style="font-size:12px;opacity:0.8">${getSetting('userEmail')||''}</div>` : '');
+        } else {
+          document.getElementById('gbg_user_badge')?.remove();
+        }
+
+      }catch(e){ console.warn('applySettingsFromStorage error', e); }
+    }
+
+    // run initial UI update & preview
+    updateUI(); applyPreview();
+
+    // listen for settings change event (same tab)
+    window.addEventListener('gbg_settings_changed', ()=>{ updateUI(); applyPreview(); });
+
+    // also listen to storage events (other tabs)
+    window.addEventListener('storage', (e)=>{
+      if(e.key && e.key.startsWith('gbg_')){ updateUI(); applyPreview(); }
+    });
+
+    // expose applySettingsFromStorage to window (for other pages to call)
+    window.applySettingsFromStorage = applySettingsFromStorage;
+
+    // initial apply (for convenience)
+    applySettingsFromStorage();
+
+  </script>
 </body>
 </html>
