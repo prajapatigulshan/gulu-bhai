@@ -3,97 +3,195 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Settings - GBG</title>
+  <title>About - GBG</title>
   <style>
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background: url('https://images.unsplash.com/photo-1503264116251-35a269479413?auto=format&fit=crop&w=1200&q=80') no-repeat center center fixed;
-      background-size: cover;
       color: white;
       text-align: center;
-      transition: background 0.5s, color 0.5s;
+      background: linear-gradient(270deg, red, orange, yellow, green, cyan, blue, violet, red);
+      background-size: 1500% 1500%;
+      animation: bgRGB 30s ease infinite;
+      position: relative;
+      overflow: hidden;
     }
-    body.light { background:#f5f5f5; color:black; }
+
+    /* Watermark */
+    body::before {
+      content: "GBG";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 15rem;
+      font-weight: bold;
+      color: rgba(255,255,255,0.05);
+      text-shadow: 0 0 40px rgba(0,255,200,0.3);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* RGB Background Animation */
+    @keyframes bgRGB {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* RGB Text */
+    @keyframes rgbMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .rgb-text {
+      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 400%;
+      animation: rgbMove 8s linear infinite;
+      font-weight: bold;
+      position: relative;
+      z-index: 1;
+    }
+    .rgb-border {
+      border: 2px solid;
+      border-image: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red) 1;
+      animation: rgbMove 8s linear infinite;
+      border-radius: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
     header {
+      background: rgba(0,0,0,0.85);
+      padding: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 0 15px #00ffc8;
+    }
+    .logo span {
+      font-size: 26px;
+      font-weight: bold;
+      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-size: 400%;
+      animation: rgbMove 8s linear infinite;
+    }
+    nav a {
+      color: white;
+      margin: 0 15px;
+      text-decoration: none;
+      font-size: 18px;
+      position: relative;
+      z-index: 1;
+    }
+    nav a:hover {
+      background-image: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: rgbMove 6s linear infinite;
+    }
+
+    .content {
+      margin-top: 50px;
+      padding: 20px;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .profile-pic {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      box-shadow: 0 0 20px #00ffc8;
+      margin-bottom: 20px;
+    }
+
+    .fun-facts {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+    .fact {
       background: rgba(0,0,0,0.7);
-      padding: 15px; display:flex; justify-content:space-between; align-items:center;
-      position:sticky; top:0;
+      padding: 15px;
+      width: 200px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px #00ffc8;
     }
-    .logo { font-size:28px; font-weight:bold; color:#ffcc00; }
-    nav a { color:white; margin:0 15px; text-decoration:none; font-size:18px; }
-    nav a:hover { color:#ffcc00; }
-    .content { margin-top:60px; }
-    .setting-option { margin:20px 0; }
-    button {
-      padding:10px 20px; border:none; border-radius:6px;
-      background:#ffcc00; color:black; font-weight:bold; cursor:pointer;
+
+    footer {
+      margin-top: 40px;
+      padding: 15px;
+      background: rgba(0,0,0,0.85);
+      font-size: 14px;
+      box-shadow: 0 0 15px #00ffc8;
+      position: relative;
+      z-index: 1;
     }
-    button:hover { background:#ffaa00; }
   </style>
 </head>
 <body>
+
+  <!-- HEADER -->
   <header>
-    <div class="logo">GBG</div>
+    <div class="logo"><span>GBG</span></div>
     <nav>
-      <a href="index.html">Home</a>
-      <a href="settings.html">Settings</a>
-      <a href="about.html">About</a>
+      <a href="index.html">🏠 Home</a>
+      <a href="about.html">ℹ About</a>
+      <a href="contact.html">📞 Contact</a>
     </nav>
   </header>
 
+  <!-- CONTENT -->
   <div class="content">
-    <h1>⚙ Settings Page</h1>
+    <h1 class="rgb-text">About GBG</h1>
+    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="GBG" class="profile-pic rgb-border">
 
-    <!-- Theme -->
-    <div class="setting-option">
-      <h3>Theme</h3>
-      <button onclick="setTheme('light')">🌞 Light</button>
-      <button onclick="setTheme('dark')">🌙 Dark</button>
-    </div>
+    <p class="rgb-text">
+      Hi 👋 I’m <b>Gulshan</b> aka <b>Gulu Bhai Gamer (GBG)</b>.  
+      I love Minecraft, Gaming, and building my GBG Army 🚀  
+      This website is made for gamers who want free Skins, Mods, Maps, and full gaming vibes 🔥
+    </p>
 
-    <!-- Music -->
-    <div class="setting-option">
-      <h3>Music</h3>
-      <button onclick="setMusic('on')">▶ ON</button>
-      <button onclick="setMusic('off')">⏸ OFF</button>
-    </div>
+    <h2 class="rgb-text">🎯 My Mission</h2>
+    <p class="rgb-text">
+      To create the best community of gamers, share awesome content, and make GBG Army stronger 💀⚡
+    </p>
 
-    <!-- Google Login -->
-    <div class="setting-option">
-      <h3>Login</h3>
-      <div id="g_id_onload"
-          data-client_id="YOUR_GOOGLE_CLIENT_ID"
-          data-context="signin"
-          data-ux_mode="popup"
-          data-callback="handleCredentialResponse"
-          data-auto_prompt="false">
+    <h2 class="rgb-text">✨ Fun Facts</h2>
+    <div class="fun-facts">
+      <div class="fact rgb-border">
+        <h3 class="rgb-text">🎮 Game</h3>
+        <p>Minecraft Forever</p>
       </div>
-      <div class="g_id_signin" data-type="standard"></div>
+      <div class="fact rgb-border">
+        <h3 class="rgb-text">🌈 Motto</h3>
+        <p>Respect + Gaming + Brotherhood</p>
+      </div>
+      <div class="fact rgb-border">
+        <h3 class="rgb-text">⚡ Goal</h3>
+        <p>Grow the GBG Army</p>
+      </div>
     </div>
   </div>
 
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
-  <script>
-    // Theme Functions
-    function setTheme(theme) {
-      localStorage.setItem("theme", theme);
-      document.body.className = theme;
-    }
-    // Load saved theme
-    document.body.className = localStorage.getItem("theme") || "dark";
+  <!-- FOOTER -->
+  <footer>
+    <p class="rgb-text">© 2025 GBG | Made with ❤️ by Gulshan</p>
+  </footer>
 
-    // Music Functions
-    function setMusic(state) {
-      localStorage.setItem("music", state);
-      alert("Music " + state + " selected! 🎵");
-    }
-
-    // Google Login
-    function handleCredentialResponse(response) {
-      alert("Google Login Successful ✅");
-      console.log("JWT: ", response.credential);
-    }
-  </script>
 </body>
 </html>
