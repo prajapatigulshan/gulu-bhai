@@ -1,1 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GBG Game Play</title>
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: white;
+    background: linear-gradient(270deg, red, orange, yellow, green, cyan, blue, violet, red);
+    background-size: 1500% 1500%;
+    animation: bgRGB 30s ease infinite;
+    text-align: center;
+    overflow: hidden;
+}
+@keyframes bgRGB {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+}
+.rgb-text {
+    background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 400%;
+    animation: rgbMove 8s linear infinite;
+    font-weight: bold;
+}
+@keyframes rgbMove {
+    0% {background-position: 0% 50%;}
+    50% {background-position: 100% 50%;}
+    100% {background-position: 0% 50%;}
+}
+header {
+    background: rgba(0,0,0,0.85);
+    padding: 15px;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 0 20px #00ffc8;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+#coinDisplay {
+    font-size: 1.2rem;
+    background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: rgbMove 8s linear infinite;
+}
+canvas {
+    display: block;
+    margin: 90px auto 0 auto;
+    background: rgba(0,0,0,0.8);
+    border: 4px solid;
+    border-image: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red) 1;
+    border-radius: 15px;
+}
+button {
+    margin-top: 10px;
+    padding: 8px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    border: none;
+    background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
+    color: black;
+    background-size: 400%;
+    animation: rgbMove 6s linear infinite;
+}
+</style>
+</head>
+<body>
+
+<header>
+    <span class="rgb-text" style="font-size:24px;">GBG Games Hub</span>
+    <span id="coinDisplay">💎 Coins: 0</span>
+</header>
+
+<h1 class="rgb-text" id="gameTitle">Loading Game...</h1>
+<canvas id="gameCanvas" width="600" height="400"></canvas>
+<br>
+<button onclick="restartGame()">🔄 Restart Game</button>
+
+<script>
+// Get game from URL
+const urlParams = new URLSearchParams(window.location.search);
+const game = urlParams.get('game') || 'parkour';
+
+// Coins system
+let coins = localStorage.getItem('coins') ? parseInt(localStorage.getItem('coins')) : 0;
+const coinDisplay = document.getElementById('coinDisplay');
+function updateCoins(amount) {
+    coins += amount;
+    localStorage.setItem('coins', coins);
+    coinDisplay.innerText = "💎 Coins: " + coins;
+}
+
+// Canvas setup
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+let player, obstacles = [], score = 0, gameInterval;
+
+// Restart game
+function restartGame() {
+    cancelAnimationFrame(gameInterval);
+    startGame();
+}
+
+// Start game based on selected type
+function startGame() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    player = {x:50, y:canvas.height-30, width:25, height:25, dy:0, jump: false};
+    obstacles = [];
+    score = 0;
+    document.getElementById('gameTitle').innerText = game.replace(/([a-z])([A-Z])/g, '$1 $2').toUpperCase();
+    spawnObstacles();
+    gameLoop();
+}
+
+// Key controls
+document.addEventListener('keydown', e=>{
+    if(e.key==='ArrowUp' && !player.jump){
+        player.dy=-9; // jump power
+        player.jump=true;
+    }
+    if(e.key==='ArrowLeft') player.x -= 5;
+    if(e.key==='ArrowRight') player.x += 5;
+});
+document.addEventListener('keyup', e=>{
+    if(e.key==='ArrowUp' && player.dy<0){
+        player.dy=0;
+    }
+});
+
+// Game mechanics
+function spawnObstacles(){
+    for(let i=0;i<15;i++){
+        obstacles.push({
+            x:Math.random()*canvas.width,
+            y:Math.random()*300,
+            width:20+Math.random()*15,
+            height:20,
+            color:`hsl(${Math.random()*360},100%,50%)`
+        });
+    }
+}
+function gameLoop(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    // Draw player
+    ctx.fillStyle='cyan';
+    player.y += player.dy + 3; // gravity
+    if(player.y+player.height>canvas.height){player.y=canvas.height-player.height; player.jump=false;}
+    if(player.y<0) player.y=0;
+    ctx.fillRect(player.x, player.y, player.width, player.height);
+    
+    // Draw obstacles
+    obstacles.forEach((obs)=>{
+        obs.x -= 2 + Math.random()*2;
+        if(obs.x+obs.width<0){
+            obs.x=canvas.width + Math.random()*100;
+            obs.y=Math.random()*300;
+            score+=10;
+            updateCoins(1); // coin collect
+            obs.color=`hsl(${Math.random()*360},100%,50%)`;
+        }
+        ctx.fillStyle=obs.color;
+        ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+        // Collision
+        if(player.x<obs.x+obs.width && player.x+player.width>obs.x &&
+           player.y<obs.y+obs.height && player.y+player.height>obs.y){
+            alert(`💀 Game Over! Score: ${score}`);
+            restartGame();
+        }
+    });
+
+    // Draw score
+    ctx.fillStyle='white';
+    ctx.font='16px Arial';
+    ctx.fillText('Score: '+score, 10, 20);
+    gameInterval = requestAnimationFrame(gameLoop);
+}
+
+// Start initial game
+startGame();
+</script>
+
+</body>
+</html>
 
