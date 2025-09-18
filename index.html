@@ -1,377 +1,370 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GBG MINECRAFT STORE</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      color: white;
-      text-align: center;
-      overflow-x: hidden;
-      min-height: 100vh;
-      background: linear-gradient(270deg, red, orange, yellow, green, cyan, blue, violet, red);
-      background-size: 1500% 1500%;
-      animation: bgRGB 30s ease infinite;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GBG MINECRAFT STORE</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: white;
+    overflow-x: hidden;
+    min-height: 100vh;
+    background: linear-gradient(270deg, red, orange, yellow, green, cyan, blue, violet, red);
+    background-size: 1500% 1500%;
+    animation: bgRGB 30s ease infinite;
+  }
 
-    @keyframes bgRGB {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+  @keyframes bgRGB {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
 
-    @keyframes rgbMove {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+  @keyframes rgbMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
 
-    .rgb-text {
-      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-size: 400%;
-      animation: rgbMove 8s linear infinite;
-      font-weight: bold;
-    }
-    .rgb-border {
-      border: 2px solid;
-      border-image: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red) 1;
-      animation: rgbMove 8s linear infinite;
-    }
-    .rgb-bg {
-      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
-      background-size: 400%;
-      animation: rgbMove 8s linear infinite;
-      color: black;
-      font-weight: bold;
-    }
+  .rgb-text {
+    background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 400%;
+    animation: rgbMove 8s linear infinite;
+    font-weight: bold;
+  }
 
-    header {
-      background: rgba(0,0,0,0.85);
-      padding: 15px;
-      display: flex;
-      align-items: center;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 1000;
-      box-shadow: 0 0 15px #00ffc8;
-    }
-    .menu-btn {
-      font-size: 28px;
-      cursor: pointer;
-      margin-right: 20px;
-      color: white;
-    }
-    .logo span {
-      font-size: 26px;
-      font-weight: bold;
-      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-size: 400%;
-      animation: rgbMove 8s linear infinite;
-    }
+  header {
+    background: rgba(0,0,0,0.85);
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 0 15px #00ffc8;
+  }
+  .logo span {
+    font-size: 26px;
+    font-weight: bold;
+    background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 400%;
+    animation: rgbMove 8s linear infinite;
+  }
 
-    .sidebar {
-      height: 100%;
-      width: 0;
-      position: fixed;
-      top: 0;
-      left: 0;
-      background-color: rgba(0,0,0,0.95);
-      overflow-x: hidden;
-      transition: 0.4s;
-      padding-top: 60px;
-      z-index: 1500;
-      box-shadow: 0 0 25px #00ffc8;
-    }
-    .sidebar a {
-      display: block;
-      color: white;
-      padding: 12px 25px;
-      text-decoration: none;
-      font-size: 20px;
-      transition: 0.3s;
-      margin: 5px 0;
-      border-radius: 6px;
-    }
-    .sidebar a:hover {
-      background: rgba(255,255,255,0.1);
-      box-shadow: 0 0 15px #00ffc8;
-      background-image: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-size: 400%;
-      animation: rgbMove 6s linear infinite;
-    }
-    .close-btn {
-      position: absolute;
-      top: 20px;
-      right: 25px;
-      font-size: 30px;
-      cursor: pointer;
-      color: white;
-    }
+  /* SIDEBAR */
+  .sidebar {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0,0,0,0.95);
+    overflow-x: hidden;
+    transition: 0.4s;
+    padding-top: 60px;
+    z-index: 1500;
+    box-shadow: 0 0 25px #00ffc8;
+  }
+  .sidebar a {
+    display: block;
+    color: white;
+    padding: 12px 25px;
+    text-decoration: none;
+    font-size: 20px;
+    margin: 5px 0;
+    border-radius: 6px;
+    transition: 0.3s;
+  }
+  .sidebar a:hover {
+    background: rgba(255,255,255,0.1);
+    box-shadow: 0 0 15px #00ffc8;
+    background-image: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 400%;
+    animation: rgbMove 6s linear infinite;
+  }
+  .close-btn {
+    position: absolute;
+    top: 20px;
+    right: 25px;
+    font-size: 30px;
+    cursor: pointer;
+    color: white;
+  }
 
-    .content {
-      margin-top: 100px;
-      padding: 20px;
-    }
-    .content h1 {
-      font-size: 2.5rem;
-    }
-    .content p {
-      font-size: 1.2rem;
-      margin-top: 10px;
-    }
+  .topbar {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 30px;
+    z-index: 1200;
+    box-shadow: 0 0 15px #00ffc8;
+  }
+  .topbar .stats {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+  }
+  .stat {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  .stat img {
+    width: 28px;
+    height: 28px;
+    filter: drop-shadow(0 0 6px gold);
+  }
+  .topbar .actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+  }
+  .topbar button {
+    background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
+    padding: 8px 18px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    animation: rgbMove 8s linear infinite;
+    color: white;
+  }
 
-    .options {
-      display: flex;
-      justify-content: center;
-      gap: 30px;
-      margin-top: 40px;
-      flex-wrap: wrap;
-    }
-    .card {
-      background: rgba(0,0,0,0.6);
-      border-radius: 12px;
-      padding: 20px;
-      width: 200px;
-      text-align: center;
-      transition: 0.3s;
-      box-shadow: 0 0 15px rgba(0,0,0,0.7);
-    }
-    .card img { width: 100px; height: 100px; }
-    .card h2 { margin-top: 10px; }
-    .card a {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 8px 12px;
-      border-radius: 6px;
-      text-decoration: none;
-      transition: 0.3s;
-    }
-    .card:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 25px #00ffc8;
-    }
+  .content {
+    margin-top: 120px;
+    padding: 20px;
+    text-align: center;
+  }
+  .options {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+  }
+  .card {
+    background: rgba(0,0,0,0.6);
+    border-radius: 12px;
+    padding: 20px;
+    width: 200px;
+    text-align: center;
+    transition: 0.3s;
+    box-shadow: 0 0 15px rgba(0,0,0,0.7);
+  }
+  .card img { width: 100px; height: 100px; }
+  .card a {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    text-decoration: none;
+  }
+  .card:hover { transform: scale(1.1); box-shadow: 0 0 25px #00ffc8; }
 
-    #userBox img {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      margin-top: 10px;
-      box-shadow: 0 0 15px #00ffc8;
-    }
-    button.logout-btn {
-      margin-top: 10px;
-      padding: 8px 12px;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
+  /* CARTOON CHARACTER */
+  #cartoon {
+    position: fixed;
+    bottom: 50px;
+    left: -100px;
+    width: 100px;
+    transition: left 0.05s linear;
+    z-index: 2000;
+  }
 
-    /* TOP BAR */
-    .topbar {
-      position: fixed;
-      top: 60px;
-      left: 0;
-      width: 100%;
-      background: rgba(0,0,0,0.7);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 30px;
-      z-index: 1200;
-      box-shadow: 0 0 15px #00ffc8;
-    }
-    .topbar .stats {
-      display: flex;
-      gap: 25px;
-      align-items: center;
-    }
-    .stat {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 20px;
-      font-weight: bold;
-    }
-    .stat img {
-      width: 28px;
-      height: 28px;
-      filter: drop-shadow(0 0 6px gold);
-    }
-    .topbar .actions {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      align-items: flex-end;
-    }
-    .topbar button {
-      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
-      padding: 8px 18px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      animation: rgbMove 8s linear infinite;
-      color: white;
-    }
-  </style>
+  /* LOGIN */
+  #loginBox, #userBox {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0,0,0,0.7);
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+  }
+  #userBox { display: none; }
+  button.logout-btn {
+    margin-top: 10px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    animation: rgbMove 8s linear infinite;
+    background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
+    color: white;
+  }
+
+</style>
 </head>
 <body>
 
-  <!-- HEADER -->
-  <header>
-    <div class="menu-btn" onclick="openMenu()">☰</div>
-    <div class="logo"><span>GBG</span></div>
-  </header>
+<header>
+  <div class="menu-btn" onclick="openMenu()">☰</div>
+  <div class="logo"><span>GBG</span></div>
+</header>
 
-  <!-- SIDEBAR -->
-  <div id="sidebar" class="sidebar">
-    <span class="close-btn" onclick="closeMenu()">×</span>
-    <a href="index.html">🏠 Home</a>
-    <a href="about.html">ℹ About</a>
-    <a href="skins.html">🎭 Skins</a>
-    <a href="maps.html">🗺 Maps</a>
-    <a href="mods.html">🔧 Mods</a>
-    <a href="vip.html">⭐ VIP Levels</a>
-    <a href="contact.html">📞 Contact</a>
-    <a href="game.html">🎯 Play Game</a>
-    <a href="https://t.me/GBG_Army_Official" target="_blank">📢 Telegram</a>
-    <a href="https://www.instagram.com/gulu_bhai_gamer_01" target="_blank">📸 Instagram</a>
-    <a href="settings.html">⚙ Settings</a>
-  </div>
+<!-- SIDEBAR -->
+<div id="sidebar" class="sidebar">
+  <span class="close-btn" onclick="closeMenu()">×</span>
+  <a href="index.html">🏠 Home</a>
+  <a href="about.html">ℹ About</a>
+  <a href="skins.html">🎭 Skins</a>
+  <a href="maps.html">🗺 Maps</a>
+  <a href="mods.html">🔧 Mods</a>
+  <a href="vip.html">⭐ VIP Levels</a>
+  <a href="contact.html">📞 Contact</a>
+  <a href="game.html">🎯 Play Game</a>
+  <a href="https://t.me/GBG_Army_Official" target="_blank">📢 Telegram</a>
+  <a href="https://www.instagram.com/gulu_bhai_gamer_01" target="_blank">📸 Instagram</a>
+  <a href="settings.html">⚙ Settings</a>
+</div>
 
-  <!-- TOPBAR -->
-  <div class="topbar">
-    <div class="stats">
-      <div class="stat">
-        <img src="https://cdn-icons-png.flaticon.com/512/1464/1464079.png" alt="Coins">
-        <span id="coinDisplay">0</span>
-      </div>
-      <div class="stat">
-        <img src="https://cdn-icons-png.flaticon.com/512/2583/2583349.png" alt="Gold">
-        <span id="goldDisplay">0</span>
-      </div>
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="stats">
+    <div class="stat">
+      <img src="https://cdn-icons-png.flaticon.com/512/1464/1464079.png" alt="Coins">
+      <span id="coinDisplay">0</span>
     </div>
-    <div class="actions">
-      <button onclick="openSubscription()">⭐ Subscription</button>
-      <button onclick="openProfile()">👤 Profile</button>
+    <div class="stat">
+      <img src="https://cdn-icons-png.flaticon.com/512/2583/2583349.png" alt="Gold">
+      <span id="goldDisplay">0</span>
     </div>
   </div>
+  <div class="actions">
+    <button onclick="openSubscription()">⭐ Subscription</button>
+    <button onclick="openProfile()">👤 Profile</button>
+  </div>
+</div>
 
-  <!-- PAGE CONTENT -->
-  <div class="content">
-    <h1 class="rgb-text">Welcome to My Website</h1>
-    <p class="rgb-text">This is Gulshan aka Gulu Bhai Gamer</p>
+<!-- CARTOON CHARACTER -->
+<img id="cartoon" src="https://i.postimg.cc/8z1PR8Fp/cartoon.png" alt="Cartoon Character">
 
-    <div class="options">
-      <div class="card rgb-border">
-        <img src="https://minecraft.wiki/images/Skin.png" alt="Skins">
-        <h2 class="rgb-text">Skins</h2>
-        <a href="skins.html" class="rgb-bg">Explore Skins</a>
-      </div>
-      <div class="card rgb-border">
-        <img src="https://minecraft.wiki/images/Village_map.png" alt="Maps">
-        <h2 class="rgb-text">Maps</h2>
-        <a href="maps.html" class="rgb-bg">Explore Maps</a>
-      </div>
-      <div class="card rgb-border">
-        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="VIP">
-        <h2 class="rgb-text">VIP Level</h2>
-        <a href="vip.html" class="rgb-bg">Check VIP</a>
-      </div>
-      <div class="card rgb-border">
-        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Game">
-        <h2 class="rgb-text">Play Game</h2>
-        <a href="game.html" class="rgb-bg">🎮 Play Now</a>
-      </div>
+<!-- PAGE CONTENT -->
+<div class="content">
+  <h1 class="rgb-text">Welcome to My Website</h1>
+  <p class="rgb-text">This is Gulshan aka Gulu Bhai Gamer</p>
+
+  <div class="options">
+    <div class="card rgb-border">
+      <img src="https://minecraft.wiki/images/Skin.png" alt="Skins">
+      <h2 class="rgb-text">Skins</h2>
+      <a href="skins.html" class="rgb-bg">Explore Skins</a>
     </div>
-
-    <!-- LOGIN BOX -->
-    <div id="loginBox" style="margin-top:30px;">
-      <div id="g_id_onload"
-          data-client_id="561940078345-9sl2labkcp78h7k1d1n7sr4li81jh972.apps.googleusercontent.com"
-          data-auto_prompt="false"
-          data-callback="handleLogin">
-      </div>
-      <div class="g_id_signin" data-type="standard"></div>
+    <div class="card rgb-border">
+      <img src="https://minecraft.wiki/images/Village_map.png" alt="Maps">
+      <h2 class="rgb-text">Maps</h2>
+      <a href="maps.html" class="rgb-bg">Explore Maps</a>
     </div>
-
-    <!-- USER INFO -->
-    <div id="userBox" style="display:none; margin-top:20px;">
-      <h3 id="userName" class="rgb-text"></h3>
-      <p id="userEmail" class="rgb-text"></p>
-      <img id="userPic">
-      <button onclick="logout()" class="logout-btn rgb-bg">Logout</button>
+    <div class="card rgb-border">
+      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="VIP">
+      <h2 class="rgb-text">VIP Level</h2>
+      <a href="vip.html" class="rgb-bg">Check VIP</a>
+    </div>
+    <div class="card rgb-border">
+      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Game">
+      <h2 class="rgb-text">Play Game</h2>
+      <a href="game.html" class="rgb-bg">🎮 Play Now</a>
     </div>
   </div>
 
-  <!-- Google Sign-In -->
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <!-- LOGIN -->
+  <div id="loginBox">
+    <h2 class="rgb-text">Welcome! Please Sign In</h2>
+    <div id="g_id_onload"
+         data-client_id="561940078345-9sl2labkcp78h7k1d1n7sr4li81jh972.apps.googleusercontent.com"
+         data-auto_prompt="false"
+         data-callback="handleLogin">
+    </div>
+    <div class="g_id_signin" data-type="standard"></div>
+  </div>
 
-  <!-- SCRIPT -->
-  <script>
-    function openMenu() { document.getElementById("sidebar").style.width = "250px"; }
-    function closeMenu() { document.getElementById("sidebar").style.width = "0"; }
+  <!-- USER INFO -->
+  <div id="userBox">
+    <h3 id="userName" class="rgb-text"></h3>
+    <p id="userEmail" class="rgb-text"></p>
+    <img id="userPic" style="width:100px; border-radius:50%; box-shadow:0 0 15px #00ffc8;">
+    <br>
+    <button onclick="logout()" class="logout-btn">Logout</button>
+  </div>
+</div>
 
-    function decodeJwt(token) {
-      const base64Url = token.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-      }).join(''));
-      return JSON.parse(jsonPayload);
-    }
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script>
+  // SIDEBAR
+  function openMenu() { document.getElementById("sidebar").style.width = "250px"; }
+  function closeMenu() { document.getElementById("sidebar").style.width = "0"; }
 
-    function handleLogin(response) {
-      const data = decodeJwt(response.credential);
-      localStorage.setItem("user", JSON.stringify(data));
-      showUser(data);
-    }
+  // COINS & GOLD
+  let coins = localStorage.getItem("coins") ? parseInt(localStorage.getItem("coins")) : 0;
+  document.getElementById("coinDisplay").innerText = coins;
+  let gold = localStorage.getItem("gold") ? parseInt(localStorage.getItem("gold")) : 0;
+  document.getElementById("goldDisplay").innerText = gold;
 
-    function showUser(data) {
-      document.getElementById("loginBox").style.display = "none";
-      document.getElementById("userBox").style.display = "block";
-      document.getElementById("userName").innerText = "Welcome, " + data.name;
-      document.getElementById("userEmail").innerText = data.email;
-      document.getElementById("userPic").src = data.picture;
-    }
+  function openSubscription(){ alert("🚀 Subscription Page Coming Soon!"); }
+  function openProfile(){ alert("👤 Profile Page Coming Soon!"); }
 
-    function logout() {
-      localStorage.removeItem("user");
-      document.getElementById("loginBox").style.display = "block";
-      document.getElementById("userBox").style.display = "none";
-    }
+  // CARTOON CHARACTER
+  const cartoon = document.getElementById("cartoon");
+  let pos = -100;
+  function moveCartoon(){
+    pos += 2;
+    if(pos > window.innerWidth) pos = -100;
+    cartoon.style.left = pos + "px";
+    const user = localStorage.getItem("user");
+    if(user) cartoon.title = "Hello " + JSON.parse(user).name + "! Welcome!";
+    else cartoon.title = "Please Sign In to continue!";
+    requestAnimationFrame(moveCartoon);
+  }
+  moveCartoon();
 
-    const savedUser = localStorage.getItem("user");
-    if (savedUser) { showUser(JSON.parse(savedUser)); }
+  // GOOGLE SIGN-IN
+  function decodeJwt(token){
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    return JSON.parse(decodeURIComponent(atob(base64).split('').map(c=>('%'+('00'+c.charCodeAt(0).toString(16))).slice(-2)).join('')));
+  }
 
-    // Coins
-    let coins = localStorage.getItem("coins") ? parseInt(localStorage.getItem("coins")) : 0;
-    document.getElementById("coinDisplay").innerText = coins;
+  function handleLogin(response){
+    const data = decodeJwt(response.credential);
+    localStorage.setItem("user", JSON.stringify(data));
+    showUser(data);
+  }
 
-    // Gold
-    let gold = localStorage.getItem("gold") ? parseInt(localStorage.getItem("gold")) : 0;
-    document.getElementById("goldDisplay").innerText = gold;
+  function showUser(data){
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("userBox").style.display = "block";
+    document.getElementById("userName").innerText = "Welcome, " + data.name;
+    document.getElementById("userEmail").innerText = data.email;
+    document.getElementById("userPic").src = data.picture;
+  }
 
-    // Subscription
-    function openSubscription() {
-      alert("🚀 Subscription Page Coming Soon! Yaha se aap Gold ya VIP purchase kar sakte ho.");
-    }
+  function logout(){
+    localStorage.removeItem("user");
+    document.getElementById("loginBox").style.display = "block";
+    document.getElementById("userBox").style.display = "none";
+  }
 
-    // Profile
-    function openProfile() {
-      alert("👤 Profile Page Coming Soon! Yaha se aap apna account dekh paayenge.");
-    }
-  </script>
+  const savedUser = localStorage.getItem("user");
+  if(savedUser) showUser(JSON.parse(savedUser));
+</script>
 </body>
 </html>
