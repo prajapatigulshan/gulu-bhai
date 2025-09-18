@@ -1,155 +1,123 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GBG Parkour</title>
-<style>
-  body {
-    margin: 0;
-    overflow: hidden;
-    background: linear-gradient(270deg, red, orange, yellow, green, cyan, blue, violet, red);
-    background-size: 1500% 1500%;
-    animation: bgRGB 30s ease infinite;
-  }
-  @keyframes bgRGB {
-    0% {background-position:0% 50%;}
-    50% {background-position:100% 50%;}
-    100% {background-position:0% 50%;}
-  }
-  canvas {
-    display: block;
-    margin: 0 auto;
-    background: #87CEEB;
-  }
-</style>
+  <title>Minecraft Parkour</title>
+  <style>
+    body { margin: 0; overflow: hidden; background: skyblue; }
+    canvas { display: block; margin: auto; background: #87CEEB; }
+  </style>
 </head>
 <body>
-<canvas id="gameCanvas" width="800" height="500"></canvas>
-<script>
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
+  <canvas id="game" width="800" height="400"></canvas>
 
-const GRAVITY = 0.5;
-const JUMP = -10;
+  <script>
+    const canvas = document.getElementById("game");
+    const ctx = canvas.getContext("2d");
 
-let keys = {};
+    // Load Images
+    const imgPlayer = new Image();
+    imgPlayer.src = "player.png";   // 👉 तेरी दी हुई skin (same folder में रखनी है)
 
-// Map blocks (x, y, width, height, image)
-const blocks = [
-  {x: 0, y: 450, w: 200, h: 50, img: 'https://i.imgur.com/O3e7F5h.png'},
-  {x: 250, y: 400, w: 150, h: 50, img: 'https://i.imgur.com/O3e7F5h.png'},
-  {x: 450, y: 350, w: 150, h: 50, img: 'https://i.imgur.com/O3e7F5h.png'},
-  {x: 650, y: 300, w: 150, h: 50, img: 'https://i.imgur.com/O3e7F5h.png'},
-];
+    const imgZombie = new Image();
+    imgZombie.src = "zombie.png";   // Enemy (zombie image डालना पड़ेगा)
 
-// Coins (x, y, collected, image)
-const coins = [
-  {x: 280, y: 370, collected:false, img:'https://i.imgur.com/3bX2rjv.png'},
-  {x: 480, y: 320, collected:false, img:'https://i.imgur.com/3bX2rjv.png'},
-  {x: 680, y: 270, collected:false, img:'https://i.imgur.com/3bX2rjv.png'},
-];
+    const imgGrass = new Image();
+    imgGrass.src = "grass.png";     // Grass block
+    const imgDirt = new Image();
+    imgDirt.src = "dirt.png";       // Dirt block
+    const imgWater = new Image();
+    imgWater.src = "water.png";     // Water block
 
-// Player sprite
-const playerImg = new Image();
-playerImg.src = 'https://i.imgur.com/1X3eZ4s.png'; // small Minecraft-style character
-let player = {x:50, y:400, w:40, h:50, dx:0, dy:0, onGround:false};
+    // Game settings
+    const gravity = 0.8;
+    let score = 0;
 
-document.addEventListener('keydown', e=> keys[e.code] = true);
-document.addEventListener('keyup', e=> keys[e.code] = false);
+    // Player
+    const player = { x: 100, y: 300, w: 50, h: 50, velY: 0, onGround: false };
 
-function update() {
-  // Horizontal movement
-  if(keys['ArrowRight']) player.dx = 5;
-  else if(keys['ArrowLeft']) player.dx = -5;
-  else player.dx = 0;
+    // Enemy (Zombie)
+    const enemy = { x: 700, y: 300, w: 50, h: 50, speed: 4 };
 
-  // Jump
-  if(keys['Space'] && player.onGround) {
-    player.dy = JUMP;
-    player.onGround = false;
-  }
+    // Platforms (grass/dirt/water blocks)
+    const platforms = [
+      { x: 0,   y: 350, w: 100, h: 50, type: "grass" },
+      { x: 150, y: 300, w: 100, h: 50, type: "dirt" },
+      { x: 300, y: 250, w: 100, h: 50, type: "grass" },
+      { x: 450, y: 200, w: 100, h: 50, type: "dirt" },
+      { x: 600, y: 350, w: 100, h: 50, type: "water" }
+    ];
 
-  // Gravity
-  player.dy += GRAVITY;
-  player.x += player.dx;
-  player.y += player.dy;
+    let keys = {};
 
-  // Collision
-  player.onGround = false;
-  blocks.forEach(block => {
-    if(player.x < block.x + block.w &&
-       player.x + player.w > block.x &&
-       player.y < block.y + block.h &&
-       player.y + player.h > block.y) {
+    // Key controls
+    window.addEventListener("keydown", e => keys[e.code] = true);
+    window.addEventListener("keyup", e => keys[e.code] = false);
 
-      // Collision from top
-      if(player.dy > 0 && player.y + player.h - player.dy <= block.y) {
-        player.y = block.y - player.h;
-        player.dy = 0;
-        player.onGround = true;
+    function gameLoop() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Move player
+      if (keys["ArrowLeft"]) player.x -= 5;
+      if (keys["ArrowRight"]) player.x += 5;
+
+      // Jump
+      if (keys["Space"] && player.onGround) {
+        player.velY = -15;
+        player.onGround = false;
       }
-      // Collision from bottom
-      else if(player.dy < 0 && player.y >= block.y + block.h - player.dy) {
-        player.y = block.y + block.h;
-        player.dy = 0;
+
+      // Gravity
+      player.velY += gravity;
+      player.y += player.velY;
+
+      // Platforms collision
+      player.onGround = false;
+      for (let p of platforms) {
+        if (player.x < p.x + p.w &&
+            player.x + player.w > p.x &&
+            player.y + player.h > p.y &&
+            player.y + player.h < p.y + 20 &&
+            player.velY >= 0) {
+          player.y = p.y - player.h;
+          player.velY = 0;
+          player.onGround = true;
+        }
+
+        // Draw blocks
+        if (p.type === "grass") ctx.drawImage(imgGrass, p.x, p.y, p.w, p.h);
+        else if (p.type === "dirt") ctx.drawImage(imgDirt, p.x, p.y, p.w, p.h);
+        else if (p.type === "water") ctx.drawImage(imgWater, p.x, p.y, p.w, p.h);
       }
-      // Side collisions
-      else if(player.dx > 0) player.x = block.x - player.w;
-      else if(player.dx < 0) player.x = block.x + block.w;
+
+      // Enemy movement
+      enemy.x -= enemy.speed;
+      if (enemy.x < -enemy.w) {
+        enemy.x = canvas.width + Math.random() * 300;
+        score++;
+      }
+
+      // Collision with enemy
+      if (player.x < enemy.x + enemy.w &&
+          player.x + player.w > enemy.x &&
+          player.y < enemy.y + enemy.h &&
+          player.y + player.h > enemy.y) {
+        alert("Game Over! Score: " + score);
+        document.location.reload();
+      }
+
+      // Draw player + enemy
+      ctx.drawImage(imgPlayer, player.x, player.y, player.w, player.h); //
+      ctx.drawImage(imgZombie, enemy.x, enemy.y, enemy.w, enemy.h);
+
+      // Score
+      ctx.fillStyle = "black";
+      ctx.font = "20px Arial";
+      ctx.fillText("Score: " + score, 10, 20);
+
+      requestAnimationFrame(gameLoop);
     }
-  });
 
-  // Collect coins
-  coins.forEach(coin => {
-    if(!coin.collected &&
-       player.x < coin.x + 30 &&
-       player.x + player.w > coin.x &&
-       player.y < coin.y + 30 &&
-       player.y + player.h > coin.y) {
-         coin.collected = true;
-         // Coin sound
-         let audio = new Audio('https://freesound.org/data/previews/341/341695_3248244-lq.mp3');
-         audio.play();
-       }
-  });
-}
-
-function draw() {
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-
-  // Draw blocks
-  blocks.forEach(block => {
-    let img = new Image();
-    img.src = block.img;
-    ctx.drawImage(img, block.x, block.y, block.w, block.h);
-  });
-
-  // Draw coins
-  coins.forEach(coin => {
-    if(!coin.collected) {
-      let img = new Image();
-      img.src = coin.img;
-      ctx.drawImage(img, coin.x, coin.y, 30, 30);
-    }
-  });
-
-  // Draw player
-  ctx.drawImage(playerImg, player.x, player.y, player.w, player.h);
-
-  // Score
-  ctx.fillStyle = 'yellow';
-  ctx.font = '20px Arial';
-  let score = coins.filter(c => c.collected).length;
-  ctx.fillText(`Coins: ${score}`, 10, 30);
-}
-
-function gameLoop() {
-  update();
-  draw();
-  requestAnimationFrame(gameLoop);
-}
-gameLoop();
-</script>
+    gameLoop();
+  </script>
 </body>
 </html>
