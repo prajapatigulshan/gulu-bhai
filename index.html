@@ -177,7 +177,7 @@
       cursor: pointer;
     }
 
-    /* TOP BAR COINS */
+    /* TOP BAR */
     .topbar {
       position: fixed;
       top: 60px;
@@ -186,6 +186,7 @@
       background: rgba(0,0,0,0.7);
       display: flex;
       justify-content: space-between;
+      align-items: center;
       padding: 10px 20px;
       z-index: 1200;
       box-shadow: 0 0 15px #00ffc8;
@@ -202,6 +203,11 @@
       cursor: pointer;
       font-weight: bold;
       animation: rgbMove 8s linear infinite;
+    }
+    .topbar .stats {
+      display: flex;
+      gap: 20px;
+      align-items: center;
     }
   </style>
 </head>
@@ -229,10 +235,13 @@
     <a href="settings.html">⚙ Settings</a>
   </div>
 
-  <!-- TOPBAR COINS -->
+  <!-- TOPBAR -->
   <div class="topbar">
-    <h2 id="coinDisplay">💰 Coins: 0</h2>
-    <button class="subscribe-btn" onclick="subscribeNow()">⭐ Subscribe</button>
+    <div class="stats">
+      <h2 id="coinDisplay">💰 Coins: 0</h2>
+      <h2 id="goldDisplay">🏆 Gold: 0</h2>
+    </div>
+    <button onclick="openSubscription()">⭐ Subscription</button>
   </div>
 
   <!-- PAGE CONTENT -->
@@ -326,8 +335,13 @@
     let coins = localStorage.getItem("coins") ? parseInt(localStorage.getItem("coins")) : 0;
     document.getElementById("coinDisplay").innerText = "💰 Coins: " + coins;
 
-    function subscribeNow() {
-      alert("🚀 Subscription Coming Soon with Real Payment Gateway!");
+    // Gold
+    let gold = localStorage.getItem("gold") ? parseInt(localStorage.getItem("gold")) : 0;
+    document.getElementById("goldDisplay").innerText = "🏆 Gold: " + gold;
+
+    // Subscription
+    function openSubscription() {
+      alert("🚀 Subscription Page Coming Soon! Yaha se aap Gold ya VIP purchase kar sakte ho.");
     }
   </script>
 </body>
