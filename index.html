@@ -10,7 +10,7 @@
     font-family: Arial, sans-serif;
     color: white;
     overflow-x: hidden;
-    min-height: 100vh;
+    min-height: 150vh;
     background: linear-gradient(270deg, red, orange, yellow, green, cyan, blue, violet, red);
     background-size: 1500% 1500%;
     animation: bgRGB 30s ease infinite;
@@ -49,14 +49,13 @@
     z-index: 1000;
     box-shadow: 0 0 15px #00ffc8;
   }
+  .menu-btn { font-size:28px; cursor:pointer; margin-right:20px; color:white; }
   .logo span {
-    font-size: 26px;
-    font-weight: bold;
+    font-size:26px; font-weight:bold;
     background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    background-size: 400%;
-    animation: rgbMove 8s linear infinite;
+    background-size: 400%; animation: rgbMove 8s linear infinite;
   }
 
   /* SIDEBAR */
@@ -74,33 +73,19 @@
     box-shadow: 0 0 25px #00ffc8;
   }
   .sidebar a {
-    display: block;
-    color: white;
-    padding: 12px 25px;
-    text-decoration: none;
-    font-size: 20px;
-    margin: 5px 0;
-    border-radius: 6px;
-    transition: 0.3s;
+    display:block; color:white; padding:12px 25px; text-decoration:none; font-size:20px; margin:5px 0; border-radius:6px; transition:0.3s;
   }
   .sidebar a:hover {
     background: rgba(255,255,255,0.1);
-    box-shadow: 0 0 15px #00ffc8;
+    box-shadow:0 0 15px #00ffc8;
     background-image: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-size: 400%;
-    animation: rgbMove 6s linear infinite;
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-size:400%; animation: rgbMove 6s linear infinite;
   }
-  .close-btn {
-    position: absolute;
-    top: 20px;
-    right: 25px;
-    font-size: 30px;
-    cursor: pointer;
-    color: white;
-  }
+  .close-btn { position:absolute; top:20px; right:25px; font-size:30px; cursor:pointer; color:white; }
 
+  /* TOPBAR */
   .topbar {
     position: fixed;
     top: 60px;
@@ -112,105 +97,40 @@
     align-items: center;
     padding: 10px 30px;
     z-index: 1200;
-    box-shadow: 0 0 15px #00ffc8;
+    box-shadow:0 0 15px #00ffc8;
   }
-  .topbar .stats {
-    display: flex;
-    gap: 25px;
-    align-items: center;
-  }
-  .stat {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 20px;
-    font-weight: bold;
-  }
-  .stat img {
-    width: 28px;
-    height: 28px;
-    filter: drop-shadow(0 0 6px gold);
-  }
-  .topbar .actions {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    align-items: flex-end;
-  }
+  .topbar .stats { display:flex; gap:25px; align-items:center; }
+  .stat { display:flex; align-items:center; gap:8px; font-size:20px; font-weight:bold; }
+  .stat img { width:28px; height:28px; filter:drop-shadow(0 0 6px gold); }
+  .topbar .actions { display:flex; flex-direction:column; gap:8px; align-items:flex-end; }
   .topbar button {
-    background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
-    padding: 8px 18px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    animation: rgbMove 8s linear infinite;
-    color: white;
+    background: linear-gradient(135deg, red, orange, yellow, green, cyan, blue, violet);
+    padding: 8px 18px; border:none; border-radius:50% 10% 50% 10%;
+    cursor:pointer; font-weight:bold;
+    animation: rgbMove 8s linear infinite; color:white;
+    box-shadow:0 0 15px #00ffc8;
   }
 
-  .content {
-    margin-top: 120px;
-    padding: 20px;
-    text-align: center;
-  }
-  .options {
-    display: flex;
-    justify-content: center;
-    gap: 30px;
-    margin-top: 40px;
-    flex-wrap: wrap;
-  }
-  .card {
-    background: rgba(0,0,0,0.6);
-    border-radius: 12px;
-    padding: 20px;
-    width: 200px;
-    text-align: center;
-    transition: 0.3s;
-    box-shadow: 0 0 15px rgba(0,0,0,0.7);
-  }
-  .card img { width: 100px; height: 100px; }
-  .card a {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 8px 12px;
-    border-radius: 6px;
-    text-decoration: none;
-  }
+  /* CONTENT */
+  .content { margin-top: 120px; padding:20px; text-align:center; }
+  .options { display:flex; justify-content:center; gap:30px; margin-top:40px; flex-wrap:wrap; }
+  .card { background: rgba(0,0,0,0.6); border-radius:12px; padding:20px; width:200px; text-align:center; transition:0.3s; box-shadow:0 0 15px rgba(0,0,0,0.7);}
+  .card img { width:100px; height:100px; }
+  .card a { display:inline-block; margin-top:10px; padding:8px 12px; border-radius:6px; text-decoration:none; background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet); color:white; animation:rgbMove 8s linear infinite;}
   .card:hover { transform: scale(1.1); box-shadow: 0 0 25px #00ffc8; }
 
-  /* CARTOON CHARACTER */
+  /* CARTOON */
   #cartoon {
-    position: fixed;
-    bottom: 50px;
-    left: -100px;
-    width: 100px;
-    transition: left 0.05s linear;
-    z-index: 2000;
+    position: fixed; bottom:50px; left:-120px; width:100px; z-index:2000; transition:left 0.05s linear;
   }
 
   /* LOGIN */
   #loginBox, #userBox {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(0,0,0,0.7);
-    padding: 30px;
-    border-radius: 15px;
-    text-align: center;
+    position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);
+    background: rgba(0,0,0,0.7); padding:30px; border-radius:15px; text-align:center; width:300px;
   }
-  #userBox { display: none; }
-  button.logout-btn {
-    margin-top: 10px;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    animation: rgbMove 8s linear infinite;
-    background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
-    color: white;
-  }
+  #userBox { display:none; }
+  button.logout-btn { margin-top:10px; padding:8px 12px; border:none; border-radius:6px; cursor:pointer; animation:rgbMove 8s linear infinite; background:linear-gradient(90deg, red,orange,yellow,green,cyan,blue,violet); color:white; }
 
 </style>
 </head>
@@ -240,14 +160,8 @@
 <!-- TOPBAR -->
 <div class="topbar">
   <div class="stats">
-    <div class="stat">
-      <img src="https://cdn-icons-png.flaticon.com/512/1464/1464079.png" alt="Coins">
-      <span id="coinDisplay">0</span>
-    </div>
-    <div class="stat">
-      <img src="https://cdn-icons-png.flaticon.com/512/2583/2583349.png" alt="Gold">
-      <span id="goldDisplay">0</span>
-    </div>
+    <div class="stat"><img src="https://cdn-icons-png.flaticon.com/512/1464/1464079.png" alt="Coins"><span id="coinDisplay">0</span></div>
+    <div class="stat"><img src="https://cdn-icons-png.flaticon.com/512/2583/2583349.png" alt="Gold"><span id="goldDisplay">0</span></div>
   </div>
   <div class="actions">
     <button onclick="openSubscription()">⭐ Subscription</button>
@@ -255,7 +169,7 @@
   </div>
 </div>
 
-<!-- CARTOON CHARACTER -->
+<!-- CARTOON -->
 <img id="cartoon" src="https://i.postimg.cc/8z1PR8Fp/cartoon.png" alt="Cartoon Character">
 
 <!-- PAGE CONTENT -->
@@ -264,25 +178,25 @@
   <p class="rgb-text">This is Gulshan aka Gulu Bhai Gamer</p>
 
   <div class="options">
-    <div class="card rgb-border">
+    <div class="card">
       <img src="https://minecraft.wiki/images/Skin.png" alt="Skins">
       <h2 class="rgb-text">Skins</h2>
-      <a href="skins.html" class="rgb-bg">Explore Skins</a>
+      <a href="skins.html">Explore Skins</a>
     </div>
-    <div class="card rgb-border">
+    <div class="card">
       <img src="https://minecraft.wiki/images/Village_map.png" alt="Maps">
       <h2 class="rgb-text">Maps</h2>
-      <a href="maps.html" class="rgb-bg">Explore Maps</a>
+      <a href="maps.html">Explore Maps</a>
     </div>
-    <div class="card rgb-border">
+    <div class="card">
       <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="VIP">
       <h2 class="rgb-text">VIP Level</h2>
-      <a href="vip.html" class="rgb-bg">Check VIP</a>
+      <a href="vip.html">Check VIP</a>
     </div>
-    <div class="card rgb-border">
+    <div class="card">
       <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Game">
       <h2 class="rgb-text">Play Game</h2>
-      <a href="game.html" class="rgb-bg">🎮 Play Now</a>
+      <a href="game.html">🎮 Play Now</a>
     </div>
   </div>
 
@@ -324,10 +238,10 @@
 
   // CARTOON CHARACTER
   const cartoon = document.getElementById("cartoon");
-  let pos = -100;
+  let pos = -120;
   function moveCartoon(){
     pos += 2;
-    if(pos > window.innerWidth) pos = -100;
+    if(pos > window.innerWidth) pos = -120;
     cartoon.style.left = pos + "px";
     const user = localStorage.getItem("user");
     if(user) cartoon.title = "Hello " + JSON.parse(user).name + "! Welcome!";
@@ -366,5 +280,6 @@
   const savedUser = localStorage.getItem("user");
   if(savedUser) showUser(JSON.parse(savedUser));
 </script>
+
 </body>
 </html>
