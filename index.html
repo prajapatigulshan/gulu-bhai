@@ -187,27 +187,42 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 10px 20px;
+      padding: 10px 30px;
       z-index: 1200;
       box-shadow: 0 0 15px #00ffc8;
     }
-    .topbar h2, .topbar button {
-      margin: 0;
-      color: white;
+    .topbar .stats {
+      display: flex;
+      gap: 25px;
+      align-items: center;
+    }
+    .stat {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .stat img {
+      width: 28px;
+      height: 28px;
+      filter: drop-shadow(0 0 6px gold);
+    }
+    .topbar .actions {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-end;
     }
     .topbar button {
       background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
-      padding: 6px 12px;
+      padding: 8px 18px;
       border: none;
-      border-radius: 6px;
+      border-radius: 8px;
       cursor: pointer;
       font-weight: bold;
       animation: rgbMove 8s linear infinite;
-    }
-    .topbar .stats {
-      display: flex;
-      gap: 20px;
-      align-items: center;
+      color: white;
     }
   </style>
 </head>
@@ -238,10 +253,19 @@
   <!-- TOPBAR -->
   <div class="topbar">
     <div class="stats">
-      <h2 id="coinDisplay">💰 Coins: 0</h2>
-      <h2 id="goldDisplay">🏆 Gold: 0</h2>
+      <div class="stat">
+        <img src="https://cdn-icons-png.flaticon.com/512/1464/1464079.png" alt="Coins">
+        <span id="coinDisplay">0</span>
+      </div>
+      <div class="stat">
+        <img src="https://cdn-icons-png.flaticon.com/512/2583/2583349.png" alt="Gold">
+        <span id="goldDisplay">0</span>
+      </div>
     </div>
-    <button onclick="openSubscription()">⭐ Subscription</button>
+    <div class="actions">
+      <button onclick="openSubscription()">⭐ Subscription</button>
+      <button onclick="openProfile()">👤 Profile</button>
+    </div>
   </div>
 
   <!-- PAGE CONTENT -->
@@ -333,15 +357,20 @@
 
     // Coins
     let coins = localStorage.getItem("coins") ? parseInt(localStorage.getItem("coins")) : 0;
-    document.getElementById("coinDisplay").innerText = "💰 Coins: " + coins;
+    document.getElementById("coinDisplay").innerText = coins;
 
     // Gold
     let gold = localStorage.getItem("gold") ? parseInt(localStorage.getItem("gold")) : 0;
-    document.getElementById("goldDisplay").innerText = "🏆 Gold: " + gold;
+    document.getElementById("goldDisplay").innerText = gold;
 
     // Subscription
     function openSubscription() {
       alert("🚀 Subscription Page Coming Soon! Yaha se aap Gold ya VIP purchase kar sakte ho.");
+    }
+
+    // Profile
+    function openProfile() {
+      alert("👤 Profile Page Coming Soon! Yaha se aap apna account dekh paayenge.");
     }
   </script>
 </body>
