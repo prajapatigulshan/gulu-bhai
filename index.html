@@ -100,13 +100,11 @@
     justify-content: space-between;
     align-items: center;
     padding: 10px 30px;
+    padding-right: 50px;
     z-index: 1200;
     box-shadow:0 0 15px #00ffc8;
   }
-  .topbar .stats { display:flex; gap:25px; align-items:center; }
-  .stat { display:flex; align-items:center; gap:8px; font-size:20px; font-weight:bold; }
-  .stat img { width:28px; height:28px; filter:drop-shadow(0 0 6px gold); border-radius:50%; }
-  .topbar .actions { display:flex; flex-direction:column; gap:8px; align-items:flex-end; }
+  .topbar .actions { display:flex; flex-direction:row; gap:12px; align-items:center; }
   .topbar button {
     background: linear-gradient(135deg, red, orange, yellow, green, cyan, blue, violet);
     padding: 8px 18px; border:none; border-radius:50% 10% 50% 10%;
@@ -123,15 +121,32 @@
   .card a { display:inline-block; margin-top:10px; padding:8px 12px; border-radius:6px; text-decoration:none; background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet); color:white; animation:rgbMove 8s linear infinite;}
   .card:hover { transform: scale(1.1); box-shadow: 0 0 25px #00ffc8; }
 
-  /* CARTOON */
-  #cartoon {
-    position: fixed; bottom:50px; left:-120px; width:100px; z-index:2000; transition:left 0.05s linear;
+  /* CARTOON (style maarne wala insaan) */
+  #cartoonGuy {
+    position: fixed;
+    bottom: 60px;
+    left: -150px;
+    width: 120px;
+    z-index: 2000;
+    transition: left 0.1s linear;
+    display: none;
+  }
+  #cartoonText {
+    position: fixed;
+    bottom: 200px;
+    left: -300px;
+    background: rgba(0,0,0,0.7);
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-size: 18px;
+    box-shadow: 0 0 15px #00ffc8;
+    display: none;
   }
 
   /* LOGIN */
   #loginBox, #userBox {
     position:relative;
-    top:100px; /* thoda niche */
+    top:100px;
     background: rgba(0,0,0,0.7); padding:30px; border-radius:15px; text-align:center; width:300px;
     margin:auto;
   }
@@ -157,25 +172,15 @@
   <a href="vip.html">⭐ VIP Levels</a>
   <a href="contact.html">📞 Contact</a>
   <a href="game.html">🎯 Play Game</a>
-  <a href="https://t.me/GBG_Army_Official" target="_blank">📢 Telegram</a>
-  <a href="https://www.instagram.com/gulu_bhai_gamer_01" target="_blank">📸 Instagram</a>
-  <a href="settings.html">⚙ Settings</a>
 </div>
 
 <!-- TOPBAR -->
 <div class="topbar">
-  <div class="stats">
-    <div class="stat"><img src="https://cdn-icons-png.flaticon.com/512/1464/1464079.png" alt="Coins"><span id="coinDisplay">0</span></div>
-    <div class="stat"><img src="https://cdn-icons-png.flaticon.com/512/2583/2583349.png" alt="Gold"><span id="goldDisplay">0</span></div>
-  </div>
   <div class="actions">
     <button onclick="openSubscription()">⭐ Subscription</button>
     <button onclick="openProfile()">👤 Profile</button>
   </div>
 </div>
-
-<!-- CARTOON -->
-<img id="cartoon" src="https://i.postimg.cc/8z1PR8Fp/cartoon.png" alt="Cartoon Character">
 
 <!-- PAGE CONTENT -->
 <div class="content">
@@ -184,22 +189,18 @@
 
   <div class="options">
     <div class="card">
-      <img src="https://minecraft.wiki/images/Skin.png" alt="Skins">
       <h2 class="rgb-text">Skins</h2>
       <a href="skins.html">Explore Skins</a>
     </div>
     <div class="card">
-      <img src="https://minecraft.wiki/images/Village_map.png" alt="Maps">
       <h2 class="rgb-text">Maps</h2>
       <a href="maps.html">Explore Maps</a>
     </div>
     <div class="card">
-      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="VIP">
       <h2 class="rgb-text">VIP Level</h2>
       <a href="vip.html">Check VIP</a>
     </div>
     <div class="card">
-      <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Game">
       <h2 class="rgb-text">Play Game</h2>
       <a href="game.html">🎮 Play Now</a>
     </div>
@@ -226,31 +227,18 @@
   </div>
 </div>
 
+<!-- CARTOON GUY -->
+<img id="cartoonGuy" src="https://i.ibb.co/4mWwZwR/cartoon-guy.png" alt="Cartoon Guy">
+<div id="cartoonText" class="rgb-text">👉 Sign karo please!</div>
+
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
   // SIDEBAR
   function openMenu() { document.getElementById("sidebar").style.width = "250px"; }
   function closeMenu() { document.getElementById("sidebar").style.width = "0"; }
 
-  // COINS & GOLD
-  let coins = parseInt(localStorage.getItem("coins") || "0");
-  document.getElementById("coinDisplay").innerText = coins;
-  let gold = parseInt(localStorage.getItem("gold") || "0");
-  document.getElementById("goldDisplay").innerText = gold;
-
   function openSubscription(){ alert("🚀 Subscription Page Coming Soon!"); }
   function openProfile(){ alert("👤 Profile Page Coming Soon!"); }
-
-  // CARTOON CHARACTER
-  const cartoon = document.getElementById("cartoon");
-  let pos = -120;
-  function moveCartoon(){
-    pos += 2;
-    if(pos > window.innerWidth) pos = -cartoon.offsetWidth;
-    cartoon.style.left = pos + "px";
-    requestAnimationFrame(moveCartoon);
-  }
-  moveCartoon();
 
   // GOOGLE SIGN-IN
   function decodeJwt(token){
@@ -287,6 +275,34 @@
 
   const savedUser = localStorage.getItem("user");
   if(savedUser) showUser(JSON.parse(savedUser));
+
+  // CARTOON GUY animation every 10 minutes if not logged in
+  function showCartoonMessage(){
+    if(!localStorage.getItem("user")){
+      let guy = document.getElementById("cartoonGuy");
+      let text = document.getElementById("cartoonText");
+      let pos = -150;
+      guy.style.display = "block";
+      text.style.display = "block";
+
+      function animate(){
+        pos += 4;
+        guy.style.left = pos + "px";
+        text.style.left = (pos+130) + "px";
+
+        if(pos < window.innerWidth){
+          requestAnimationFrame(animate);
+        } else {
+          guy.style.display = "none";
+          text.style.display = "none";
+        }
+      }
+      animate();
+    }
+  }
+
+  // 10 min = 600000 ms
+  setInterval(showCartoonMessage, 600000);
 </script>
 
 </body>
