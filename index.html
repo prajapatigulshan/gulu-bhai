@@ -97,10 +97,9 @@
     width: 100%;
     background: rgba(0,0,0,0.7);
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     padding: 10px 30px;
-    padding-right: 50px;
     z-index: 1200;
     box-shadow:0 0 15px #00ffc8;
   }
@@ -117,7 +116,6 @@
   .content { margin-top: 140px; padding:20px; text-align:center; max-width:1200px; width:100%; }
   .options { display:flex; justify-content:center; gap:30px; margin-top:40px; flex-wrap:wrap; }
   .card { background: rgba(0,0,0,0.6); border-radius:12px; padding:20px; width:200px; text-align:center; transition: transform 0.4s ease, box-shadow 0.4s ease; box-shadow:0 0 15px rgba(0,0,0,0.7);}
-  .card img { width:100px; height:100px; }
   .card a { display:inline-block; margin-top:10px; padding:8px 12px; border-radius:6px; text-decoration:none; background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet); color:white; animation:rgbMove 8s linear infinite;}
   .card:hover { transform: scale(1.1); box-shadow: 0 0 25px #00ffc8; }
 
@@ -135,11 +133,12 @@
     position: fixed;
     bottom: 200px;
     left: -300px;
-    background: rgba(0,0,0,0.7);
+    background: rgba(0,0,0,0.8);
     padding: 10px 20px;
     border-radius: 12px;
-    font-size: 18px;
-    box-shadow: 0 0 15px #00ffc8;
+    font-size: 20px;
+    font-weight: bold;
+    box-shadow: 0 0 25px #00ffc8;
     display: none;
   }
 
@@ -228,8 +227,11 @@
 </div>
 
 <!-- CARTOON GUY -->
-<img id="cartoonGuy" src="https://i.ibb.co/4mWwZwR/cartoon-guy.png" alt="Cartoon Guy">
+<img id="cartoonGuy" src="https://media.tenor.com/GfEXzDdFeYAAAAAi/walk.gif" alt="Cartoon Guy">
 <div id="cartoonText" class="rgb-text">👉 Sign karo please!</div>
+
+<!-- SOUND EFFECT -->
+<audio id="cartoonSound" src="https://www.myinstants.com/media/sounds/cartoon_jump.mp3" preload="auto"></audio>
 
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
@@ -276,14 +278,19 @@
   const savedUser = localStorage.getItem("user");
   if(savedUser) showUser(JSON.parse(savedUser));
 
-  // CARTOON GUY animation every 10 minutes if not logged in
+  // CARTOON GUY animation every 2 minutes if not logged in
   function showCartoonMessage(){
     if(!localStorage.getItem("user")){
       let guy = document.getElementById("cartoonGuy");
       let text = document.getElementById("cartoonText");
+      let sound = document.getElementById("cartoonSound");
       let pos = -150;
       guy.style.display = "block";
       text.style.display = "block";
+
+      // Play sound
+      sound.currentTime = 0;
+      sound.play();
 
       function animate(){
         pos += 4;
@@ -301,8 +308,8 @@
     }
   }
 
-  // 1 min = 6000 ms
-  setInterval(showCartoonMessage, 6000);
+  // 2 minutes = 120000 ms
+  setInterval(showCartoonMessage, 120000);
 </script>
 
 </body>
