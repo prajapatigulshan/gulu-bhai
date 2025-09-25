@@ -55,30 +55,25 @@ canvas { display:block; margin:90px auto 20px auto; background:#111; border:3px 
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
 
-let gameStarted = false;
-let speed = 5;        // horizontal speed
-let scrollSpeed = 2;  // forward scroll speed
-let score = 0;
-let coins = [];
-let enemies = [];
-let coinSize = 20;
-let enemySize = 40;
-let player = {x:375, y:320, w:50, h:50};
-let keys = {};
+let gameStarted=false;
+let speed=5, scrollSpeed=2;
+let score=0;
+let coins=[], enemies=[];
+let coinSize=20, enemySize=40;
+let player={x:375, y:320, w:50, h:50};
+let keys={};
 let highScores = JSON.parse(localStorage.getItem('highScores')) || [];
-let playerName = localStorage.getItem('playerName') || null;
-const commandLogDiv = document.getElementById('commandLog');
+const commandLogDiv=document.getElementById('commandLog');
+let playerName=null;
 
 // Start game
 function startGame(){
   if(!playerName){
-    playerName = prompt("Enter your name:");
-    if(!playerName) playerName = "Player";
-    localStorage.setItem('playerName', playerName);
+    playerName = prompt('Enter your name:') || 'Player';
   }
-  gameStarted = true;
-  score = 0; coins = []; enemies = [];
-  player.x = 375; player.y = 320;
+  gameStarted=true;
+  score=0; coins=[]; enemies=[];
+  player.x=375; player.y=320;
   document.getElementById('startBtn').style.display='none';
   spawnInitialCoins();
   spawnInitialEnemies();
@@ -122,27 +117,43 @@ function update(){
 }
 
 // Game loop
-function gameLoop(){ if(!gameStarted) return; update(); draw(); requestAnimationFrame(gameLoop); }
+function gameLoop(){
+  if(!gameStarted) return;
+  update();
+  draw();
+  requestAnimationFrame(gameLoop);
+}
 
 // Game over
 function endGame(){
   gameStarted=false;
-  document.getElementById('finalScore').innerText='Coins collected: '+score;
+  document.getElementById('finalScore').innerText='Coins collected this run: '+score;
   document.getElementById('gameOverPopup').classList.add('show');
 
-  // Update highscore for the same player
+  // cumulative high score for same player
   let existing = highScores.find(h=>h.name===playerName);
-  if(existing){ if(score>existing.score) existing.score=score; }
-  else{ highScores.push({name:playerName, score}); }
+  if(existing){ existing.score += score; } 
+  else{ highScores.push({name:playerName, score:score}); }
   highScores.sort((a,b)=>b.score-a.score);
-  localStorage.setItem('highScores',JSON.stringify(highScores));
+  localStorage.setItem('highScores', JSON.stringify(highScores));
   renderLeaderboard();
 }
 
-function restartGame(){ document.getElementById('gameOverPopup').classList.remove('show'); startGame(); }
+// Restart
+function restartGame(){
+  document.getElementById('gameOverPopup').classList.remove('show');
+  startGame();
+}
 
 // Leaderboard
-function renderLeaderboard(){ const list=document.getElementById('scoreList'); list.innerHTML=''; highScores.slice(0,10).forEach(h=>{ let li=document.createElement('li'); li.innerText=h.name+' - '+h.score; list.appendChild(li); }); }
+function renderLeaderboard(){
+  const list=document.getElementById('scoreList'); list.innerHTML='';
+  highScores.slice(0,10).forEach(h=>{
+    let li=document.createElement('li');
+    li.innerText=h.name+' - '+h.score;
+    list.appendChild(li);
+  });
+}
 
 // Controls
 window.addEventListener('keydown',e=>keys[e.key]=true);
@@ -153,7 +164,9 @@ document.getElementById('rightBtn').addEventListener('touchstart',()=>keys['Arro
 document.getElementById('rightBtn').addEventListener('touchend',()=>keys['ArrowRight']=false);
 
 // Commands
-document.getElementById('cmdInput').addEventListener('keydown', function(e){ if(e.key==='Enter'){ executeCommand(this.value); this.value=''; } });
+document.getElementById('cmdInput').addEventListener('keydown',function(e){
+  if(e.key==='Enter'){ executeCommand(this.value); this.value=''; }
+});
 function executeCommand(cmd){
   if(!cmd) return;
   logCommand(cmd);
@@ -163,9 +176,15 @@ function executeCommand(cmd){
     case 'gbg.scroll': let sc=parseInt(parts[1]); if(!isNaN(sc)) scrollSpeed=sc; break;
     case 'gbg.coin': let c=parseInt(parts[1]); if(!isNaN(c)) for(let i=0;i<c;i++) spawnCoin(); break;
     case 'gbg.enemy': let e=parseInt(parts[1]); if(!isNaN(e)) for(let i=0;i<e;i++) spawnEnemy(); break;
-    case 'gbg.score': let s=parseInt(parts[1]); if(!isNaN(s)) score=s; renderLeaderboard(); break;
-    case 'gbg.spawnCoin': spawnCoin(); break;
-    case 'gbg.spawnEnemy': spawnEnemy(); break;
     case 'gbg.cd_speed': let x=parseInt(parts[1]); if(!isNaN(x)){ speed=x; scrollSpeed=x/2; } break;
     case 'gbg.reset': restartGame(); break;
-    case 'gbg.maxCoins': for(let i=
+    case 'gbg.maxCoins': for(let i=0;i<50;i++) spawnCoin(); break;
+    default: logCommand('Unknown command'); break;
+  }
+}
+function logCommand(text){
+  const p=document.createElement('p'); p.innerText=text; commandLogDiv.appendChild(p); commandLogDiv.scrollTop=commandLogDiv.scrollHeight;
+}
+</script>
+</body>
+</html>
