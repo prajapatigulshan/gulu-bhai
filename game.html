@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GBG Ultimate Car Game - Infinite Pro</title>
+<title>GBG Ultimate Car Game</title>
 <style>
 body { margin:0; font-family:Arial,sans-serif; background:#111; color:white; overflow:hidden; }
 header { position:fixed; top:0; width:100%; background:#000c; padding:15px; display:flex; justify-content:space-between; align-items:center; z-index:1000; }
@@ -13,6 +13,7 @@ canvas { display:block; margin:90px auto 20px auto; background:#111; border:3px 
 .controls button { padding:15px 20px; font-size:18px; border:none; border-radius:12px; cursor:pointer; background:linear-gradient(to right, red, orange, yellow, green, cyan, blue, violet); color:white; }
 #commandPrompt { position:fixed; left:10px; top:80px; width:300px; height:400px; background:#000c; overflow-y:auto; padding:10px; border-radius:12px; font-family:monospace; }
 #commandPrompt input { width:90%; padding:5px; margin-top:10px; border-radius:5px; border:none; }
+#commandLog { margin-top:10px; max-height:250px; overflow-y:auto; font-size:14px; }
 #leaderboard { position:fixed; right:10px; top:80px; width:250px; height:400px; background:#000c; overflow-y:auto; padding:10px; border-radius:12px; }
 #gameOverPopup { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%) scale(0); background:#000c; padding:30px; border-radius:15px; text-align:center; transition:0.3s; }
 #gameOverPopup.show { transform:translate(-50%,-50%) scale(1); }
@@ -29,6 +30,7 @@ canvas { display:block; margin:90px auto 20px auto; background:#111; border:3px 
 <div id="commandPrompt">
   <p>// GBG Commands:</p>
   <input type="text" id="cmdInput" placeholder="Type command and press Enter">
+  <div id="commandLog"></div>
 </div>
 
 <div id="leaderboard">
@@ -54,8 +56,8 @@ const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
 
 let gameStarted = false;
-let speed = 5; // horizontal speed
-let scrollSpeed = 2; // forward scroll
+let speed = 5;
+let scrollSpeed = 2;
 let score = 0;
 let coins = [];
 let enemies = [];
@@ -64,6 +66,7 @@ let enemySize = 40;
 let player = {x:375, y:320, w:50, h:50, dx:0};
 let keys = {};
 let highScores = JSON.parse(localStorage.getItem('highScores')) || [];
+const commandLogDiv = document.getElementById('commandLog');
 
 // Start Game
 function startGame(){
@@ -92,56 +95,33 @@ function spawnEnemy(y){ let x=Math.random()*(canvas.width-enemySize); if(y===und
 // Draw
 function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
-
   // Player
-  ctx.fillStyle='red';
-  ctx.fillRect(player.x, player.y, player.w, player.h);
-
+  ctx.fillStyle='red'; ctx.fillRect(player.x, player.y, player.w, player.h);
   // Coins
-  ctx.fillStyle='yellow';
-  coins.forEach(c=>ctx.fillRect(c.x, c.y, coinSize, coinSize));
-
+  ctx.fillStyle='yellow'; coins.forEach(c=>ctx.fillRect(c.x, c.y, coinSize, coinSize));
   // Enemies
-  ctx.fillStyle='green';
-  enemies.forEach(e=>ctx.fillRect(e.x, e.y, enemySize, enemySize));
-
+  ctx.fillStyle='green'; enemies.forEach(e=>ctx.fillRect(e.x, e.y, enemySize, enemySize));
   // Score
-  ctx.fillStyle='white';
-  ctx.font='20px Arial';
-  ctx.fillText('Score: '+score,10,30);
+  ctx.fillStyle='white'; ctx.font='20px Arial'; ctx.fillText('Score: '+score,10,30);
 }
 
 // Update
 function update(){
-  // Horizontal movement
-  player.dx = 0;
-  if(keys['ArrowLeft']) player.dx = -speed;
-  else if(keys['ArrowRight']) player.dx = speed;
-  player.x += player.dx;
+  player.dx=0;
+  if(keys['ArrowLeft']) player.dx=-speed;
+  if(keys['ArrowRight']) player.dx=speed;
+  player.x+=player.dx;
 
-  // Scroll coins/enemies down
-  coins.forEach(c=>c.y += scrollSpeed);
-  enemies.forEach(e=>e.y += scrollSpeed);
+  coins.forEach(c=>c.y+=scrollSpeed);
+  enemies.forEach(e=>e.y+=scrollSpeed);
 
-  // Re-spawn coins/enemies
   coins.forEach((c,i)=>{ if(c.y>canvas.height){ coins.splice(i,1); spawnCoin(); } });
   enemies.forEach((e,i)=>{ if(e.y>canvas.height){ enemies.splice(i,1); spawnEnemy(); } });
 
-  // Collision with coins
-  coins.forEach((c,i)=>{
-    if(player.x< c.x+coinSize && player.x+player.w>c.x && player.y<c.y+coinSize && player.y+player.h>c.y){
-      coins.splice(i,1); score++; spawnCoin(); renderLeaderboard();
-    }
-  });
+  coins.forEach((c,i)=>{ if(player.x<c.x+coinSize && player.x+player.w>c.x && player.y<c.y+coinSize && player.y+player.h>c.y){ coins.splice(i,1); score++; spawnCoin(); renderLeaderboard(); } });
+  
+  enemies.forEach(e=>{ if(player.x<e.x+enemySize && player.x+player.w>e.x && player.y<e.y+enemySize && player.y+player.h>e.y){ endGame(); } });
 
-  // Collision with enemies → game over
-  enemies.forEach(e=>{
-    if(player.x< e.x+enemySize && player.x+player.w>e.x && player.y<e.y+enemySize && player.y+player.h>e.y){
-      endGame();
-    }
-  });
-
-  // Boundary
   if(player.x<0) player.x=0;
   if(player.x+player.w>canvas.width) player.x=canvas.width-player.w;
 }
@@ -158,37 +138,25 @@ function gameLoop(){
 function endGame(){
   gameStarted=false;
   document.getElementById('finalScore').innerText='Coins collected: '+score;
-  const popup = document.getElementById('gameOverPopup');
-  popup.classList.add('show');
-  let playerName = prompt('Enter your name:');
-  if(playerName){
-    highScores.push({name:playerName, score});
-    highScores.sort((a,b)=>b.score-b.score);
-    localStorage.setItem('highScores', JSON.stringify(highScores));
-    renderLeaderboard();
-  }
+  document.getElementById('gameOverPopup').classList.add('show');
+  let playerName=prompt('Enter your name:');
+  if(playerName){ highScores.push({name:playerName, score}); highScores.sort((a,b)=>b.score-a.score); localStorage.setItem('highScores',JSON.stringify(highScores)); renderLeaderboard(); }
 }
 
 function restartGame(){
-  const popup = document.getElementById('gameOverPopup');
-  popup.classList.remove('show');
+  document.getElementById('gameOverPopup').classList.remove('show');
   startGame();
 }
 
 // Leaderboard
 function renderLeaderboard(){
-  const list = document.getElementById('scoreList');
-  list.innerHTML='';
-  highScores.slice(0,10).forEach(h=>{
-    let li=document.createElement('li');
-    li.innerText=h.name+' - '+h.score;
-    list.appendChild(li);
-  });
+  const list=document.getElementById('scoreList'); list.innerHTML='';
+  highScores.slice(0,10).forEach(h=>{ let li=document.createElement('li'); li.innerText=h.name+' - '+h.score; list.appendChild(li); });
 }
 
 // Controls
-window.addEventListener('keydown', e=>keys[e.key]=true);
-window.addEventListener('keyup', e=>keys[e.key]=false);
+window.addEventListener('keydown',e=>keys[e.key]=true);
+window.addEventListener('keyup',e=>keys[e.key]=false);
 document.getElementById('leftBtn').addEventListener('touchstart',()=>keys['ArrowLeft']=true);
 document.getElementById('leftBtn').addEventListener('touchend',()=>keys['ArrowLeft']=false);
 document.getElementById('rightBtn').addEventListener('touchstart',()=>keys['ArrowRight']=true);
@@ -196,35 +164,35 @@ document.getElementById('rightBtn').addEventListener('touchend',()=>keys['ArrowR
 
 // Command Input
 document.getElementById('cmdInput').addEventListener('keydown', function(e){
-  if(e.key==='Enter'){
-    executeCommand(this.value);
-    this.value='';
-  }
+  if(e.key==='Enter'){ executeCommand(this.value); this.value=''; }
 });
 
-// 10 GBG Commands
+// 10 GBG Commands + command log
 function executeCommand(cmd){
-  const parts = cmd.trim().split(' ');
+  if(!cmd) return;
+  logCommand(cmd);
+  const parts=cmd.trim().split(' ');
   switch(parts[0]){
-    case 'gbg.speed':
-      let sp = parseInt(parts[1]); if(!isNaN(sp)) speed = sp; break;
-    case 'gbg.scroll':
-      let sc = parseInt(parts[1]); if(!isNaN(sc)) scrollSpeed = sc; break;
-    case 'gbg.coin':
-      let c = parseInt(parts[1]); if(!isNaN(c)) for(let i=0;i<c;i++) spawnCoin(); break;
-    case 'gbg.enemy':
-      let e = parseInt(parts[1]); if(!isNaN(e)) for(let i=0;i<e;i++) spawnEnemy(); break;
-    case 'gbg.score':
-      let s = parseInt(parts[1]); if(!isNaN(s)) score=s; renderLeaderboard(); break;
+    case 'gbg.speed': let sp=parseInt(parts[1]); if(!isNaN(sp)) speed=sp; break;
+    case 'gbg.scroll': let sc=parseInt(parts[1]); if(!isNaN(sc)) scrollSpeed=sc; break;
+    case 'gbg.coin': let c=parseInt(parts[1]); if(!isNaN(c)) for(let i=0;i<c;i++) spawnCoin(); break;
+    case 'gbg.enemy': let e=parseInt(parts[1]); if(!isNaN(e)) for(let i=0;i<e;i++) spawnEnemy(); break;
+    case 'gbg.score': let s=parseInt(parts[1]); if(!isNaN(s)) score=s; renderLeaderboard(); break;
     case 'gbg.spawnCoin': spawnCoin(); break;
     case 'gbg.spawnEnemy': spawnEnemy(); break;
-    case 'gbg.cd_speed':
-      let x = parseInt(parts[1]); if(!isNaN(x)){ speed=x; scrollSpeed=x/2; } break;
+    case 'gbg.cd_speed': let x=parseInt(parts[1]); if(!isNaN(x)){ speed=x; scrollSpeed=x/2; } break;
     case 'gbg.reset': restartGame(); break;
     case 'gbg.maxCoins': for(let i=0;i<50;i++) spawnCoin(); break;
-    default: console.log('Unknown command'); break;
+    default: logCommand('Unknown command'); break;
   }
 }
 
+// Log commands
+function logCommand(text){
+  const p=document.createElement('p'); p.innerText=text; commandLogDiv.appendChild(p); commandLogDiv.scrollTop=commandLogDiv.scrollHeight;
+}
+
 renderLeaderboard();
-</script
+</script>
+</body>
+</html>
