@@ -3,189 +3,210 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GBG Alsi Car Game - Final</title>
+<title>GBG Ultimate Car Game</title>
 <style>
-  body { margin:0; overflow:hidden; font-family: Arial; background: #000; color:white; }
-  canvas { display:block; margin:0 auto; background:#111; }
-  #startBtn { 
-    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-    padding:20px 40px; font-size:24px; cursor:pointer;
-    background: linear-gradient(90deg, red,orange,yellow,green,cyan,blue,violet);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    animation: rgbMove 6s linear infinite; border:2px solid #00ffc8; border-radius:12px;
-  }
-  @keyframes rgbMove {
-    0%{background-position:0% 50%;}
-    50%{background-position:100% 50%;}
-    100%{background-position:0% 50%;}
-  }
-  #controls { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); display:flex; gap:20px; }
-  .btn { padding:20px; font-size:20px; border-radius:10px; border:none; cursor:pointer;
-        background: linear-gradient(90deg, red,orange,yellow,green,cyan,blue,violet);
-        -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: rgbMove 6s linear infinite;}
-  #console { position:fixed; left:0; top:0; width:200px; height:100%; background: rgba(0,0,0,0.9);
-             color:#0f0; padding:10px; font-family:monospace; overflow:auto; }
-  #console input { width:100%; background:#000; color:#0f0; border:none; outline:none; }
-  #scoreBoard { position:fixed; top:10px; right:10px; font-size:20px; background:rgba(0,0,0,0.7); padding:10px; border-radius:10px; }
+body {margin:0; overflow:hidden; font-family:Arial,sans-serif; background:#111;}
+canvas{display:block; margin:auto; background:#1a1a1a;}
+#startBtn, #settingsBtn {position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); padding:15px 30px; font-size:22px; border:none; border-radius:10px; cursor:pointer; background: linear-gradient(90deg, red,orange,yellow,green,cyan,blue,violet,red); color:white; animation: rgbMove 6s linear infinite;}
+@keyframes rgbMove{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+#controls {position:absolute; bottom:20px; width:100%; text-align:center;}
+.controlBtn {padding:15px 25px; margin:0 20px; font-size:20px; border:none; border-radius:10px; background: rgba(255,255,255,0.2); color:white; cursor:pointer;}
+#cmdBox {position:absolute; left:10px; top:10px; width:220px; height:90%; background:rgba(0,0,0,0.7); overflow-y:auto; padding:10px; border-radius:10px; color:#0f0; font-family:monospace; font-size:14px;}
+#leaderboard {position:absolute; right:10px; top:10px; width:180px; height:90%; background:rgba(0,0,0,0.7); overflow-y:auto; padding:10px; border-radius:10px; color:#ff0; font-family:monospace; font-size:14px;}
 </style>
 </head>
 <body>
 
-<canvas id="gameCanvas" width="400" height="600"></canvas>
-<button id="startBtn">🚀 Start Game</button>
-
+<canvas id="game" width="800" height="500"></canvas>
+<button id="startBtn">🚦 Start Game</button>
 <div id="controls">
-  <button class="btn" id="leftBtn">⬅</button>
-  <button class="btn" id="rightBtn">➡</button>
+  <button class="controlBtn" id="leftBtn">⬅️ Left</button>
+  <button class="controlBtn" id="rightBtn">➡️ Right</button>
 </div>
 
-<div id="scoreBoard">Score: 0 | Coins: 0 | Speed: 5</div>
+<div id="cmdBox">
+<h3>Command Prompt</h3>
+<p>Type commands: speed 5, coins 100, invisible, height 50</p>
+<input type="text" id="cmdInput" placeholder="// Enter command" style="width:100%; border:none; border-radius:5px; padding:5px;">
+<button onclick="runCommand()" style="width:100%; margin-top:5px;">Run</button>
+<div id="cmdOutput"></div>
+</div>
 
-<div id="console">
-  <div id="log">> Welcome to GBG Alsi Car Game<br>> Commands: speed+, speed-, coin+N, score+N, reset<br></div>
-  <input type="text" id="cmdInput" placeholder="Enter command and press Enter">
+<div id="leaderboard">
+<h3>Leaderboard</h3>
+<ul id="leaderboardList"></ul>
 </div>
 
 <script>
-const canvas = document.getElementById("gameCanvas");
+const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
-const startBtn = document.getElementById("startBtn");
-const leftBtn = document.getElementById("leftBtn");
-const rightBtn = document.getElementById("rightBtn");
-const scoreBoard = document.getElementById("scoreBoard");
-const log = document.getElementById("log");
-const cmdInput = document.getElementById("cmdInput");
 
+// Game state
 let gameStarted = false;
-let car = { x:170, y:500, w:60, h:100 };
-let keys = { left:false, right:false };
-let obstacles = [];
-let coins = [];
-let speed = 5;
 let score = 0;
-let coinCount = 0;
-let spawnCounter = 0;
+let coins = 0;
+let speed = 5;
+let carHeight = 50;
+let invisible = false;
 
-// Start game
-startBtn.addEventListener("click", ()=>{
+// Player car
+const player = {x:350, y:canvas.height-100, w:50, h:50};
+
+// Obstacles
+let obstacles = [];
+let coinsArr = [];
+
+// Controls
+let moveLeft = false;
+let moveRight = false;
+
+// Leaderboard
+let leaderboard = [];
+
+// Start Game
+document.getElementById("startBtn").addEventListener("click", () => {
+  resetGame();
   gameStarted = true;
-  startBtn.style.display="none";
+  document.getElementById("startBtn").style.display = "none";
+  requestAnimationFrame(gameLoop);
 });
 
 // Mobile buttons
-leftBtn.addEventListener("touchstart",()=>keys.left=true);
-leftBtn.addEventListener("touchend",()=>keys.left=false);
-rightBtn.addEventListener("touchstart",()=>keys.right=true);
-rightBtn.addEventListener("touchend",()=>keys.right=false);
+document.getElementById("leftBtn").addEventListener("mousedown", ()=>{moveLeft=true});
+document.getElementById("leftBtn").addEventListener("mouseup", ()=>{moveLeft=false});
+document.getElementById("rightBtn").addEventListener("mousedown", ()=>{moveRight=true});
+document.getElementById("rightBtn").addEventListener("mouseup", ()=>{moveRight=false});
 
 // Keyboard
-window.addEventListener("keydown", e => {
-  if(e.code=="ArrowLeft") keys.left=true;
-  if(e.code=="ArrowRight") keys.right=true;
+window.addEventListener("keydown", e=>{
+  if(e.code==="ArrowLeft") moveLeft=true;
+  if(e.code==="ArrowRight") moveRight=true;
 });
-window.addEventListener("keyup", e => {
-  if(e.code=="ArrowLeft") keys.left=false;
-  if(e.code=="ArrowRight") keys.right=false;
+window.addEventListener("keyup", e=>{
+  if(e.code==="ArrowLeft") moveLeft=false;
+  if(e.code==="ArrowRight") moveRight=false;
 });
-
-// Command console
-cmdInput.addEventListener("keydown",(e)=>{
-  if(e.key==="Enter"){
-    const cmd = cmdInput.value.trim();
-    log.innerHTML += "<br>> "+cmd;
-    executeCommand(cmd);
-    cmdInput.value="";
-    log.scrollTop = log.scrollHeight;
-  }
-});
-
-function executeCommand(cmd){
-  if(cmd=="speed+") speed+=2;
-  else if(cmd=="speed-") speed=Math.max(1,speed-2);
-  else if(cmd.startsWith("coin+")){
-    const n = parseInt(cmd.split("+")[1]); if(!isNaN(n)) coinCount+=n;
-  }
-  else if(cmd.startsWith("score+")){
-    const n = parseInt(cmd.split("+")[1]); if(!isNaN(n)) score+=n;
-  }
-  else if(cmd=="reset"){ location.reload(); }
-  updateScoreBoard();
-}
 
 // Voice commands
-let recognition;
 if('webkitSpeechRecognition' in window){
-  recognition = new webkitSpeechRecognition();
-  recognition.continuous = true;
-  recognition.lang = 'en-US';
+  const recognition = new webkitSpeechRecognition();
+  recognition.continuous=true;
   recognition.onresult = function(event){
-    let transcript = event.results[event.results.length-1][0].transcript.trim().toLowerCase();
-    if(transcript.includes("left")) keys.left=true; 
-    else keys.left=false;
-    if(transcript.includes("right")) keys.right=true;
-    else keys.right=false;
-  };
+    const voice = event.results[event.results.length-1][0].transcript.trim().toLowerCase();
+    if(voice.includes("left")) moveLeft=true; if(voice.includes("right")) moveRight=true;
+    setTimeout(()=>{moveLeft=false; moveRight=false}, 500);
+  }
+  recognition.start();
 }
 
-// Start voice recognition when game starts
-startBtn.addEventListener("click",()=>{
-  if(recognition) recognition.start();
-});
+// Command prompt
+function runCommand(){
+  const cmd = document.getElementById("cmdInput").value.trim().toLowerCase();
+  const output = document.getElementById("cmdOutput");
+  if(cmd.startsWith("speed")){
+    const val = parseInt(cmd.split(" ")[1]);
+    if(!isNaN(val)){ speed = val; output.innerHTML="Speed set to "+speed; }
+  }else if(cmd.startsWith("coins")){
+    const val = parseInt(cmd.split(" ")[1]);
+    if(!isNaN(val)){ coins += val; output.innerHTML="Coins increased by "+val; }
+  }else if(cmd==="invisible"){ invisible=true; output.innerHTML="Car is now invisible"; }
+  else if(cmd==="visible"){ invisible=false; output.innerHTML="Car visible again"; }
+  else if(cmd.startsWith("height")){
+    const val = parseInt(cmd.split(" ")[1]);
+    if(!isNaN(val)){ carHeight=val; output.innerHTML="Car height set to "+carHeight; player.h=carHeight; }
+  }else{
+    output.innerHTML="Unknown command";
+  }
+}
+
+// Generate obstacle
+function genObstacle(){
+  const width = 50+Math.random()*50;
+  const x = Math.random()*(canvas.width-width);
+  obstacles.push({x:x, y:-50, w:width, h:20});
+}
+
+// Generate coin
+function genCoin(){
+  const x = Math.random()*(canvas.width-20);
+  coinsArr.push({x:x, y:-20, w:20, h:20});
+}
+
+// Reset Game
+function resetGame(){
+  score=0; coins=0; obstacles=[]; coinsArr=[]; player.x=350; player.y=canvas.height-100;
+}
+
+// Leaderboard update
+function updateLeaderboard(){
+  const lb = document.getElementById("leaderboardList");
+  lb.innerHTML="";
+  leaderboard.sort((a,b)=>b.score-a.score);
+  leaderboard.slice(0,10).forEach(p=>{
+    lb.innerHTML+="<li>"+p.name+" - "+p.score+"</li>";
+  });
+}
 
 // Game loop
+let frames=0;
 function gameLoop(){
+  if(!gameStarted) return;
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  if(gameStarted){
-    // Move car
-    if(keys.left) car.x -= speed;
-    if(keys.right) car.x += speed;
-    if(car.x<0) car.x=0; if(car.x>canvas.width-car.w) car.x=canvas.width-car.w;
+  // Move player
+  if(moveLeft) player.x-=speed;
+  if(moveRight) player.x+=speed;
+  if(player.x<0) player.x=0;
+  if(player.x+player.w>canvas.width) player.x=canvas.width-player.w;
 
-    // Spawn obstacles and coins
-    spawnCounter++;
-    if(spawnCounter % 50 === 0){
-      obstacles.push({ x: Math.random()*340, y:-50, w:60, h:60 });
-      coins.push({ x: Math.random()*340, y:-50, w:30, h:30 });
+  // Generate obstacles & coins
+  frames++;
+  if(frames%60===0) genObstacle();
+  if(frames%100===0) genCoin();
+
+  // Move obstacles
+  obstacles.forEach(o=>{ o.y+=speed; ctx.fillStyle="red"; ctx.fillRect(o.x,o.y,o.w,o.h); });
+  obstacles = obstacles.filter(o=>o.y<canvas.height);
+
+  // Move coins
+  coinsArr.forEach(c=>{ c.y+=speed; ctx.fillStyle="yellow"; ctx.fillRect(c.x,c.y,c.w,c.h); });
+  coinsArr = coinsArr.filter(c=>c.y<canvas.height);
+
+  // Collision with obstacles
+  for(let o of obstacles){
+    if(player.x<o.x+o.w && player.x+player.w>o.x && player.y<o.y+o.h && player.y+player.h>o.y){
+      gameStarted=false;
+      alert("Game Over!\nScore: "+score+"\nCoins: "+coins);
+      // Save leaderboard
+      const name = prompt("Enter your name for leaderboard:") || "Guest";
+      leaderboard.push({name:name, score:coins});
+      updateLeaderboard();
+      document.getElementById("startBtn").style.display="block";
+      return;
     }
-
-    // Move obstacles
-    obstacles.forEach(o=>{ o.y+=speed; ctx.fillStyle="red"; ctx.fillRect(o.x,o.y,o.w,o.h); });
-    coins.forEach(c=>{ c.y+=speed; ctx.fillStyle="yellow"; ctx.beginPath(); ctx.arc(c.x+15,c.y+15,15,0,Math.PI*2); ctx.fill(); });
-
-    // Collision with obstacles
-    for(let o of obstacles){
-      if(car.x<o.x+o.w && car.x+car.w>o.x && car.y<o.y+o.h && car.y+car.h>o.y){
-        alert("💥 Game Over! Score: "+Math.floor(score)+" Coins: "+coinCount);
-        location.reload();
-      }
-    }
-
-    // Collect coins
-    coins.forEach((c,i)=>{
-      if(car.x<c.x+c.w && car.x+car.w>c.x && car.y<c.y+c.w && car.y+car.h>c.y){
-        coinCount++;
-        coins.splice(i,1);
-      }
-    });
-
-    // Update score by distance
-    score += 0.1;
-    updateScoreBoard();
   }
 
-  // Draw car
-  ctx.fillStyle="cyan";
-  ctx.fillRect(car.x,car.y,car.w,car.h);
+  // Collision with coins
+  for(let i=coinsArr.length-1;i>=0;i--){
+    const c=coinsArr[i];
+    if(player.x<c.x+c.w && player.x+player.w>c.x && player.y<c.y+c.h && player.y+player.h>c.y){
+      coins++; coinsArr.splice(i,1);
+    }
+  }
+
+  // Draw player
+  if(!invisible){ ctx.fillStyle="cyan"; ctx.fillRect(player.x,player.y,player.w,player.h); }
+
+  // Score & coins
+  ctx.fillStyle="white"; ctx.font="20px Arial";
+  ctx.fillText("Coins: "+coins, 10, 30);
+  ctx.fillText("Score: "+score, 10, 60);
+
+  // Increment score
+  score++;
 
   requestAnimationFrame(gameLoop);
 }
-
-function updateScoreBoard(){
-  scoreBoard.innerHTML = "Score: "+Math.floor(score)+" | Coins: "+coinCount+" | Speed: "+speed;
-}
-
-gameLoop();
 </script>
 </body>
 </html>
