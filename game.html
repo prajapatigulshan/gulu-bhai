@@ -3,186 +3,189 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GBG Car Game</title>
+<title>GBG Alsi Car Game - Final</title>
 <style>
-  body { margin:0; overflow:hidden; background: linear-gradient(270deg, red, orange, yellow, green, cyan, blue, violet); background-size: 2000% 2000%; animation:bgRGB 60s linear infinite; font-family:Arial,sans-serif; }
-  @keyframes bgRGB {
-    0%{background-position:0% 50%;}
-    50%{background-position:100% 50%;}
-    100%{background-position:0% 50%;}
-  }
-  canvas { display:block; margin:auto; background:#222; }
-  .score {
-    position:absolute; top:10px; left:50%; transform:translateX(-50%);
-    font-size:24px; font-weight:bold;
-    background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet);
+  body { margin:0; overflow:hidden; font-family: Arial; background: #000; color:white; }
+  canvas { display:block; margin:0 auto; background:#111; }
+  #startBtn { 
+    position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+    padding:20px 40px; font-size:24px; cursor:pointer;
+    background: linear-gradient(90deg, red,orange,yellow,green,cyan,blue,violet);
     -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-size: 400%; animation: rgbMove 8s linear infinite;
+    animation: rgbMove 6s linear infinite; border:2px solid #00ffc8; border-radius:12px;
   }
   @keyframes rgbMove {
     0%{background-position:0% 50%;}
     50%{background-position:100% 50%;}
     100%{background-position:0% 50%;}
   }
-  /* Mobile controls */
-  .controls {
-    position:absolute; bottom:20px; width:100%; display:flex; justify-content:space-around;
-  }
-  .btn {
-    width:80px; height:80px; border-radius:50%; background:rgba(255,255,255,0.2);
-    border:none; font-size:24px; color:white; font-weight:bold;
-    user-select:none; -webkit-user-select:none;
-  }
-  /* Settings */
-  #settingsMenu {
-    position:absolute; top:50px; right:20px; background:rgba(0,0,0,0.7); color:white; padding:15px; border-radius:12px; display:none; z-index:1000;
-  }
-  #settingsMenu label, #settingsMenu select { display:block; margin:10px 0; }
-  #settingsBtn {
-    position:absolute; top:10px; right:10px; padding:10px 15px; border:none; border-radius:6px; background:rgba(0,0,0,0.6); color:white; font-weight:bold;
-  }
+  #controls { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); display:flex; gap:20px; }
+  .btn { padding:20px; font-size:20px; border-radius:10px; border:none; cursor:pointer;
+        background: linear-gradient(90deg, red,orange,yellow,green,cyan,blue,violet);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: rgbMove 6s linear infinite;}
+  #console { position:fixed; left:0; top:0; width:200px; height:100%; background: rgba(0,0,0,0.9);
+             color:#0f0; padding:10px; font-family:monospace; overflow:auto; }
+  #console input { width:100%; background:#000; color:#0f0; border:none; outline:none; }
+  #scoreBoard { position:fixed; top:10px; right:10px; font-size:20px; background:rgba(0,0,0,0.7); padding:10px; border-radius:10px; }
 </style>
 </head>
 <body>
 
-<div class="score" id="scoreDisplay">Score: 0</div>
-<button id="settingsBtn">⚙️ Settings</button>
-<div id="settingsMenu">
-  <label>Left Control Key: 
-    <select id="leftKeySelect">
-      <option value="ArrowLeft">Arrow Left</option>
-      <option value="KeyA">A</option>
-    </select>
-  </label>
-  <label>Right Control Key: 
-    <select id="rightKeySelect">
-      <option value="ArrowRight">Arrow Right</option>
-      <option value="KeyD">D</option>
-    </select>
-  </label>
+<canvas id="gameCanvas" width="400" height="600"></canvas>
+<button id="startBtn">🚀 Start Game</button>
+
+<div id="controls">
+  <button class="btn" id="leftBtn">⬅</button>
+  <button class="btn" id="rightBtn">➡</button>
 </div>
 
-<canvas id="gameCanvas" width="400" height="600"></canvas>
+<div id="scoreBoard">Score: 0 | Coins: 0 | Speed: 5</div>
 
-<div class="controls">
-  <button class="btn" id="leftBtn">◀</button>
-  <button class="btn" id="rightBtn">▶</button>
+<div id="console">
+  <div id="log">> Welcome to GBG Alsi Car Game<br>> Commands: speed+, speed-, coin+N, score+N, reset<br></div>
+  <input type="text" id="cmdInput" placeholder="Enter command and press Enter">
 </div>
 
 <script>
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+const startBtn = document.getElementById("startBtn");
+const leftBtn = document.getElementById("leftBtn");
+const rightBtn = document.getElementById("rightBtn");
+const scoreBoard = document.getElementById("scoreBoard");
+const log = document.getElementById("log");
+const cmdInput = document.getElementById("cmdInput");
 
-let score = 0;
-let gameOver = false;
-
-// Car
-const car = { x:180, y:500, w:40, h:70, speed:5 };
-
-// Obstacles
+let gameStarted = false;
+let car = { x:170, y:500, w:60, h:100 };
+let keys = { left:false, right:false };
 let obstacles = [];
-function addObstacle() {
-  const width = 50 + Math.random()*50;
-  const x = Math.random()*(canvas.width-width);
-  obstacles.push({x:x, y:-70, w:width, h:20, speed:4});
-}
-
-// Coins
 let coins = [];
-function addCoin() {
-  const size = 20;
-  const x = Math.random()*(canvas.width-size);
-  coins.push({x:x, y:-30, w:size, h:size});
+let speed = 5;
+let score = 0;
+let coinCount = 0;
+let spawnCounter = 0;
+
+// Start game
+startBtn.addEventListener("click", ()=>{
+  gameStarted = true;
+  startBtn.style.display="none";
+});
+
+// Mobile buttons
+leftBtn.addEventListener("touchstart",()=>keys.left=true);
+leftBtn.addEventListener("touchend",()=>keys.left=false);
+rightBtn.addEventListener("touchstart",()=>keys.right=true);
+rightBtn.addEventListener("touchend",()=>keys.right=false);
+
+// Keyboard
+window.addEventListener("keydown", e => {
+  if(e.code=="ArrowLeft") keys.left=true;
+  if(e.code=="ArrowRight") keys.right=true;
+});
+window.addEventListener("keyup", e => {
+  if(e.code=="ArrowLeft") keys.left=false;
+  if(e.code=="ArrowRight") keys.right=false;
+});
+
+// Command console
+cmdInput.addEventListener("keydown",(e)=>{
+  if(e.key==="Enter"){
+    const cmd = cmdInput.value.trim();
+    log.innerHTML += "<br>> "+cmd;
+    executeCommand(cmd);
+    cmdInput.value="";
+    log.scrollTop = log.scrollHeight;
+  }
+});
+
+function executeCommand(cmd){
+  if(cmd=="speed+") speed+=2;
+  else if(cmd=="speed-") speed=Math.max(1,speed-2);
+  else if(cmd.startsWith("coin+")){
+    const n = parseInt(cmd.split("+")[1]); if(!isNaN(n)) coinCount+=n;
+  }
+  else if(cmd.startsWith("score+")){
+    const n = parseInt(cmd.split("+")[1]); if(!isNaN(n)) score+=n;
+  }
+  else if(cmd=="reset"){ location.reload(); }
+  updateScoreBoard();
 }
 
-// Controls
-let leftPressed=false, rightPressed=false;
-let leftKey='ArrowLeft', rightKey='ArrowRight';
-
-document.addEventListener('keydown', e => {
-  if(e.code===leftKey) leftPressed=true;
-  if(e.code===rightKey) rightPressed=true;
-});
-document.addEventListener('keyup', e => {
-  if(e.code===leftKey) leftPressed=false;
-  if(e.code===rightKey) rightPressed=false;
-});
-document.getElementById('leftBtn').addEventListener('touchstart',()=>leftPressed=true);
-document.getElementById('leftBtn').addEventListener('touchend',()=>leftPressed=false);
-document.getElementById('rightBtn').addEventListener('touchstart',()=>rightPressed=true);
-document.getElementById('rightBtn').addEventListener('touchend',()=>rightPressed=false);
-
-// Settings Menu
-const settingsBtn = document.getElementById('settingsBtn');
-const settingsMenu = document.getElementById('settingsMenu');
-settingsBtn.addEventListener('click', ()=>{
-  settingsMenu.style.display = settingsMenu.style.display==='none'?'block':'none';
-});
-document.getElementById('leftKeySelect').addEventListener('change',(e)=>{ leftKey=e.target.value; });
-document.getElementById('rightKeySelect').addEventListener('change',(e)=>{ rightKey=e.target.value; });
-
-// Collision detection
-function isColliding(a,b){
-  return a.x < b.x + b.w &&
-         a.x + a.w > b.x &&
-         a.y < b.y + b.h &&
-         a.y + a.h > b.y;
+// Voice commands
+let recognition;
+if('webkitSpeechRecognition' in window){
+  recognition = new webkitSpeechRecognition();
+  recognition.continuous = true;
+  recognition.lang = 'en-US';
+  recognition.onresult = function(event){
+    let transcript = event.results[event.results.length-1][0].transcript.trim().toLowerCase();
+    if(transcript.includes("left")) keys.left=true; 
+    else keys.left=false;
+    if(transcript.includes("right")) keys.right=true;
+    else keys.right=false;
+  };
 }
 
-// Game Loop
-let obstacleTimer=0;
-let coinTimer=0;
+// Start voice recognition when game starts
+startBtn.addEventListener("click",()=>{
+  if(recognition) recognition.start();
+});
 
-function loop(){
-  if(gameOver) return;
-
+// Game loop
+function gameLoop(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  // Move car
-  if(leftPressed) car.x -= car.speed;
-  if(rightPressed) car.x += car.speed;
-  if(car.x<0) car.x=0;
-  if(car.x+car.w>canvas.width) car.x=canvas.width-car.w;
+  if(gameStarted){
+    // Move car
+    if(keys.left) car.x -= speed;
+    if(keys.right) car.x += speed;
+    if(car.x<0) car.x=0; if(car.x>canvas.width-car.w) car.x=canvas.width-car.w;
+
+    // Spawn obstacles and coins
+    spawnCounter++;
+    if(spawnCounter % 50 === 0){
+      obstacles.push({ x: Math.random()*340, y:-50, w:60, h:60 });
+      coins.push({ x: Math.random()*340, y:-50, w:30, h:30 });
+    }
+
+    // Move obstacles
+    obstacles.forEach(o=>{ o.y+=speed; ctx.fillStyle="red"; ctx.fillRect(o.x,o.y,o.w,o.h); });
+    coins.forEach(c=>{ c.y+=speed; ctx.fillStyle="yellow"; ctx.beginPath(); ctx.arc(c.x+15,c.y+15,15,0,Math.PI*2); ctx.fill(); });
+
+    // Collision with obstacles
+    for(let o of obstacles){
+      if(car.x<o.x+o.w && car.x+car.w>o.x && car.y<o.y+o.h && car.y+car.h>o.y){
+        alert("💥 Game Over! Score: "+Math.floor(score)+" Coins: "+coinCount);
+        location.reload();
+      }
+    }
+
+    // Collect coins
+    coins.forEach((c,i)=>{
+      if(car.x<c.x+c.w && car.x+car.w>c.x && car.y<c.y+c.w && car.y+car.h>c.y){
+        coinCount++;
+        coins.splice(i,1);
+      }
+    });
+
+    // Update score by distance
+    score += 0.1;
+    updateScoreBoard();
+  }
 
   // Draw car
-  ctx.fillStyle='lime';
-  ctx.fillRect(car.x, car.y, car.w, car.h);
+  ctx.fillStyle="cyan";
+  ctx.fillRect(car.x,car.y,car.w,car.h);
 
-  // Add obstacles
-  obstacleTimer++;
-  if(obstacleTimer>60){ addObstacle(); obstacleTimer=0; }
-
-  // Move & draw obstacles
-  ctx.fillStyle='red';
-  for(let i=0;i<obstacles.length;i++){
-    obstacles[i].y += obstacles[i].speed;
-    ctx.fillRect(obstacles[i].x, obstacles[i].y, obstacles[i].w, obstacles[i].h);
-    if(isColliding(car,obstacles[i])) { gameOver=true; alert('Game Over! Score: '+score); location.reload(); }
-    if(obstacles[i].y>canvas.height) obstacles.splice(i,1);
-  }
-
-  // Add coins
-  coinTimer++;
-  if(coinTimer>90){ addCoin(); coinTimer=0; }
-
-  // Move & draw coins
-  ctx.fillStyle='yellow';
-  for(let i=0;i<coins.length;i++){
-    coins[i].y += 4;
-    ctx.beginPath();
-    ctx.arc(coins[i].x+coins[i].w/2, coins[i].y+coins[i].h/2, coins[i].w/2,0,Math.PI*2);
-    ctx.fill();
-    if(isColliding(car,coins[i])) { score++; coins.splice(i,1); }
-    if(coins[i] && coins[i].y>canvas.height) coins.splice(i,1);
-  }
-
-  // Update score
-  document.getElementById('scoreDisplay').innerText = 'Score: '+score;
-
-  requestAnimationFrame(loop);
+  requestAnimationFrame(gameLoop);
 }
 
-loop();
+function updateScoreBoard(){
+  scoreBoard.innerHTML = "Score: "+Math.floor(score)+" | Coins: "+coinCount+" | Speed: "+speed;
+}
+
+gameLoop();
 </script>
 </body>
 </html>
