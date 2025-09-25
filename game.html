@@ -19,6 +19,7 @@ canvas { display:block; margin:90px auto 20px auto; background:#111; border:3px 
 #gameOverPopup.show { transform:translate(-50%,-50%) scale(1); }
 #gameOverPopup button { padding:10px 20px; margin-top:15px; border:none; border-radius:10px; cursor:pointer; background:linear-gradient(to right, red, orange, yellow, green, cyan, blue, violet); color:white; }
 .highest { color:#0ff; font-weight:bold; }
+#coinBalance { position:fixed; top:15px; right:150px; font-size:18px; color:yellow; }
 </style>
 </head>
 <body>
@@ -26,6 +27,7 @@ canvas { display:block; margin:90px auto 20px auto; background:#111; border:3px 
 <header>
   <div>GBG Infinite Runner</div>
   <button id="startBtn">Start Game</button>
+  <div id="coinBalance">Coins: 0</div>
 </header>
 
 <div id="commandPrompt">
@@ -64,11 +66,19 @@ let coinSize=20, enemySize=40;
 let player={x:375,y:320,w:50,h:50};
 let keys={};
 let highScores=JSON.parse(localStorage.getItem('highScores'))||[];
-let totalCoins=parseInt(localStorage.getItem('totalCoins'))||0;
-const commandLogDiv=document.getElementById('commandLog');
 let playerName=localStorage.getItem('playerName')||null;
+let playerCoins=parseInt(localStorage.getItem('playerCoins'))||0;
 
-// Start game
+document.getElementById('coinBalance').innerText='Coins: '+playerCoins;
+
+function updateCoinDisplay(){ document.getElementById('coinBalance').innerText='Coins: '+playerCoins; }
+
+function addCoins(amount){
+  playerCoins+=amount;
+  localStorage.setItem('playerCoins', playerCoins);
+  updateCoinDisplay();
+}
+
 function startGame(){
   if(!playerName){
     let nameValid=false;
@@ -91,13 +101,11 @@ function startGame(){
   requestAnimationFrame(gameLoop);
 }
 
-// Spawn coins/enemies
 function spawnInitialCoins(){ for(let i=0;i<10;i++) spawnCoin(-Math.random()*canvas.height); }
 function spawnCoin(y){ let x=Math.random()*(canvas.width-coinSize); if(y===undefined)y=-coinSize; coins.push({x,y}); }
 function spawnInitialEnemies(){ for(let i=0;i<5;i++) spawnEnemy(-Math.random()*canvas.height*2); }
 function spawnEnemy(y){ let x=Math.random()*(canvas.width-enemySize); if(y===undefined)y=-enemySize; enemies.push({x,y}); }
 
-// Draw
 function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   ctx.fillStyle='red'; ctx.fillRect(player.x,player.y,player.w,player.h);
@@ -106,7 +114,6 @@ function draw(){
   ctx.fillStyle='white'; ctx.font='20px Arial'; ctx.fillText('Score: '+score,10,30);
 }
 
-// Update
 function update(){
   if(keys['ArrowLeft']) player.x-=speed;
   if(keys['ArrowRight']) player.x+=speed;
@@ -119,10 +126,14 @@ function update(){
   coins.forEach((c,i)=>{ if(c.y>canvas.height){ coins.splice(i,1); spawnCoin(); } });
   enemies.forEach((e,i)=>{ if(e.y>canvas.height){ enemies.splice(i,1); spawnEnemy(); } });
 
-  coins.forEach((c,i)=>{ 
+  coins.forEach((c,i)=>{
     if(player.x<c.x+coinSize && player.x+player.w>c.x && player.y<c.y+coinSize && player.y+player.h>c.y){
-      coins.splice(i,1); score++; totalCoins++; spawnCoin(); renderLeaderboard(); updateTotalCoins(); 
-    } 
+      coins.splice(i,1);
+      addCoins(1);
+      score++;
+      spawnCoin();
+      renderLeaderboard();
+    }
   });
 
   enemies.forEach(e=>{
@@ -132,33 +143,23 @@ function update(){
   });
 }
 
-// Update total coins in localStorage
-function updateTotalCoins(){
-  localStorage.setItem('totalCoins', totalCoins);
-}
-
-// Game loop
 function gameLoop(){ if(!gameStarted) return; update(); draw(); requestAnimationFrame(gameLoop); }
 
-// Game over
 function endGame(){
   gameStarted=false;
   document.getElementById('finalScore').innerText='Coins collected this run: '+score;
   document.getElementById('gameOverPopup').classList.add('show');
 
-  // Cumulative score
   let existing=highScores.find(h=>h.name===playerName);
-  if(existing){ existing.score += score; } 
+  if(existing){ existing.score+=score; } 
   else{ highScores.push({name:playerName, score:score}); }
   highScores.sort((a,b)=>b.score-a.score);
   localStorage.setItem('highScores',JSON.stringify(highScores));
   renderLeaderboard();
 }
 
-// Restart
 function restartGame(){ document.getElementById('gameOverPopup').classList.remove('show'); startGame(); }
 
-// Leaderboard
 function renderLeaderboard(){
   const list=document.getElementById('scoreList'); list.innerHTML='';
   let maxScore=highScores.reduce((max,h)=>h.score>max?h.score:max,0);
@@ -170,7 +171,6 @@ function renderLeaderboard(){
   });
 }
 
-// Controls
 window.addEventListener('keydown',e=>keys[e.key]=true);
 window.addEventListener('keyup',e=>keys[e.key]=false);
 document.getElementById('leftBtn').addEventListener('touchstart',()=>keys['ArrowLeft']=true);
@@ -178,10 +178,10 @@ document.getElementById('leftBtn').addEventListener('touchend',()=>keys['ArrowLe
 document.getElementById('rightBtn').addEventListener('touchstart',()=>keys['ArrowRight']=true);
 document.getElementById('rightBtn').addEventListener('touchend',()=>keys['ArrowRight']=false);
 
-// Commands
 document.getElementById('cmdInput').addEventListener('keydown',function(e){
   if(e.key==='Enter'){ executeCommand(this.value); this.value=''; }
 });
+
 function executeCommand(cmd){
   if(!cmd) return; logCommand(cmd);
   const parts=cmd.trim().split(' ');
@@ -192,20 +192,21 @@ function executeCommand(cmd){
     case 'gbg.enemy': let e=parseInt(parts[1]); if(!isNaN(e)) for(let i=0;i<e;i++) spawnEnemy(); break;
     case 'gbg.cd_speed': let x=parseInt(parts[1]); if(!isNaN(x)){ speed=x; scrollSpeed=x/2; } break;
     case 'gbg.maxCoins': 
-      let maxC=parseInt(parts[1])||50; maxC=Math.min(maxC,1000); 
+      let maxC=parseInt(parts[1])||1000; maxC=Math.min(maxC,1000000); 
       for(let i=0;i<maxC;i++) spawnCoin(); 
-    break;
+      break;
     case 'gbg.enemySpeed': let es=parseFloat(parts[1]); if(!isNaN(es)) enemySpeed=es; break;
     case 'gbg.reset': restartGame(); break;
     default: logCommand('Unknown command'); break;
   }
 }
+
 function logCommand(text){
   const p=document.createElement('p'); p.innerText=text; commandLogDiv.appendChild(p); commandLogDiv.scrollTop=commandLogDiv.scrollHeight;
 }
 
-// Start button listener
 document.getElementById('startBtn').addEventListener('click', startGame);
 </script>
+
 </body>
 </html>
