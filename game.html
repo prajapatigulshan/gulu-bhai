@@ -65,18 +65,18 @@ let player={x:375,y:320,w:50,h:50};
 let keys={};
 let highScores=JSON.parse(localStorage.getItem('highScores'))||[];
 const commandLogDiv=document.getElementById('commandLog');
-let playerName=null;
+let playerName=localStorage.getItem('playerName')||null;
 
 // Start game
 function startGame(){
   if(!playerName){
     let nameValid=false;
     while(!nameValid){
-      let name=prompt('Enter your name:')||'Player';
+      let name=prompt('Enter your unique name:')||'Player';
       if(highScores.find(h=>h.name===name)){
         alert('Name already taken! Enter a different name.');
       }else{
-        playerName=name; nameValid=true;
+        playerName=name; localStorage.setItem('playerName', playerName); nameValid=true;
       }
     }
   }
@@ -185,8 +185,8 @@ function executeCommand(cmd){
     case 'gbg.coin': let c=parseInt(parts[1]); if(!isNaN(c)) for(let i=0;i<c;i++) spawnCoin(); break;
     case 'gbg.enemy': let e=parseInt(parts[1]); if(!isNaN(e)) for(let i=0;i<e;i++) spawnEnemy(); break;
     case 'gbg.cd_speed': let x=parseInt(parts[1]); if(!isNaN(x)){ speed=x; scrollSpeed=x/2; } break;
-    case 'gbg.reset': restartGame(); break;
     case 'gbg.maxCoins': for(let i=0;i<50;i++) spawnCoin(); break;
+    case 'gbg.reset': restartGame(); break;
     default: logCommand('Unknown command'); break;
   }
 }
