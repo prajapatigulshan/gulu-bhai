@@ -95,11 +95,17 @@ function update(){
       coins.splice(i,1);
       score++;
       spawnCoin();
+      renderLeaderboard(); // realtime update
     }
   });
 
   if(player.x<0) player.x=0;
   if(player.x+player.w>canvas.width) player.x=canvas.width-player.w;
+
+  // Game over condition
+  if(score>=20){ // adjust as you like
+    endGame();
+  }
 }
 
 function gameLoop(){
@@ -147,7 +153,7 @@ document.getElementById('rightBtn').addEventListener('touchstart',()=>keys['Arro
 document.getElementById('rightBtn').addEventListener('touchend',()=>keys['ArrowRight']=false);
 
 // Command input
-document.getElementById('cmdInput').addEventListener('keypress', function(e){
+document.getElementById('cmdInput').addEventListener('keydown', function(e){
   if(e.key==='Enter'){
     executeCommand(this.value);
     this.value='';
@@ -160,6 +166,7 @@ function executeCommand(cmd){
     let val=parseInt(parts[1]); if(!isNaN(val)) speed=val;
   } else if(parts[0]==='coin'){
     let val=parseInt(parts[1]); if(!isNaN(val)) for(let i=0;i<val;i++) spawnCoin();
+    renderLeaderboard(); // coins added, update
   }
 }
 </script>
