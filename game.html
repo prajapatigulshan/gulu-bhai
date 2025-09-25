@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GBG Ultimate Car Game</title>
+<title>GBG Ultimate Car Game - Pro</title>
 <style>
-body { margin:0; font-family:Arial,sans-serif; background:#111; color:white; overflow:hidden;}
+body { margin:0; font-family:Arial,sans-serif; background:#111; color:white; overflow:hidden; }
 header { position:fixed; top:0; width:100%; background:#000c; padding:15px; display:flex; justify-content:space-between; align-items:center; z-index:1000; }
 #startBtn { padding:10px 20px; font-size:18px; border:none; border-radius:10px; cursor:pointer; background:linear-gradient(to right, red, orange, yellow, green, cyan, blue, violet); color:white; }
 canvas { display:block; margin:90px auto 20px auto; background:#87CEEB; border:3px solid #0ff; border-radius:12px; }
@@ -14,14 +14,15 @@ canvas { display:block; margin:90px auto 20px auto; background:#87CEEB; border:3
 #commandPrompt { position:fixed; left:10px; top:80px; width:300px; height:400px; background:#000c; overflow-y:auto; padding:10px; border-radius:12px; font-family:monospace; }
 #commandPrompt input { width:90%; padding:5px; margin-top:10px; border-radius:5px; border:none; }
 #leaderboard { position:fixed; right:10px; top:80px; width:250px; height:400px; background:#000c; overflow-y:auto; padding:10px; border-radius:12px; }
-#gameOverPopup { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#000c; padding:30px; border-radius:15px; text-align:center; }
+#gameOverPopup { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%) scale(0); background:#000c; padding:30px; border-radius:15px; text-align:center; transition:0.3s; }
+#gameOverPopup.show { transform:translate(-50%,-50%) scale(1); }
 #gameOverPopup button { padding:10px 20px; margin-top:15px; border:none; border-radius:10px; cursor:pointer; background:linear-gradient(to right, red, orange, yellow, green, cyan, blue, violet); color:white; }
 </style>
 </head>
 <body>
 
 <header>
-  <div>GBG Car Game</div>
+  <div>GBG Car Game Pro</div>
   <button id="startBtn">Start Game</button>
 </header>
 
@@ -57,7 +58,7 @@ let speed = 5;
 let score = 0;
 let coins = [];
 let coinSize = 20;
-let player = {x:100, y:300, w:50, h:50};
+let player = {x:100, y:300, w:50, h:50, dx:0};
 let keys = {};
 let highScores = JSON.parse(localStorage.getItem('highScores')) || [];
 
@@ -66,7 +67,7 @@ function startGame(){
   gameStarted = true;
   score = 0;
   coins = [];
-  player.x = 100; player.y = 300;
+  player.x = 100; player.y = 300; player.dx = 0;
   document.getElementById('startBtn').style.display='none';
   spawnCoin();
   renderLeaderboard();
@@ -75,22 +76,33 @@ function startGame(){
 
 document.getElementById('startBtn').addEventListener('click', startGame);
 
-// Spawn Coin
+// Spawn Coin smoothly
 function spawnCoin(){
   let x = Math.random()*(canvas.width-coinSize);
   let y = Math.random()*(canvas.height-coinSize-50);
-  coins.push({x,y});
+  coins.push({x,y,scale:0}); // scale for animation
 }
 
 // Draw
 function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  // Player
+
+  // Player with smooth movement
   ctx.fillStyle='red';
+  player.x += player.dx;
   ctx.fillRect(player.x, player.y, player.w, player.h);
-  // Coins
+
+  // Coins with animation
   ctx.fillStyle='yellow';
-  coins.forEach(c=>ctx.fillRect(c.x,c.y,coinSize,coinSize));
+  coins.forEach(c=>{
+    if(c.scale<1) c.scale += 0.05;
+    ctx.save();
+    ctx.translate(c.x+coinSize/2, c.y+coinSize/2);
+    ctx.scale(c.scale,c.scale);
+    ctx.fillRect(-coinSize/2,-coinSize/2,coinSize,coinSize);
+    ctx.restore();
+  });
+
   // Score
   ctx.fillStyle='black';
   ctx.font='20px Arial';
@@ -99,15 +111,18 @@ function draw(){
 
 // Update
 function update(){
-  if(keys['ArrowLeft']) player.x-=speed;
-  if(keys['ArrowRight']) player.x+=speed;
+  // Smooth controls
+  if(keys['ArrowLeft']) player.dx = -speed;
+  else if(keys['ArrowRight']) player.dx = speed;
+  else player.dx = 0;
 
+  // Collision with coins
   coins.forEach((c,i)=>{
     if(player.x< c.x+coinSize && player.x+player.w>c.x && player.y<c.y+coinSize && player.y+player.h>c.y){
       coins.splice(i,1);
       score++;
       spawnCoin();
-      renderLeaderboard(); // Update leaderboard
+      renderLeaderboard(); // Update leaderboard live
     }
   });
 
@@ -129,7 +144,8 @@ function gameLoop(){
 function endGame(){
   gameStarted=false;
   document.getElementById('finalScore').innerText='Coins collected: '+score;
-  document.getElementById('gameOverPopup').style.display='block';
+  const popup = document.getElementById('gameOverPopup');
+  popup.classList.add('show');
   let playerName = prompt('Enter your name:');
   if(playerName){
     highScores.push({name:playerName, score});
@@ -140,7 +156,8 @@ function endGame(){
 }
 
 function restartGame(){
-  document.getElementById('gameOverPopup').style.display='none';
+  const popup = document.getElementById('gameOverPopup');
+  popup.classList.remove('show');
   startGame();
 }
 
