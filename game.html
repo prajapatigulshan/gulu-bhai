@@ -12,7 +12,7 @@
   header { position:fixed; top:0; width:100%; background: rgba(0,0,0,0.85); padding:15px; box-shadow:0 0 15px #00ffc8; z-index:1000; display:flex; justify-content:space-between; align-items:center; }
   .logo span { font-size:26px; font-weight:bold; }
   #startBtn { padding:15px 30px; font-size:18px; border:none; border-radius:12px; cursor:pointer; background: linear-gradient(90deg, red,orange,yellow,green,cyan,blue,violet); animation:rgbMove 6s linear infinite; color:white; box-shadow:0 0 15px #00ffc8; }
-  canvas { display:block; margin:auto; background:#87CEEB; border:3px solid rgba(0,255,200,0.7); border-radius:12px; }
+  canvas { display:block; margin:auto; background:#87CEEB; border:3px solid rgba(0,255,200,0.7); border-radius:12px; margin-top:70px;}
   .controls { position:fixed; bottom:20px; width:100%; display:flex; justify-content:center; gap:20px; }
   .controls button { padding:15px; font-size:20px; border:none; border-radius:12px; cursor:pointer; background: linear-gradient(90deg, red,orange,yellow,green,cyan,blue,violet); color:white; animation:rgbMove 6s linear infinite; }
   #commandPrompt { position:fixed; left:10px; top:80px; width:300px; height:400px; background:rgba(0,0,0,0.9); overflow-y:auto; padding:10px; border-radius:12px; box-shadow:0 0 15px #00ffc8; font-family:monospace; }
@@ -26,7 +26,7 @@
   <div class="logo rgb-text">GBG Car Game</div>
   <button id="startBtn">Start Game</button>
 </header>
-<div id="commandPrompt">// Command Prompt: Use commands to control game (example: speed 5)</div>
+<div id="commandPrompt">// Command Prompt: Use commands (speed X, coin X)</div>
 <div id="leaderboard"><h3 class="rgb-text">Leaderboard</h3><ol id="scoreList"></ol></div>
 <canvas id="game" width="800" height="400"></canvas>
 <div class="controls">
@@ -41,6 +41,7 @@
 <script>
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
+
 let gameStarted = false;
 let speed = 5;
 let score = 0;
@@ -55,6 +56,7 @@ function startGame(){
   score = 0;
   coins = [];
   spawnCoin();
+  player.x = 100; player.y = 300;
   document.getElementById('startBtn').style.display='none';
   requestAnimationFrame(gameLoop);
 }
@@ -81,6 +83,7 @@ function draw(){
 function update(){
   if(keys['ArrowLeft']) player.x-=speed;
   if(keys['ArrowRight']) player.x+=speed;
+
   coins.forEach((c,i)=>{
     if(player.x< c.x+coinSize && player.x+player.w>c.x && player.y<c.y+coinSize && player.y+player.h>c.y){
       coins.splice(i,1);
@@ -88,6 +91,7 @@ function update(){
       spawnCoin();
     }
   });
+
   if(player.x<0) player.x=0;
   if(player.x+player.w>canvas.width) player.x=canvas.width-player.w;
 }
@@ -96,7 +100,6 @@ function gameLoop(){
   if(!gameStarted) return;
   update();
   draw();
-  if(score>=100){ endGame(); return; }
   requestAnimationFrame(gameLoop);
 }
 
@@ -115,10 +118,7 @@ function endGame(){
 
 function restartGame(){
   document.getElementById('gameOverPopup').style.display='none';
-  player.x=100; player.y=300; score=0; coins=[];
-  spawnCoin();
-  gameStarted=true;
-  requestAnimationFrame(gameLoop);
+  startGame();
 }
 
 function renderLeaderboard(){
@@ -142,7 +142,7 @@ document.getElementById('rightBtn').addEventListener('touchend',()=>keys['ArrowR
 
 // Command prompt (Pro)
 function executeCommand(cmd){
-  const parts = cmd.split(' ');
+  const parts = cmd.trim().split(' ');
   if(parts[0]==='speed'){
     let val=parseInt(parts[1]); if(!isNaN(val)) speed=val;
   } else if(parts[0]==='coin'){
@@ -150,7 +150,7 @@ function executeCommand(cmd){
   }
 }
 
-// Example usage: executeCommand('speed 10'); executeCommand('coin 50');
+// Example: executeCommand('speed 10'); executeCommand('coin 50');
 </script>
 </body>
 </html>
