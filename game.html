@@ -5,208 +5,152 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GBG Ultimate Car Game</title>
 <style>
-body {margin:0; overflow:hidden; font-family:Arial,sans-serif; background:#111;}
-canvas{display:block; margin:auto; background:#1a1a1a;}
-#startBtn, #settingsBtn {position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); padding:15px 30px; font-size:22px; border:none; border-radius:10px; cursor:pointer; background: linear-gradient(90deg, red,orange,yellow,green,cyan,blue,violet,red); color:white; animation: rgbMove 6s linear infinite;}
-@keyframes rgbMove{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
-#controls {position:absolute; bottom:20px; width:100%; text-align:center;}
-.controlBtn {padding:15px 25px; margin:0 20px; font-size:20px; border:none; border-radius:10px; background: rgba(255,255,255,0.2); color:white; cursor:pointer;}
-#cmdBox {position:absolute; left:10px; top:10px; width:220px; height:90%; background:rgba(0,0,0,0.7); overflow-y:auto; padding:10px; border-radius:10px; color:#0f0; font-family:monospace; font-size:14px;}
-#leaderboard {position:absolute; right:10px; top:10px; width:180px; height:90%; background:rgba(0,0,0,0.7); overflow-y:auto; padding:10px; border-radius:10px; color:#ff0; font-family:monospace; font-size:14px;}
+  body { margin:0; font-family:Arial,sans-serif; background: linear-gradient(270deg, red, orange, yellow, green, cyan, blue, violet, red); background-size: 2000% 2000%; animation: bgRGB 60s linear infinite; color:white; overflow:hidden;}
+  @keyframes bgRGB { 0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;} }
+  .rgb-text { background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-size:400%; animation: rgbMove 8s linear infinite; font-weight:bold;}
+  @keyframes rgbMove {0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+  header { position:fixed; top:0; width:100%; background: rgba(0,0,0,0.85); padding:15px; box-shadow:0 0 15px #00ffc8; z-index:1000; display:flex; justify-content:space-between; align-items:center; }
+  .logo span { font-size:26px; font-weight:bold; }
+  #startBtn { padding:15px 30px; font-size:18px; border:none; border-radius:12px; cursor:pointer; background: linear-gradient(90deg, red,orange,yellow,green,cyan,blue,violet); animation:rgbMove 6s linear infinite; color:white; box-shadow:0 0 15px #00ffc8; }
+  canvas { display:block; margin:auto; background:#87CEEB; border:3px solid rgba(0,255,200,0.7); border-radius:12px; }
+  .controls { position:fixed; bottom:20px; width:100%; display:flex; justify-content:center; gap:20px; }
+  .controls button { padding:15px; font-size:20px; border:none; border-radius:12px; cursor:pointer; background: linear-gradient(90deg, red,orange,yellow,green,cyan,blue,violet); color:white; animation:rgbMove 6s linear infinite; }
+  #commandPrompt { position:fixed; left:10px; top:80px; width:300px; height:400px; background:rgba(0,0,0,0.9); overflow-y:auto; padding:10px; border-radius:12px; box-shadow:0 0 15px #00ffc8; font-family:monospace; }
+  #leaderboard { position:fixed; right:10px; top:80px; width:250px; height:400px; background:rgba(0,0,0,0.9); overflow-y:auto; padding:10px; border-radius:12px; box-shadow:0 0 15px #00ffc8; }
+  #gameOverPopup { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,0.85); padding:30px; border-radius:15px; text-align:center; box-shadow:0 0 25px #00ffc8; }
+  #gameOverPopup button { padding:10px 20px; margin-top:15px; border:none; border-radius:10px; cursor:pointer; background: linear-gradient(90deg, red,orange,yellow,green,cyan,blue,violet); color:white; animation:rgbMove 6s linear infinite; }
 </style>
 </head>
 <body>
-
-<canvas id="game" width="800" height="500"></canvas>
-<button id="startBtn">🚦 Start Game</button>
-<div id="controls">
-  <button class="controlBtn" id="leftBtn">⬅️ Left</button>
-  <button class="controlBtn" id="rightBtn">➡️ Right</button>
+<header>
+  <div class="logo rgb-text">GBG Car Game</div>
+  <button id="startBtn">Start Game</button>
+</header>
+<div id="commandPrompt">// Command Prompt: Use commands to control game (example: speed 5)</div>
+<div id="leaderboard"><h3 class="rgb-text">Leaderboard</h3><ol id="scoreList"></ol></div>
+<canvas id="game" width="800" height="400"></canvas>
+<div class="controls">
+  <button id="leftBtn">⬅️</button>
+  <button id="rightBtn">➡️</button>
 </div>
-
-<div id="cmdBox">
-<h3>Command Prompt</h3>
-<p>Type commands: speed 5, coins 100, invisible, height 50</p>
-<input type="text" id="cmdInput" placeholder="// Enter command" style="width:100%; border:none; border-radius:5px; padding:5px;">
-<button onclick="runCommand()" style="width:100%; margin-top:5px;">Run</button>
-<div id="cmdOutput"></div>
+<div id="gameOverPopup">
+  <h2 class="rgb-text">Game Over!</h2>
+  <p id="finalScore"></p>
+  <button onclick="restartGame()">OK</button>
 </div>
-
-<div id="leaderboard">
-<h3>Leaderboard</h3>
-<ul id="leaderboardList"></ul>
-</div>
-
 <script>
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
-
-// Game state
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
 let gameStarted = false;
-let score = 0;
-let coins = 0;
 let speed = 5;
-let carHeight = 50;
-let invisible = false;
+let score = 0;
+let coins = [];
+let coinSize = 20;
+let player = {x: 100, y: 300, w:50, h:50};
+let keys = {};
+let highScores = JSON.parse(localStorage.getItem('highScores')) || [];
 
-// Player car
-const player = {x:350, y:canvas.height-100, w:50, h:50};
-
-// Obstacles
-let obstacles = [];
-let coinsArr = [];
-
-// Controls
-let moveLeft = false;
-let moveRight = false;
-
-// Leaderboard
-let leaderboard = [];
-
-// Start Game
-document.getElementById("startBtn").addEventListener("click", () => {
-  resetGame();
+function startGame(){
   gameStarted = true;
-  document.getElementById("startBtn").style.display = "none";
+  score = 0;
+  coins = [];
+  spawnCoin();
+  document.getElementById('startBtn').style.display='none';
   requestAnimationFrame(gameLoop);
-});
-
-// Mobile buttons
-document.getElementById("leftBtn").addEventListener("mousedown", ()=>{moveLeft=true});
-document.getElementById("leftBtn").addEventListener("mouseup", ()=>{moveLeft=false});
-document.getElementById("rightBtn").addEventListener("mousedown", ()=>{moveRight=true});
-document.getElementById("rightBtn").addEventListener("mouseup", ()=>{moveRight=false});
-
-// Keyboard
-window.addEventListener("keydown", e=>{
-  if(e.code==="ArrowLeft") moveLeft=true;
-  if(e.code==="ArrowRight") moveRight=true;
-});
-window.addEventListener("keyup", e=>{
-  if(e.code==="ArrowLeft") moveLeft=false;
-  if(e.code==="ArrowRight") moveRight=false;
-});
-
-// Voice commands
-if('webkitSpeechRecognition' in window){
-  const recognition = new webkitSpeechRecognition();
-  recognition.continuous=true;
-  recognition.onresult = function(event){
-    const voice = event.results[event.results.length-1][0].transcript.trim().toLowerCase();
-    if(voice.includes("left")) moveLeft=true; if(voice.includes("right")) moveRight=true;
-    setTimeout(()=>{moveLeft=false; moveRight=false}, 500);
-  }
-  recognition.start();
 }
 
-// Command prompt
-function runCommand(){
-  const cmd = document.getElementById("cmdInput").value.trim().toLowerCase();
-  const output = document.getElementById("cmdOutput");
-  if(cmd.startsWith("speed")){
-    const val = parseInt(cmd.split(" ")[1]);
-    if(!isNaN(val)){ speed = val; output.innerHTML="Speed set to "+speed; }
-  }else if(cmd.startsWith("coins")){
-    const val = parseInt(cmd.split(" ")[1]);
-    if(!isNaN(val)){ coins += val; output.innerHTML="Coins increased by "+val; }
-  }else if(cmd==="invisible"){ invisible=true; output.innerHTML="Car is now invisible"; }
-  else if(cmd==="visible"){ invisible=false; output.innerHTML="Car visible again"; }
-  else if(cmd.startsWith("height")){
-    const val = parseInt(cmd.split(" ")[1]);
-    if(!isNaN(val)){ carHeight=val; output.innerHTML="Car height set to "+carHeight; player.h=carHeight; }
-  }else{
-    output.innerHTML="Unknown command";
-  }
+document.getElementById('startBtn').addEventListener('click', startGame);
+
+function spawnCoin(){
+  let x = Math.random() * (canvas.width-coinSize);
+  let y = Math.random() * (canvas.height-coinSize-50);
+  coins.push({x,y});
 }
 
-// Generate obstacle
-function genObstacle(){
-  const width = 50+Math.random()*50;
-  const x = Math.random()*(canvas.width-width);
-  obstacles.push({x:x, y:-50, w:width, h:20});
-}
-
-// Generate coin
-function genCoin(){
-  const x = Math.random()*(canvas.width-20);
-  coinsArr.push({x:x, y:-20, w:20, h:20});
-}
-
-// Reset Game
-function resetGame(){
-  score=0; coins=0; obstacles=[]; coinsArr=[]; player.x=350; player.y=canvas.height-100;
-}
-
-// Leaderboard update
-function updateLeaderboard(){
-  const lb = document.getElementById("leaderboardList");
-  lb.innerHTML="";
-  leaderboard.sort((a,b)=>b.score-a.score);
-  leaderboard.slice(0,10).forEach(p=>{
-    lb.innerHTML+="<li>"+p.name+" - "+p.score+"</li>";
-  });
-}
-
-// Game loop
-let frames=0;
-function gameLoop(){
-  if(!gameStarted) return;
+function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle='red';
+  ctx.fillRect(player.x, player.y, player.w, player.h);
+  ctx.fillStyle='yellow';
+  coins.forEach(c=>ctx.fillRect(c.x,c.y,coinSize,coinSize));
+  ctx.fillStyle='black';
+  ctx.font='20px Arial';
+  ctx.fillText('Score: '+score,10,30);
+}
 
-  // Move player
-  if(moveLeft) player.x-=speed;
-  if(moveRight) player.x+=speed;
+function update(){
+  if(keys['ArrowLeft']) player.x-=speed;
+  if(keys['ArrowRight']) player.x+=speed;
+  coins.forEach((c,i)=>{
+    if(player.x< c.x+coinSize && player.x+player.w>c.x && player.y<c.y+coinSize && player.y+player.h>c.y){
+      coins.splice(i,1);
+      score++;
+      spawnCoin();
+    }
+  });
   if(player.x<0) player.x=0;
   if(player.x+player.w>canvas.width) player.x=canvas.width-player.w;
+}
 
-  // Generate obstacles & coins
-  frames++;
-  if(frames%60===0) genObstacle();
-  if(frames%100===0) genCoin();
-
-  // Move obstacles
-  obstacles.forEach(o=>{ o.y+=speed; ctx.fillStyle="red"; ctx.fillRect(o.x,o.y,o.w,o.h); });
-  obstacles = obstacles.filter(o=>o.y<canvas.height);
-
-  // Move coins
-  coinsArr.forEach(c=>{ c.y+=speed; ctx.fillStyle="yellow"; ctx.fillRect(c.x,c.y,c.w,c.h); });
-  coinsArr = coinsArr.filter(c=>c.y<canvas.height);
-
-  // Collision with obstacles
-  for(let o of obstacles){
-    if(player.x<o.x+o.w && player.x+player.w>o.x && player.y<o.y+o.h && player.y+player.h>o.y){
-      gameStarted=false;
-      alert("Game Over!\nScore: "+score+"\nCoins: "+coins);
-      // Save leaderboard
-      const name = prompt("Enter your name for leaderboard:") || "Guest";
-      leaderboard.push({name:name, score:coins});
-      updateLeaderboard();
-      document.getElementById("startBtn").style.display="block";
-      return;
-    }
-  }
-
-  // Collision with coins
-  for(let i=coinsArr.length-1;i>=0;i--){
-    const c=coinsArr[i];
-    if(player.x<c.x+c.w && player.x+player.w>c.x && player.y<c.y+c.h && player.y+player.h>c.y){
-      coins++; coinsArr.splice(i,1);
-    }
-  }
-
-  // Draw player
-  if(!invisible){ ctx.fillStyle="cyan"; ctx.fillRect(player.x,player.y,player.w,player.h); }
-
-  // Score & coins
-  ctx.fillStyle="white"; ctx.font="20px Arial";
-  ctx.fillText("Coins: "+coins, 10, 30);
-  ctx.fillText("Score: "+score, 10, 60);
-
-  // Increment score
-  score++;
-
+function gameLoop(){
+  if(!gameStarted) return;
+  update();
+  draw();
+  if(score>=100){ endGame(); return; }
   requestAnimationFrame(gameLoop);
 }
+
+function endGame(){
+  gameStarted=false;
+  document.getElementById('finalScore').innerText='Coins collected: '+score;
+  document.getElementById('gameOverPopup').style.display='block';
+  let playerName = prompt('Enter your name:');
+  if(playerName){
+    highScores.push({name:playerName, score});
+    highScores.sort((a,b)=>b.score-a.score);
+    localStorage.setItem('highScores', JSON.stringify(highScores));
+    renderLeaderboard();
+  }
+}
+
+function restartGame(){
+  document.getElementById('gameOverPopup').style.display='none';
+  player.x=100; player.y=300; score=0; coins=[];
+  spawnCoin();
+  gameStarted=true;
+  requestAnimationFrame(gameLoop);
+}
+
+function renderLeaderboard(){
+  const list = document.getElementById('scoreList');
+  list.innerHTML='';
+  highScores.slice(0,10).forEach(hs=>{
+    let li=document.createElement('li');
+    li.innerText=hs.name+' - '+hs.score;
+    list.appendChild(li);
+  });
+}
+renderLeaderboard();
+
+// Controls
+window.addEventListener('keydown', e=>keys[e.key]=true);
+window.addEventListener('keyup', e=>keys[e.key]=false);
+document.getElementById('leftBtn').addEventListener('touchstart',()=>keys['ArrowLeft']=true);
+document.getElementById('leftBtn').addEventListener('touchend',()=>keys['ArrowLeft']=false);
+document.getElementById('rightBtn').addEventListener('touchstart',()=>keys['ArrowRight']=true);
+document.getElementById('rightBtn').addEventListener('touchend',()=>keys['ArrowRight']=false);
+
+// Command prompt (Pro)
+function executeCommand(cmd){
+  const parts = cmd.split(' ');
+  if(parts[0]==='speed'){
+    let val=parseInt(parts[1]); if(!isNaN(val)) speed=val;
+  } else if(parts[0]==='coin'){
+    let val=parseInt(parts[1]); if(!isNaN(val)) for(let i=0;i<val;i++) spawnCoin();
+  }
+}
+
+// Example usage: executeCommand('speed 10'); executeCommand('coin 50');
 </script>
 </body>
 </html>
