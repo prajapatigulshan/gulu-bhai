@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GBG Ultimate Car Game - Pro</title>
+<title>GBG Ultimate Car Game - Final</title>
 <style>
 body { margin:0; font-family:Arial,sans-serif; background:#111; color:white; overflow:hidden; }
 header { position:fixed; top:0; width:100%; background:#000c; padding:15px; display:flex; justify-content:space-between; align-items:center; z-index:1000; }
@@ -22,7 +22,7 @@ canvas { display:block; margin:90px auto 20px auto; background:#87CEEB; border:3
 <body>
 
 <header>
-  <div>GBG Car Game Pro</div>
+  <div>GBG Car Game Final</div>
   <button id="startBtn">Start Game</button>
 </header>
 
@@ -58,7 +58,7 @@ let speed = 5;
 let score = 0;
 let coins = [];
 let coinSize = 20;
-let player = {x:100, y:300, w:50, h:50, dx:0};
+let player = {x:375, y:300, w:50, h:50, dx:0};
 let keys = {};
 let highScores = JSON.parse(localStorage.getItem('highScores')) || [];
 
@@ -67,7 +67,7 @@ function startGame(){
   gameStarted = true;
   score = 0;
   coins = [];
-  player.x = 100; player.y = 300; player.dx = 0;
+  player.x = 375; player.y = 300; player.dx = 0;
   document.getElementById('startBtn').style.display='none';
   spawnCoin();
   renderLeaderboard();
@@ -76,23 +76,23 @@ function startGame(){
 
 document.getElementById('startBtn').addEventListener('click', startGame);
 
-// Spawn Coin smoothly
+// Spawn Coin
 function spawnCoin(){
   let x = Math.random()*(canvas.width-coinSize);
-  let y = Math.random()*(canvas.height-coinSize-50);
-  coins.push({x,y,scale:0}); // scale for animation
+  let y = Math.random()*(canvas.height-coinSize-50) + 50;
+  coins.push({x,y,scale:0});
 }
 
 // Draw
 function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
-  // Player with smooth movement
+  // Player
   ctx.fillStyle='red';
   player.x += player.dx;
   ctx.fillRect(player.x, player.y, player.w, player.h);
 
-  // Coins with animation
+  // Coins with scale animation
   ctx.fillStyle='yellow';
   coins.forEach(c=>{
     if(c.scale<1) c.scale += 0.05;
@@ -111,25 +111,31 @@ function draw(){
 
 // Update
 function update(){
-  // Smooth controls
+  // Horizontal movement
   if(keys['ArrowLeft']) player.dx = -speed;
   else if(keys['ArrowRight']) player.dx = speed;
   else player.dx = 0;
 
-  // Collision with coins
+  // Forward auto-move
+  player.y -= 2;
+  
+  // Coins collision
   coins.forEach((c,i)=>{
     if(player.x< c.x+coinSize && player.x+player.w>c.x && player.y<c.y+coinSize && player.y+player.h>c.y){
       coins.splice(i,1);
       score++;
       spawnCoin();
-      renderLeaderboard(); // Update leaderboard live
+      renderLeaderboard();
     }
   });
 
+  // Boundary checks
   if(player.x<0) player.x=0;
   if(player.x+player.w>canvas.width) player.x=canvas.width-player.w;
+  if(player.y<0) player.y=0;
+  if(player.y+player.h>canvas.height) player.y=canvas.height-player.h;
 
-  if(score>=20){ endGame(); } // Game over
+  if(score>=20){ endGame(); }
 }
 
 // Game Loop
@@ -175,7 +181,6 @@ function renderLeaderboard(){
 // Controls
 window.addEventListener('keydown', e=>keys[e.key]=true);
 window.addEventListener('keyup', e=>keys[e.key]=false);
-
 document.getElementById('leftBtn').addEventListener('touchstart',()=>keys['ArrowLeft']=true);
 document.getElementById('leftBtn').addEventListener('touchend',()=>keys['ArrowLeft']=false);
 document.getElementById('rightBtn').addEventListener('touchstart',()=>keys['ArrowRight']=true);
@@ -203,6 +208,5 @@ function executeCommand(cmd){
 
 renderLeaderboard();
 </script>
-
 </body>
 </html>
