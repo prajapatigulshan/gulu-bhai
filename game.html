@@ -64,6 +64,7 @@ let coinSize=20, enemySize=40;
 let player={x:375,y:320,w:50,h:50};
 let keys={};
 let highScores=JSON.parse(localStorage.getItem('highScores'))||[];
+let totalCoins=parseInt(localStorage.getItem('totalCoins'))||0;
 const commandLogDiv=document.getElementById('commandLog');
 let playerName=localStorage.getItem('playerName')||null;
 
@@ -120,7 +121,7 @@ function update(){
 
   coins.forEach((c,i)=>{ 
     if(player.x<c.x+coinSize && player.x+player.w>c.x && player.y<c.y+coinSize && player.y+player.h>c.y){
-      coins.splice(i,1); score++; spawnCoin(); renderLeaderboard(); 
+      coins.splice(i,1); score++; totalCoins++; spawnCoin(); renderLeaderboard(); updateTotalCoins(); 
     } 
   });
 
@@ -129,6 +130,11 @@ function update(){
       endGame();
     }
   });
+}
+
+// Update total coins in localStorage
+function updateTotalCoins(){
+  localStorage.setItem('totalCoins', totalCoins);
 }
 
 // Game loop
@@ -186,7 +192,7 @@ function executeCommand(cmd){
     case 'gbg.enemy': let e=parseInt(parts[1]); if(!isNaN(e)) for(let i=0;i<e;i++) spawnEnemy(); break;
     case 'gbg.cd_speed': let x=parseInt(parts[1]); if(!isNaN(x)){ speed=x; scrollSpeed=x/2; } break;
     case 'gbg.maxCoins': 
-      let maxC=parseInt(parts[1])||50; maxC=Math.min(maxC,200); 
+      let maxC=parseInt(parts[1])||50; maxC=Math.min(maxC,1000); 
       for(let i=0;i<maxC;i++) spawnCoin(); 
     break;
     case 'gbg.enemySpeed': let es=parseFloat(parts[1]); if(!isNaN(es)) enemySpeed=es; break;
