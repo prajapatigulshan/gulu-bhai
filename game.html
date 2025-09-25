@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GBG Alsi Car Game</title>
+<title>GBG Car Game</title>
 <style>
-  body { margin:0; overflow:hidden; background: linear-gradient(270deg, red, orange, yellow, green, cyan, blue, violet); background-size: 2000% 2000%; animation:bgRGB 60s linear infinite; font-family:Arial,sans-serif;}
+  body { margin:0; overflow:hidden; background: linear-gradient(270deg, red, orange, yellow, green, cyan, blue, violet); background-size: 2000% 2000%; animation:bgRGB 60s linear infinite; font-family:Arial,sans-serif; }
   @keyframes bgRGB {
     0%{background-position:0% 50%;}
     50%{background-position:100% 50%;}
@@ -31,12 +31,37 @@
   .btn {
     width:80px; height:80px; border-radius:50%; background:rgba(255,255,255,0.2);
     border:none; font-size:24px; color:white; font-weight:bold;
+    user-select:none; -webkit-user-select:none;
+  }
+  /* Settings */
+  #settingsMenu {
+    position:absolute; top:50px; right:20px; background:rgba(0,0,0,0.7); color:white; padding:15px; border-radius:12px; display:none; z-index:1000;
+  }
+  #settingsMenu label, #settingsMenu select { display:block; margin:10px 0; }
+  #settingsBtn {
+    position:absolute; top:10px; right:10px; padding:10px 15px; border:none; border-radius:6px; background:rgba(0,0,0,0.6); color:white; font-weight:bold;
   }
 </style>
 </head>
 <body>
 
 <div class="score" id="scoreDisplay">Score: 0</div>
+<button id="settingsBtn">⚙️ Settings</button>
+<div id="settingsMenu">
+  <label>Left Control Key: 
+    <select id="leftKeySelect">
+      <option value="ArrowLeft">Arrow Left</option>
+      <option value="KeyA">A</option>
+    </select>
+  </label>
+  <label>Right Control Key: 
+    <select id="rightKeySelect">
+      <option value="ArrowRight">Arrow Right</option>
+      <option value="KeyD">D</option>
+    </select>
+  </label>
+</div>
+
 <canvas id="gameCanvas" width="400" height="600"></canvas>
 
 <div class="controls">
@@ -72,18 +97,29 @@ function addCoin() {
 
 // Controls
 let leftPressed=false, rightPressed=false;
+let leftKey='ArrowLeft', rightKey='ArrowRight';
+
 document.addEventListener('keydown', e => {
-  if(e.code==='ArrowLeft') leftPressed=true;
-  if(e.code==='ArrowRight') rightPressed=true;
+  if(e.code===leftKey) leftPressed=true;
+  if(e.code===rightKey) rightPressed=true;
 });
 document.addEventListener('keyup', e => {
-  if(e.code==='ArrowLeft') leftPressed=false;
-  if(e.code==='ArrowRight') rightPressed=false;
+  if(e.code===leftKey) leftPressed=false;
+  if(e.code===rightKey) rightPressed=false;
 });
 document.getElementById('leftBtn').addEventListener('touchstart',()=>leftPressed=true);
 document.getElementById('leftBtn').addEventListener('touchend',()=>leftPressed=false);
 document.getElementById('rightBtn').addEventListener('touchstart',()=>rightPressed=true);
 document.getElementById('rightBtn').addEventListener('touchend',()=>rightPressed=false);
+
+// Settings Menu
+const settingsBtn = document.getElementById('settingsBtn');
+const settingsMenu = document.getElementById('settingsMenu');
+settingsBtn.addEventListener('click', ()=>{
+  settingsMenu.style.display = settingsMenu.style.display==='none'?'block':'none';
+});
+document.getElementById('leftKeySelect').addEventListener('change',(e)=>{ leftKey=e.target.value; });
+document.getElementById('rightKeySelect').addEventListener('change',(e)=>{ rightKey=e.target.value; });
 
 // Collision detection
 function isColliding(a,b){
