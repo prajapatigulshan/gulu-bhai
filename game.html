@@ -118,9 +118,17 @@ function update(){
   coins.forEach((c,i)=>{ if(c.y>canvas.height){ coins.splice(i,1); spawnCoin(); } });
   enemies.forEach((e,i)=>{ if(e.y>canvas.height){ enemies.splice(i,1); spawnEnemy(); } });
 
-  coins.forEach((c,i)=>{ if(player.x<c.x+coinSize && player.x+player.w>c.x && player.y<c.y+coinSize && player.y+player.h>c.y){ coins.splice(i,1); score++; spawnCoin(); renderLeaderboard(); } });
+  coins.forEach((c,i)=>{ 
+    if(player.x<c.x+coinSize && player.x+player.w>c.x && player.y<c.y+coinSize && player.y+player.h>c.y){
+      coins.splice(i,1); score++; spawnCoin(); renderLeaderboard(); 
+    } 
+  });
 
-  enemies.forEach(e=>{ if(player.x<e.x+enemySize && player.x+player.w>e.x && player.y<e.y+enemySize && player.y+player.h>e.y){ endGame(); } });
+  enemies.forEach(e=>{
+    if(player.x<e.x+enemySize && player.x+player.w>e.x && player.y<e.y+enemySize && player.y+player.h>e.y){
+      endGame();
+    }
+  });
 }
 
 // Game loop
@@ -132,6 +140,7 @@ function endGame(){
   document.getElementById('finalScore').innerText='Coins collected this run: '+score;
   document.getElementById('gameOverPopup').classList.add('show');
 
+  // Cumulative score
   let existing=highScores.find(h=>h.name===playerName);
   if(existing){ existing.score += score; } 
   else{ highScores.push({name:playerName, score:score}); }
@@ -184,6 +193,9 @@ function executeCommand(cmd){
 function logCommand(text){
   const p=document.createElement('p'); p.innerText=text; commandLogDiv.appendChild(p); commandLogDiv.scrollTop=commandLogDiv.scrollHeight;
 }
+
+// Start button listener
+document.getElementById('startBtn').addEventListener('click', startGame);
 </script>
 </body>
 </html>
