@@ -18,6 +18,7 @@ canvas { display:block; margin:90px auto 20px auto; background:#111; border:3px 
 #gameOverPopup { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%) scale(0); background:#000c; padding:30px; border-radius:15px; text-align:center; transition:0.3s; }
 #gameOverPopup.show { transform:translate(-50%,-50%) scale(1); }
 #gameOverPopup button { padding:10px 20px; margin-top:15px; border:none; border-radius:10px; cursor:pointer; background:linear-gradient(to right, red, orange, yellow, green, cyan, blue, violet); color:white; }
+.highest { color:#0ff; font-weight:bold; }
 </style>
 </head>
 <body>
@@ -52,24 +53,32 @@ canvas { display:block; margin:90px auto 20px auto; background:#111; border:3px 
 </div>
 
 <script>
-const canvas = document.getElementById('game');
-const ctx = canvas.getContext('2d');
+const canvas=document.getElementById('game');
+const ctx=canvas.getContext('2d');
 
 let gameStarted=false;
 let speed=5, scrollSpeed=2;
 let score=0;
 let coins=[], enemies=[];
 let coinSize=20, enemySize=40;
-let player={x:375, y:320, w:50, h:50};
+let player={x:375,y:320,w:50,h:50};
 let keys={};
-let highScores = JSON.parse(localStorage.getItem('highScores')) || [];
+let highScores=JSON.parse(localStorage.getItem('highScores'))||[];
 const commandLogDiv=document.getElementById('commandLog');
 let playerName=null;
 
 // Start game
 function startGame(){
   if(!playerName){
-    playerName = prompt('Enter your name:') || 'Player';
+    let nameValid=false;
+    while(!nameValid){
+      let name=prompt('Enter your name:')||'Player';
+      if(highScores.find(h=>h.name===name)){
+        alert('Name already taken! Enter a different name.');
+      }else{
+        playerName=name; nameValid=true;
+      }
+    }
   }
   gameStarted=true;
   score=0; coins=[]; enemies=[];
@@ -81,8 +90,6 @@ function startGame(){
   requestAnimationFrame(gameLoop);
 }
 
-document.getElementById('startBtn').addEventListener('click', startGame);
-
 // Spawn coins/enemies
 function spawnInitialCoins(){ for(let i=0;i<10;i++) spawnCoin(-Math.random()*canvas.height); }
 function spawnCoin(y){ let x=Math.random()*(canvas.width-coinSize); if(y===undefined)y=-coinSize; coins.push({x,y}); }
@@ -92,9 +99,9 @@ function spawnEnemy(y){ let x=Math.random()*(canvas.width-enemySize); if(y===und
 // Draw
 function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle='red'; ctx.fillRect(player.x, player.y, player.w, player.h);
-  ctx.fillStyle='yellow'; coins.forEach(c=>ctx.fillRect(c.x, c.y, coinSize, coinSize));
-  ctx.fillStyle='green'; enemies.forEach(e=>ctx.fillRect(e.x, e.y, enemySize, enemySize));
+  ctx.fillStyle='red'; ctx.fillRect(player.x,player.y,player.w,player.h);
+  ctx.fillStyle='yellow'; coins.forEach(c=>ctx.fillRect(c.x,c.y,coinSize,coinSize));
+  ctx.fillStyle='green'; enemies.forEach(e=>ctx.fillRect(e.x,e.y,enemySize,enemySize));
   ctx.fillStyle='white'; ctx.font='20px Arial'; ctx.fillText('Score: '+score,10,30);
 }
 
@@ -117,12 +124,7 @@ function update(){
 }
 
 // Game loop
-function gameLoop(){
-  if(!gameStarted) return;
-  update();
-  draw();
-  requestAnimationFrame(gameLoop);
-}
+function gameLoop(){ if(!gameStarted) return; update(); draw(); requestAnimationFrame(gameLoop); }
 
 // Game over
 function endGame(){
@@ -130,27 +132,25 @@ function endGame(){
   document.getElementById('finalScore').innerText='Coins collected this run: '+score;
   document.getElementById('gameOverPopup').classList.add('show');
 
-  // cumulative high score for same player
-  let existing = highScores.find(h=>h.name===playerName);
+  let existing=highScores.find(h=>h.name===playerName);
   if(existing){ existing.score += score; } 
   else{ highScores.push({name:playerName, score:score}); }
   highScores.sort((a,b)=>b.score-a.score);
-  localStorage.setItem('highScores', JSON.stringify(highScores));
+  localStorage.setItem('highScores',JSON.stringify(highScores));
   renderLeaderboard();
 }
 
 // Restart
-function restartGame(){
-  document.getElementById('gameOverPopup').classList.remove('show');
-  startGame();
-}
+function restartGame(){ document.getElementById('gameOverPopup').classList.remove('show'); startGame(); }
 
 // Leaderboard
 function renderLeaderboard(){
   const list=document.getElementById('scoreList'); list.innerHTML='';
+  let maxScore=highScores.reduce((max,h)=>h.score>max?h.score:max,0);
   highScores.slice(0,10).forEach(h=>{
     let li=document.createElement('li');
     li.innerText=h.name+' - '+h.score;
+    if(h.score===maxScore) li.classList.add('highest');
     list.appendChild(li);
   });
 }
@@ -168,8 +168,7 @@ document.getElementById('cmdInput').addEventListener('keydown',function(e){
   if(e.key==='Enter'){ executeCommand(this.value); this.value=''; }
 });
 function executeCommand(cmd){
-  if(!cmd) return;
-  logCommand(cmd);
+  if(!cmd) return; logCommand(cmd);
   const parts=cmd.trim().split(' ');
   switch(parts[0]){
     case 'gbg.speed': let sp=parseInt(parts[1]); if(!isNaN(sp)){ speed=sp; scrollSpeed=sp/2; } break;
