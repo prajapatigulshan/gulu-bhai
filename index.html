@@ -18,19 +18,16 @@
     flex-direction: column;
     align-items: center;
   }
-
   @keyframes bgRGB {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
   }
-
   @keyframes rgbMove {
     0% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
   }
-
   .rgb-text {
     background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
     -webkit-background-clip: text;
@@ -45,6 +42,7 @@
     padding: 15px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     position: fixed;
     top: 0;
     left: 0;
@@ -52,7 +50,7 @@
     z-index: 1000;
     box-shadow: 0 0 15px #00ffc8;
   }
-  .menu-btn { font-size:28px; cursor:pointer; margin-right:20px; color:white; }
+  .menu-btn { font-size:28px; cursor:pointer; color:white; }
   .logo span {
     font-size:26px; font-weight:bold;
     background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
@@ -61,7 +59,15 @@
     background-size: 400%; animation: rgbMove 8s linear infinite;
   }
 
-  /* SIDEBAR */
+  .top-actions { display:flex; gap:12px; }
+  .top-actions button {
+    background: linear-gradient(135deg, red, orange, yellow, green, cyan, blue, violet);
+    padding: 8px 18px; border:none; border-radius:50% 10% 50% 10%;
+    cursor:pointer; font-weight:bold;
+    animation: rgbMove 8s linear infinite; color:white;
+    box-shadow:0 0 15px #00ffc8;
+  }
+
   .sidebar {
     height: 100%;
     width: 0;
@@ -89,68 +95,26 @@
   }
   .close-btn { position:absolute; top:20px; right:25px; font-size:30px; cursor:pointer; color:white; }
 
-  /* TOPBAR */
-  .topbar {
-    position: fixed;
-    top: 60px;
-    left: 0;
-    width: 100%;
-    background: rgba(0,0,0,0.7);
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding: 10px 30px;
-    z-index: 1200;
-    box-shadow:0 0 15px #00ffc8;
-  }
-  .topbar .actions { display:flex; flex-direction:row; gap:12px; align-items:center; }
-  .topbar button {
-    background: linear-gradient(135deg, red, orange, yellow, green, cyan, blue, violet);
-    padding: 8px 18px; border:none; border-radius:50% 10% 50% 10%;
-    cursor:pointer; font-weight:bold;
-    animation: rgbMove 8s linear infinite; color:white;
-    box-shadow:0 0 15px #00ffc8;
-  }
-
-  /* CONTENT */
-  .content { margin-top: 140px; padding:20px; text-align:center; max-width:1200px; width:100%; }
+  .content { margin-top: 120px; padding:20px; text-align:center; max-width:1200px; width:100%; }
   .options { display:flex; justify-content:center; gap:30px; margin-top:40px; flex-wrap:wrap; }
   .card { background: rgba(0,0,0,0.6); border-radius:12px; padding:20px; width:200px; text-align:center; transition: transform 0.4s ease, box-shadow 0.4s ease; box-shadow:0 0 15px rgba(0,0,0,0.7);}
   .card a { display:inline-block; margin-top:10px; padding:8px 12px; border-radius:6px; text-decoration:none; background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet); color:white; animation:rgbMove 8s linear infinite;}
   .card:hover { transform: scale(1.1); box-shadow: 0 0 25px #00ffc8; }
 
-  /* CARTOON (style maarne wala insaan) */
-  #cartoonGuy {
-    position: fixed;
-    bottom: 60px;
-    left: -150px;
-    width: 120px;
-    z-index: 2000;
-    transition: left 0.1s linear;
-    display: none;
-  }
-  #cartoonText {
-    position: fixed;
-    bottom: 200px;
-    left: -300px;
-    background: rgba(0,0,0,0.8);
-    padding: 10px 20px;
-    border-radius: 12px;
-    font-size: 20px;
-    font-weight: bold;
-    box-shadow: 0 0 25px #00ffc8;
-    display: none;
-  }
-
-  /* LOGIN */
+  /* LOGIN / PROFILE FIXED ABOVE */
   #loginBox, #userBox {
-    position:relative;
-    top:100px;
-    background: rgba(0,0,0,0.7); padding:30px; border-radius:15px; text-align:center; width:300px;
-    margin:auto;
+    position: fixed; top: 60px; right: 20px;
+    background: rgba(0,0,0,0.85); padding:20px; border-radius:15px; text-align:center; width:250px;
+    z-index:2000;
+    box-shadow:0 0 25px #00ffc8;
   }
   #userBox { display:none; }
   button.logout-btn { margin-top:10px; padding:8px 12px; border:none; border-radius:6px; cursor:pointer; animation:rgbMove 8s linear infinite; background:linear-gradient(90deg, red,orange,yellow,green,cyan,blue,violet); color:white; }
+
+  /* CARTOON */
+  #cartoonGuy { position: fixed; bottom: 60px; left: -150px; width: 120px; z-index: 2000; transition: left 0.1s linear; display: none; }
+  #cartoonText { position: fixed; bottom: 200px; left: -300px; background: rgba(0,0,0,0.8); padding: 10px 20px; border-radius: 12px; font-size: 20px; font-weight: bold; box-shadow: 0 0 25px #00ffc8; display: none; }
+  audio { display:none; }
 </style>
 </head>
 <body>
@@ -158,9 +122,11 @@
 <header>
   <div class="menu-btn" onclick="openMenu()">☰</div>
   <div class="logo"><span>GBG</span></div>
+  <div class="top-actions">
+    <button onclick="openSubscription()">⭐ Subscription</button>
+  </div>
 </header>
 
-<!-- SIDEBAR -->
 <div id="sidebar" class="sidebar">
   <span class="close-btn" onclick="closeMenu()">×</span>
   <a href="index.html">🏠 Home</a>
@@ -173,17 +139,8 @@
   <a href="game.html">🎯 Play Game</a>
 </div>
 
-<!-- TOPBAR -->
-<div class="topbar">
-  <div class="actions">
-    <button onclick="openSubscription()">⭐ Subscription</button>
-    <button onclick="openProfile()">👤 Profile</button>
-  </div>
-</div>
-
-<!-- PAGE CONTENT -->
 <div class="content">
-  <h1 class="rgb-text">Welcome to My Website</h1>
+  <h1 class="rgb-text">Welcome to GBG Store</h1>
   <p class="rgb-text">This is Gulshan aka Gulu Bhai Gamer</p>
 
   <div class="options">
@@ -205,9 +162,9 @@
     </div>
   </div>
 
-  <!-- LOGIN -->
+  <!-- LOGIN / PROFILE FIXED -->
   <div id="loginBox">
-    <h2 class="rgb-text">Welcome! Please Sign In</h2>
+    <h3 class="rgb-text">Sign In</h3>
     <div id="g_id_onload"
          data-client_id="561940078345-9sl2labkcp78h7k1d1n7sr4li81jh972.apps.googleusercontent.com"
          data-auto_prompt="false"
@@ -216,42 +173,32 @@
     <div class="g_id_signin" data-type="standard"></div>
   </div>
 
-  <!-- USER INFO -->
   <div id="userBox">
     <h3 id="userName" class="rgb-text"></h3>
     <p id="userEmail" class="rgb-text"></p>
-    <img id="userPic" style="width:100px; border-radius:50%; box-shadow:0 0 15px #00ffc8;">
+    <img id="userPic" style="width:80px; border-radius:50%; box-shadow:0 0 15px #00ffc8;">
     <br>
     <button onclick="logout()" class="logout-btn">Logout</button>
   </div>
+
+  <!-- CARTOON GUY -->
+  <img id="cartoonGuy" src="https://media.tenor.com/GfEXzDdFeYAAAAAi/walk.gif" alt="Cartoon Guy">
+  <div id="cartoonText" class="rgb-text">👉 Sign karo please!</div>
+  <audio id="cartoonSound" src="https://www.myinstants.com/media/sounds/cartoon_jump.mp3" preload="auto"></audio>
 </div>
-
-<!-- CARTOON GUY -->
-<img id="cartoonGuy" src="https://media.tenor.com/GfEXzDdFeYAAAAAi/walk.gif" alt="Cartoon Guy">
-<div id="cartoonText" class="rgb-text">👉 Sign karo please!</div>
-
-<!-- SOUND EFFECT -->
-<audio id="cartoonSound" src="https://www.myinstants.com/media/sounds/cartoon_jump.mp3" preload="auto"></audio>
 
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
-  // SIDEBAR
-  function openMenu() { document.getElementById("sidebar").style.width = "250px"; }
-  function closeMenu() { document.getElementById("sidebar").style.width = "0"; }
-
+  function openMenu(){ document.getElementById("sidebar").style.width = "250px"; }
+  function closeMenu(){ document.getElementById("sidebar").style.width = "0"; }
   function openSubscription(){ alert("🚀 Subscription Page Coming Soon!"); }
-  function openProfile(){ alert("👤 Profile Page Coming Soon!"); }
 
-  // GOOGLE SIGN-IN
   function decodeJwt(token){
     try{
       const base64Url = token.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
       return JSON.parse(atob(base64));
-    } catch(e){
-      console.error("Invalid JWT", e);
-      return null;
-    }
+    } catch(e){ return null; }
   }
 
   function handleLogin(response){
@@ -278,7 +225,6 @@
   const savedUser = localStorage.getItem("user");
   if(savedUser) showUser(JSON.parse(savedUser));
 
-  // CARTOON GUY animation every 2 minutes if not logged in
   function showCartoonMessage(){
     if(!localStorage.getItem("user")){
       let guy = document.getElementById("cartoonGuy");
@@ -287,30 +233,18 @@
       let pos = -150;
       guy.style.display = "block";
       text.style.display = "block";
-
-      // Play sound
-      sound.currentTime = 0;
-      sound.play();
-
+      sound.currentTime = 0; sound.play();
       function animate(){
         pos += 4;
         guy.style.left = pos + "px";
         text.style.left = (pos+130) + "px";
-
-        if(pos < window.innerWidth){
-          requestAnimationFrame(animate);
-        } else {
-          guy.style.display = "none";
-          text.style.display = "none";
-        }
+        if(pos < window.innerWidth){ requestAnimationFrame(animate); }
+        else { guy.style.display = "none"; text.style.display = "none"; }
       }
       animate();
     }
   }
-
-  // 2 minutes = 120000 ms
   setInterval(showCartoonMessage, 120000);
 </script>
-
 </body>
 </html>
