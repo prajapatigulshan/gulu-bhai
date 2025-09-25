@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GBG Ultimate Car Game - Final</title>
+<title>GBG Ultimate Car Game - Scroll</title>
 <style>
 body { margin:0; font-family:Arial,sans-serif; background:#111; color:white; overflow:hidden; }
 header { position:fixed; top:0; width:100%; background:#000c; padding:15px; display:flex; justify-content:space-between; align-items:center; z-index:1000; }
 #startBtn { padding:10px 20px; font-size:18px; border:none; border-radius:10px; cursor:pointer; background:linear-gradient(to right, red, orange, yellow, green, cyan, blue, violet); color:white; }
-canvas { display:block; margin:90px auto 20px auto; background:#87CEEB; border:3px solid #0ff; border-radius:12px; }
+canvas { display:block; margin:90px auto 20px auto; background:#111; border:3px solid #0ff; border-radius:12px; }
 .controls { position:fixed; bottom:20px; width:100%; display:flex; justify-content:center; gap:20px; }
 .controls button { padding:15px 20px; font-size:18px; border:none; border-radius:12px; cursor:pointer; background:linear-gradient(to right, red, orange, yellow, green, cyan, blue, violet); color:white; }
 #commandPrompt { position:fixed; left:10px; top:80px; width:300px; height:400px; background:#000c; overflow-y:auto; padding:10px; border-radius:12px; font-family:monospace; }
@@ -22,7 +22,7 @@ canvas { display:block; margin:90px auto 20px auto; background:#87CEEB; border:3
 <body>
 
 <header>
-  <div>GBG Car Game Final</div>
+  <div>GBG Car Game Scroll</div>
   <button id="startBtn">Start Game</button>
 </header>
 
@@ -54,11 +54,12 @@ const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
 
 let gameStarted = false;
-let speed = 5;
+let speed = 5; // horizontal movement speed
+let scrollSpeed = 2; // forward scroll speed
 let score = 0;
 let coins = [];
 let coinSize = 20;
-let player = {x:375, y:300, w:50, h:50, dx:0};
+let player = {x:375, y:320, w:50, h:50, dx:0};
 let keys = {};
 let highScores = JSON.parse(localStorage.getItem('highScores')) || [];
 
@@ -67,20 +68,27 @@ function startGame(){
   gameStarted = true;
   score = 0;
   coins = [];
-  player.x = 375; player.y = 300; player.dx = 0;
+  player.x = 375; player.y = 320; player.dx = 0;
   document.getElementById('startBtn').style.display='none';
-  spawnCoin();
+  spawnInitialCoins();
   renderLeaderboard();
   requestAnimationFrame(gameLoop);
 }
 
 document.getElementById('startBtn').addEventListener('click', startGame);
 
-// Spawn Coin
-function spawnCoin(){
+// Spawn initial coins
+function spawnInitialCoins(){
+  for(let i=0;i<10;i++){
+    spawnCoin(Math.random()*canvas.height);
+  }
+}
+
+// Spawn Coin at given y (or top)
+function spawnCoin(y){
   let x = Math.random()*(canvas.width-coinSize);
-  let y = Math.random()*(canvas.height-coinSize-50) + 50;
-  coins.push({x,y,scale:0});
+  if(y===undefined) y=-coinSize;
+  coins.push({x,y});
 }
 
 // Draw
@@ -89,22 +97,16 @@ function draw(){
 
   // Player
   ctx.fillStyle='red';
-  player.x += player.dx;
   ctx.fillRect(player.x, player.y, player.w, player.h);
 
-  // Coins with scale animation
+  // Coins
   ctx.fillStyle='yellow';
   coins.forEach(c=>{
-    if(c.scale<1) c.scale += 0.05;
-    ctx.save();
-    ctx.translate(c.x+coinSize/2, c.y+coinSize/2);
-    ctx.scale(c.scale,c.scale);
-    ctx.fillRect(-coinSize/2,-coinSize/2,coinSize,coinSize);
-    ctx.restore();
+    ctx.fillRect(c.x, c.y, coinSize, coinSize);
   });
 
   // Score
-  ctx.fillStyle='black';
+  ctx.fillStyle='white';
   ctx.font='20px Arial';
   ctx.fillText('Score: '+score,10,30);
 }
@@ -116,10 +118,22 @@ function update(){
   else if(keys['ArrowRight']) player.dx = speed;
   else player.dx = 0;
 
-  // Forward auto-move
-  player.y -= 2;
-  
-  // Coins collision
+  player.x += player.dx;
+
+  // Move coins down (scroll effect)
+  coins.forEach(c=>{
+    c.y += scrollSpeed;
+  });
+
+  // Re-spawn coins if off screen
+  coins.forEach((c,i)=>{
+    if(c.y>canvas.height){
+      coins.splice(i,1);
+      spawnCoin();
+    }
+  });
+
+  // Collision
   coins.forEach((c,i)=>{
     if(player.x< c.x+coinSize && player.x+player.w>c.x && player.y<c.y+coinSize && player.y+player.h>c.y){
       coins.splice(i,1);
@@ -129,11 +143,9 @@ function update(){
     }
   });
 
-  // Boundary checks
+  // Boundary check
   if(player.x<0) player.x=0;
   if(player.x+player.w>canvas.width) player.x=canvas.width-player.w;
-  if(player.y<0) player.y=0;
-  if(player.y+player.h>canvas.height) player.y=canvas.height-player.h;
 
   if(score>=20){ endGame(); }
 }
@@ -198,7 +210,10 @@ function executeCommand(cmd){
   const parts = cmd.trim().split(' ');
   if(parts[0]==='speed'){
     let val=parseInt(parts[1]);
-    if(!isNaN(val)) speed=val;
+    if(!isNaN(val)){
+      speed = val; 
+      scrollSpeed = val/2; // forward scroll speed bhi adjust
+    }
   } else if(parts[0]==='coin'){
     let val=parseInt(parts[1]);
     if(!isNaN(val)) for(let i=0;i<val;i++) spawnCoin();
@@ -208,5 +223,6 @@ function executeCommand(cmd){
 
 renderLeaderboard();
 </script>
+
 </body>
 </html>
