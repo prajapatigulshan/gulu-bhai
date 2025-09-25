@@ -63,15 +63,23 @@
     animation: rgbMove 8s linear infinite;
   }
 
-  /* CONTENT */
   .content { margin-top: 90px; padding: 20px; text-align: center; width: 100%; max-width: 1200px; }
 
-  /* CAR GAME CANVAS */
-  #score {
-    color:white; font-size:24px; font-weight:bold; margin-bottom:10px;
+  #score, #coins {
+    color:white; font-size:20px; font-weight:bold; margin:5px;
   }
+
   canvas { background: linear-gradient(#444,#111); display:block; margin:auto; border:3px solid #00ffc8; border-radius:12px; box-shadow:0 0 20px #00ffc8; }
 
+  /* MOBILE CONTROLS */
+  .controls {
+    position: fixed; bottom: 20px; width: 100%; display: flex; justify-content: center; gap: 20px; z-index:2000;
+  }
+  .control-btn {
+    width: 60px; height: 60px; border-radius:50%; background: linear-gradient(135deg, red, orange, yellow, green, cyan, blue, violet);
+    border: none; color:white; font-size:24px; font-weight:bold; box-shadow:0 0 15px #00ffc8;
+    user-select:none;
+  }
 </style>
 </head>
 <body>
@@ -82,9 +90,15 @@
 
 <div class="content">
   <h1 class="rgb-text">🚗 Car Dodge Challenge 🚗</h1>
-  <p class="rgb-text">Use Arrow Keys to Move. Avoid the blue cars!</p>
+  <p class="rgb-text">Move left/right and collect coins!</p>
   <div id="score">Score: 0</div>
+  <div id="coins">Coins: 0</div>
   <canvas id="gameCanvas" width="800" height="400"></canvas>
+</div>
+
+<div class="controls">
+  <button class="control-btn" id="leftBtn">◀️</button>
+  <button class="control-btn" id="rightBtn">▶️</button>
 </div>
 
 <script>
@@ -92,17 +106,33 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
 let score = 0;
+let coins = 0;
 const player = { x: 350, y: 300, w: 100, h: 50 };
 let obstacles = [];
+let coinsArr = [];
 let obstacleSpeed = 4;
 let keys = {};
+let touchLeft = false;
+let touchRight = false;
 
+// Mobile touch buttons
+document.getElementById("leftBtn").addEventListener("touchstart",()=>touchLeft=true);
+document.getElementById("leftBtn").addEventListener("touchend",()=>touchLeft=false);
+document.getElementById("rightBtn").addEventListener("touchstart",()=>touchRight=true);
+document.getElementById("rightBtn").addEventListener("touchend",()=>touchRight=false);
+
+// Keyboard controls
 window.addEventListener("keydown", e => keys[e.code]=true);
 window.addEventListener("keyup", e => keys[e.code]=false);
 
 function createObstacle(){
   let xPos = Math.random() * (canvas.width - 50);
   obstacles.push({x:xPos, y:-60, w:50, h:50});
+}
+
+function createCoin(){
+  let xPos = Math.random() * (canvas.width - 30);
+  coinsArr.push({x:xPos, y:-50, w:30, h:30});
 }
 
 function checkCollision(a,b){
@@ -116,8 +146,10 @@ function gameLoop(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
 
   // Player move
-  if(keys["ArrowLeft"] && player.x>0) player.x -=7;
-  if(keys["ArrowRight"] && player.x + player.w < canvas.width) player.x +=7;
+  if(keys["ArrowLeft"] || touchLeft) player.x -=7;
+  if(keys["ArrowRight"] || touchRight) player.x +=7;
+  if(player.x < 0) player.x = 0;
+  if(player.x + player.w > canvas.width) player.x = canvas.width - player.w;
 
   // Draw player
   ctx.fillStyle="red";
@@ -132,7 +164,7 @@ function gameLoop(){
     ctx.fillRect(obs.x, obs.y, obs.w, obs.h);
 
     if(checkCollision(player, obs)){
-      alert("Game Over! Score: "+score);
+      alert("Game Over! Score: "+score+" Coins: "+coins);
       document.location.reload();
     }
 
@@ -140,6 +172,29 @@ function gameLoop(){
       obstacles.splice(i,1);
       score++;
       document.getElementById('score').innerText="Score: "+score;
+      i--;
+    }
+  }
+
+  // Coins
+  if(Math.random()<0.01) createCoin();
+  for(let i=0;i<coinsArr.length;i++){
+    let coin = coinsArr[i];
+    coin.y += obstacleSpeed;
+    ctx.fillStyle="gold";
+    ctx.beginPath();
+    ctx.arc(coin.x+coin.w/2, coin.y+coin.h/2, coin.w/2, 0, Math.PI*2);
+    ctx.fill();
+
+    if(checkCollision(player, coin)){
+      coins++;
+      document.getElementById('coins').innerText="Coins: "+coins;
+      coinsArr.splice(i,1);
+      i--;
+    }
+
+    if(coin.y>canvas.height){
+      coinsArr.splice(i,1);
       i--;
     }
   }
