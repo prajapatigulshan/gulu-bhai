@@ -9,81 +9,94 @@
       margin: 0;
       font-family: Arial, sans-serif;
       text-align: center;
-      height: 100vh;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       background: #000;
-      overflow: hidden;
+      overflow-x: hidden;
       position: relative;
     }
 
-    /* GBG Logo Watermark */
+    /* Background RGB Gradient Animation */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(270deg, red, orange, yellow, green, cyan, blue, violet, red);
+      background-size: 2000% 2000%;
+      animation: bgMove 30s linear infinite;
+      z-index: -2;
+    }
+    @keyframes bgMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Watermark */
     .logo-watermark {
-      position: absolute;
-      font-size: 6rem;
+      position: fixed;
+      font-size: 8rem;
       font-weight: bold;
       color: rgba(255,255,255,0.05);
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
       pointer-events: none;
-      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-size: 400%;
-      animation: rgbMove 15s linear infinite;
+      text-transform: uppercase;
+      letter-spacing: 10px;
     }
 
-    /* Neon Circles (Background Particles) */
-    .circle {
-      position: absolute;
-      border-radius: 50%;
-      animation: move 20s linear infinite;
-      mix-blend-mode: screen;
-      opacity: 0.8;
-    }
-    body.theme1 .circle { background: radial-gradient(circle, rgba(0,255,200,0.9), rgba(0,0,0,0)); }
-    body.theme2 .circle { background: radial-gradient(circle, rgba(255,0,100,0.9), rgba(0,0,0,0)); }
-    body.theme3 .circle { background: radial-gradient(circle, rgba(0,150,255,0.9), rgba(0,0,0,0)); }
-    body.theme4 .circle { background: radial-gradient(circle, rgba(200,0,255,0.9), rgba(0,0,0,0)); }
-    body.theme5 .circle { background: radial-gradient(circle, rgba(255,255,0,0.9), rgba(0,0,0,0)); }
-
-    .circle:nth-child(1) { width: 300px; height: 300px; top: 10%; left: 15%; animation-duration: 18s; }
-    .circle:nth-child(2) { width: 200px; height: 200px; bottom: 20%; right: 10%; animation-duration: 22s; }
-    .circle:nth-child(3) { width: 400px; height: 400px; top: 50%; left: 60%; animation-duration: 25s; }
-    .circle:nth-child(4) { width: 150px; height: 150px; top: 70%; left: 30%; animation-duration: 20s; }
-    .circle:nth-child(5) { width: 250px; height: 250px; bottom: 10%; right: 40%; animation-duration: 28s; }
-
-    @keyframes move {
-      0% { transform: translateY(0) translateX(0); }
-      50% { transform: translateY(-50px) translateX(50px); }
-      100% { transform: translateY(0) translateX(0); }
+    /* Form */
+    form {
+      background: rgba(0,0,0,0.85);
+      padding: 30px;
+      border-radius: 20px;
+      max-width: 500px;
+      width: 90%;
+      border: 3px solid transparent;
+      background-clip: padding-box;
+      box-shadow: 0 0 40px rgba(0,255,200,0.6);
+      animation: rgbBorder 6s linear infinite;
+      z-index: 1;
+      position: relative;
     }
 
-    /* RGB Text Effect */
-    .rgb-text {
+    @keyframes rgbBorder {
+      0% { border-color: red; box-shadow: 0 0 25px red; }
+      20% { border-color: orange; box-shadow: 0 0 25px orange; }
+      40% { border-color: green; box-shadow: 0 0 25px green; }
+      60% { border-color: cyan; box-shadow: 0 0 25px cyan; }
+      80% { border-color: blue; box-shadow: 0 0 25px blue; }
+      100% { border-color: violet; box-shadow: 0 0 25px violet; }
+    }
+
+    h1 {
       font-size: 2.5rem;
       font-weight: bold;
+      margin-bottom: 10px;
       text-transform: uppercase;
       background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-size: 400%;
       animation: rgbMove 8s linear infinite;
-      text-shadow: 0 0 20px rgba(255,255,255,0.3);
     }
 
     .rgb-label {
       display: block;
       font-size: 1rem;
+      margin-top: 10px;
       margin-bottom: 5px;
+      font-weight: bold;
       background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-size: 400%;
       animation: rgbMove 8s linear infinite;
+      text-align: left;
     }
 
     @keyframes rgbMove {
@@ -92,57 +105,47 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* Contact Form */
-    form {
-      background: rgba(0, 0, 0, 0.8);
-      padding: 25px;
-      border-radius: 15px;
-      max-width: 400px;
-      width: 100%;
-      box-shadow: 0 0 25px #00ffc8;
-      z-index: 1;
-      position: relative;
-      border: 2px solid #00ffc8;
-    }
-    input, textarea {
+    input, textarea, select {
       width: 100%;
       padding: 12px;
-      margin: 12px 0;
-      border-radius: 8px;
-      border: none;
-      outline: none;
+      margin: 8px 0 15px 0;
+      border-radius: 10px;
+      border: 2px solid #00ffc8;
       background: #111;
-      font-size: 14px;
-      background-clip: text;
-      color: transparent;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-image: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
-      background-size: 400%;
-      animation: rgbMove 8s linear infinite;
-      box-shadow: inset 0 0 15px #00ffc8;
+      color: #fff;
+      font-size: 15px;
+      box-shadow: 0 0 10px #00ffc8;
+      transition: 0.3s;
     }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: #ffcc00;
+      box-shadow: 0 0 20px #ffcc00;
+      transform: scale(1.03);
+      outline: none;
+    }
+
     textarea { resize: none; }
 
     button {
-      padding: 12px 25px;
-      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
-      color: black;
+      padding: 15px 30px;
+      font-size: 16px;
       font-weight: bold;
+      color: black;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
-      font-size: 15px;
-      transition: 0.3s;
+      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
       background-size: 400%;
-      animation: rgbMove 8s linear infinite;
-    }
-    button:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 20px #00ffc8;
+      animation: rgbMove 5s linear infinite;
+      transition: 0.3s;
     }
 
-    /* Popup Message */
+    button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 30px #fff;
+    }
+
     .popup {
       display: none;
       position: fixed;
@@ -163,10 +166,8 @@
       animation: rgbMove 8s linear infinite;
     }
 
-    /* Footer */
     footer {
-      position: absolute;
-      bottom: 10px;
+      margin-top: 20px;
       font-size: 0.9rem;
       font-weight: bold;
       background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
@@ -177,32 +178,63 @@
     }
   </style>
 </head>
-<body class="theme1">
-
-  <!-- Neon Particles Background -->
-  <div class="circle"></div>
-  <div class="circle"></div>
-  <div class="circle"></div>
-  <div class="circle"></div>
-  <div class="circle"></div>
-
-  <!-- Watermark -->
+<body>
   <div class="logo-watermark">GBG</div>
 
-  <h1 class="rgb-text">Contact GBG</h1>
-  <p class="rgb-text" style="font-size:1.2rem;">Have questions or feedback? Drop your message below 👇</p>
+  <form id="contactForm" enctype="multipart/form-data">
+    <h1>Contact GBG</h1>
 
-  <form id="contactForm">
-    <label class="rgb-label">Your Name:</label>
+    <label class="rgb-label">🎮 Player Name:</label>
     <input type="text" name="name" placeholder="Enter your name" required>
 
-    <label class="rgb-label">Your Email:</label>
+    <label class="rgb-label">📧 Email:</label>
     <input type="email" name="email" placeholder="Enter your email" required>
 
-    <label class="rgb-label">Your Message:</label>
-    <textarea name="message" rows="5" placeholder="Type your message" required></textarea>
+    <label class="rgb-label">🎂 Age:</label>
+    <input type="number" name="age" placeholder="Enter your age" required>
 
-    <button type="submit">🚀 Send Message</button>
+    <label class="rgb-label">🔥 Favorite Game:</label>
+    <input type="text" name="favorite_game" placeholder="e.g. Free Fire, BGMI, Minecraft" required>
+
+    <label class="rgb-label">🆔 In-Game Username / ID:</label>
+    <input type="text" name="game_id" placeholder="Enter your in-game ID" required>
+
+    <label class="rgb-label">💻 Device Type:</label>
+    <select name="device" required>
+      <option value="">-- Select --</option>
+      <option>PC</option>
+      <option>Mobile</option>
+      <option>Console</option>
+    </select>
+
+    <label class="rgb-label">🌐 Internet Speed:</label>
+    <select name="internet" required>
+      <option value="">-- Select --</option>
+      <option>Fast ⚡</option>
+      <option>Medium 🚀</option>
+      <option>Slow 🐌</option>
+    </select>
+
+    <label class="rgb-label">⚠️ Issues Faced:</label>
+    <select name="issue" required>
+      <option value="">-- Select --</option>
+      <option>Lag / Ping Issue</option>
+      <option>Graphics Problem</option>
+      <option>Controls Not Working</option>
+      <option>Login Error</option>
+      <option>Other</option>
+    </select>
+
+    <label class="rgb-label">💡 Your Suggestions:</label>
+    <textarea name="suggestions" rows="4" placeholder="Write your ideas to improve GBG..."></textarea>
+
+    <label class="rgb-label">📎 Upload Files (Photo / Screenshot / Docs):</label>
+    <input type="file" name="attachments" multiple accept="image/*,.pdf,.doc,.docx,.txt,.zip">
+
+    <label class="rgb-label">📝 Your Message:</label>
+    <textarea name="message" rows="5" placeholder="Type your message"></textarea>
+
+    <button type="submit">🚀 Send Legendary Feedback</button>
   </form>
 
   <div id="popup" class="popup"></div>
@@ -210,15 +242,6 @@
   <footer>© 2025 GBG (Gulu Bhai Gamer) | All Rights Reserved</footer>
 
   <script>
-    // Background theme auto-change
-    let themeIndex = 1;
-    setInterval(() => {
-      themeIndex++;
-      if(themeIndex > 5) themeIndex = 1;
-      document.body.className = "theme" + themeIndex;
-    }, 8000);
-
-    // Popup Functionality
     const form = document.getElementById("contactForm");
     const popup = document.getElementById("popup");
 
@@ -232,7 +255,7 @@
           headers: { 'Accept': 'application/json' }
         });
         if (res.ok) {
-          popup.textContent = "✅ Thanks! Your message has been sent to GBG!";
+          popup.textContent = "✅ Thanks! Your legendary feedback has been sent to GBG!";
           popup.style.display = "block";
           setTimeout(()=> popup.style.display="none", 4000);
           form.reset();
@@ -248,6 +271,5 @@
       }
     });
   </script>
-
 </body>
-</html>/
+</html>
