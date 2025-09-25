@@ -1,120 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>GBG Games Hub</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      color: white;
-      background: linear-gradient(270deg, red, orange, yellow, green, cyan, blue, violet, red);
-      background-size: 1500% 1500%;
-      animation: bgRGB 30s ease infinite;
-      text-align: center;
-      overflow-x: hidden;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GBG Car Game Hub</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: white;
+    overflow-x: hidden;
+    min-height: 100vh;
+    background: linear-gradient(270deg, red, orange, yellow, green, cyan, blue, violet, red);
+    background-size: 2000% 2000%;
+    animation: bgRGB 60s linear infinite;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
-    @keyframes bgRGB {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+  @keyframes bgRGB {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
 
-    .rgb-text {
-      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-size: 400%;
-      animation: rgbMove 8s linear infinite;
-      font-weight: bold;
-    }
+  @keyframes rgbMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
 
-    .rgb-border {
-      border: 2px solid;
-      border-image: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red) 1;
-      animation: rgbMove 8s linear infinite;
-      border-radius: 12px;
-      padding: 15px;
-      transition: 0.3s;
-      background: rgba(0,0,0,0.6);
-      box-shadow: 0 0 15px rgba(0,0,0,0.7);
-      display: inline-block;
-      margin: 20px auto;
-    }
+  .rgb-text {
+    background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 400%;
+    animation: rgbMove 8s linear infinite;
+    font-weight: bold;
+    text-align: center;
+  }
 
-    .rgb-border:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 25px #00ffc8;
-    }
+  header {
+    background: rgba(0,0,0,0.85);
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 0 15px #00ffc8;
+  }
+  .logo span {
+    font-size: 26px;
+    font-weight: bold;
+    background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 400%;
+    animation: rgbMove 8s linear infinite;
+  }
 
-    header {
-      background: rgba(0,0,0,0.85);
-      padding: 15px;
-      position: fixed;
-      top: 0;
-      width: 100%;
-      z-index: 1000;
-      box-shadow: 0 0 15px #00ffc8;
-    }
+  /* CONTENT */
+  .content { margin-top: 90px; padding: 20px; text-align: center; width: 100%; max-width: 1200px; }
 
-    .logo span {
-      font-size: 26px;
-      font-weight: bold;
-      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: rgbMove 8s linear infinite;
-    }
+  /* CAR GAME CANVAS */
+  #score {
+    color:white; font-size:24px; font-weight:bold; margin-bottom:10px;
+  }
+  canvas { background: linear-gradient(#444,#111); display:block; margin:auto; border:3px solid #00ffc8; border-radius:12px; box-shadow:0 0 20px #00ffc8; }
 
-    .content {
-      margin-top: 90px;
-      padding: 20px;
-    }
-
-    .card img {
-      width: 150px;
-      height: 150px;
-      margin-bottom: 10px;
-    }
-
-    .card h2 {
-      margin: 10px 0;
-      font-size: 1.5rem;
-    }
-
-    .card a {
-      display: inline-block;
-      margin-top: 5px;
-      padding: 10px 20px;
-      border-radius: 6px;
-      text-decoration: none;
-      color: black;
-      font-weight: bold;
-      background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
-      background-size: 400%;
-      animation: rgbMove 6s linear infinite;
-    }
-
-  </style>
+</style>
 </head>
 <body>
 
-  <header>
-    <div class="logo"><span>GBG Games Hub</span></div>
-  </header>
+<header>
+  <div class="logo"><span>GBG Car Game Hub</span></div>
+</header>
 
-  <div class="content">
-    <h1 class="rgb-text">🎮 Explore Games</h1>
-    <p class="rgb-text">Play Minecraft-style Parkour Challenge!</p>
+<div class="content">
+  <h1 class="rgb-text">🚗 Car Dodge Challenge 🚗</h1>
+  <p class="rgb-text">Use Arrow Keys to Move. Avoid the blue cars!</p>
+  <div id="score">Score: 0</div>
+  <canvas id="gameCanvas" width="800" height="400"></canvas>
+</div>
 
-    <div class="card rgb-border">
-      <img src="https://minecraft.wiki/images/Skin.png" alt="Parkour Challenge">
-      <h2 class="rgb-text">Parkour Challenge</h2>
-      <a href="play.html?game=parkour">Play Now</a>
-    </div>
-  </div>
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+let score = 0;
+const player = { x: 350, y: 300, w: 100, h: 50 };
+let obstacles = [];
+let obstacleSpeed = 4;
+let keys = {};
+
+window.addEventListener("keydown", e => keys[e.code]=true);
+window.addEventListener("keyup", e => keys[e.code]=false);
+
+function createObstacle(){
+  let xPos = Math.random() * (canvas.width - 50);
+  obstacles.push({x:xPos, y:-60, w:50, h:50});
+}
+
+function checkCollision(a,b){
+  return a.x < b.x + b.w &&
+         a.x + a.w > b.x &&
+         a.y < b.y + b.h &&
+         a.y + a.h > b.y;
+}
+
+function gameLoop(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+
+  // Player move
+  if(keys["ArrowLeft"] && player.x>0) player.x -=7;
+  if(keys["ArrowRight"] && player.x + player.w < canvas.width) player.x +=7;
+
+  // Draw player
+  ctx.fillStyle="red";
+  ctx.fillRect(player.x, player.y, player.w, player.h);
+
+  // Obstacles
+  if(Math.random()<0.02) createObstacle();
+  for(let i=0;i<obstacles.length;i++){
+    let obs = obstacles[i];
+    obs.y += obstacleSpeed;
+    ctx.fillStyle="blue";
+    ctx.fillRect(obs.x, obs.y, obs.w, obs.h);
+
+    if(checkCollision(player, obs)){
+      alert("Game Over! Score: "+score);
+      document.location.reload();
+    }
+
+    if(obs.y>canvas.height){
+      obstacles.splice(i,1);
+      score++;
+      document.getElementById('score').innerText="Score: "+score;
+      i--;
+    }
+  }
+
+  requestAnimationFrame(gameLoop);
+}
+
+gameLoop();
+</script>
 
 </body>
 </html>
