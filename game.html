@@ -3,73 +3,53 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
-<title>GBG Infinite Runner - Final</title>
+<title>GBG Infinite Runner - Final Updated</title>
 <style>
-  :root{
-    --accent: linear-gradient(90deg, #ff4d4d, #ffb84d, #ffd54d, #4de0ff);
-    --bg: #0b0b0f;
-    --panel: rgba(255,255,255,0.04);
-    --glass: rgba(255,255,255,0.03);
-  }
-  *{box-sizing:border-box;font-family:Inter,Arial,Helvetica,sans-serif}
-  html,body{height:100%;margin:0;background:radial-gradient(circle at 10% 10%, #07112a 0%, #050509 50%),var(--bg); color:#fff; -webkit-tap-highlight-color:transparent}
-  header{
-    position:fixed; top:0; left:0; right:0; height:64px; display:flex; align-items:center; justify-content:space-between;
-    padding:8px 12px; gap:12px; backdrop-filter:blur(6px); background:linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.35));
-    border-bottom:1px solid rgba(255,255,255,0.03); z-index:1000;
-  }
-  .title{font-weight:700; font-size:18px; display:flex; gap:10px; align-items:center;}
-  .header-right{display:flex; gap:10px; align-items:center;}
-  #coinBig{background:var(--panel); padding:8px 12px; border-radius:10px; font-weight:700; color:gold; min-width:110px; text-align:center}
-  #restartHeaderBtn, #startBtn{padding:8px 12px; border-radius:10px; border:none; cursor:pointer; font-weight:700}
-  #restartHeaderBtn{background:var(--glass);}
-  #startBtn{background:var(--panel); color:#fff}
-  main{ padding-top:78px; display:flex; gap:12px; align-items:flex-start; justify-content:center; width:100%; }
-  /* left: game canvas area */
-  .game-wrap{ width:100%; max-width:1000px; display:flex; flex-direction:column; align-items:center; gap:10px; padding:10px }
-  canvas{ background:linear-gradient(180deg,#07101a,#0b0b0f); border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.6); width:100%; height:auto; display:block; }
-  /* control bar for mobile */
-  .controls{ display:flex; gap:10px; justify-content:center; width:100%; margin-top:6px; }
-  .ctrl-btn{ flex:1; max-width:120px; padding:14px; border-radius:12px; font-size:20px; border:none; cursor:pointer; background:linear-gradient(90deg,#222,#111); color:#fff; touch-action:none; user-select:none}
-  .ctrl-btn.big{ flex:2; max-width:240px }
-  /* sidebar for commands & leaderboard */
-  .sidebar{ width:320px; max-width:36%; min-width:260px; display:flex; flex-direction:column; gap:12px; padding:8px }
-  .panel{ background:var(--panel); padding:10px; border-radius:12px; min-height:60px; overflow:hidden; }
-  .panel h3{ margin:0 0 8px 0; font-size:16px }
-  #leaderboard ol{ padding-left:18px; margin:0; max-height:250px; overflow:auto; }
-  #leaderboard li{ padding:6px 8px; border-radius:8px; margin-bottom:6px; background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent) }
-  .highest{ color:#0ff; font-weight:800; border-left:4px solid #0ff; padding-left:6px }
-  #commandPrompt{ display:flex; flex-direction:column; gap:6px; }
-  #cmdInput{ width:100%; padding:8px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:#fff }
-  #commandLog{ max-height:160px; overflow:auto; font-family:monospace; font-size:13px; padding:6px; background:rgba(0,0,0,0.12); border-radius:8px }
-  /* gameover popup */
-  #gameOverPopup{ position:fixed; left:50%; top:50%; transform:translate(-50%,-50%) scale(0); background:rgba(0,0,0,0.9); padding:20px; border-radius:12px; z-index:2000; min-width:260px; text-align:center; transition:all .18s ease }
-  #gameOverPopup.show{ transform:translate(-50%,-50%) scale(1) }
-  #gameOverPopup button{ margin-top:8px; padding:8px 12px; border-radius:8px; border:none; cursor:pointer }
-  /* responsive */
-  @media (max-width:900px){
-    .sidebar{ position:fixed; right:10px; top:84px; width:290px; z-index:900; max-height:60vh; overflow:auto; }
-    main{ padding-bottom:120px; }
-  }
-  @media (max-width:600px){
-    header{ height:72px; padding:10px 12px }
-    .controls{ position:fixed; left:10px; right:10px; bottom:12px; z-index:1000; }
-    .sidebar{ display:none } /* hide to save space on small phones */
-    .game-wrap{ padding-bottom:80px }
-  }
-  /* small helper */
-  .muted{ opacity:0.7; font-size:13px }
-  .flexrow{ display:flex; align-items:center; gap:8px }
+:root{
+  --accent: linear-gradient(90deg,#ff4d4d,#ffb84d,#ffd54d,#4de0ff);
+  --bg:#0b0b0f;
+  --panel:rgba(255,255,255,0.04);
+  --glass:rgba(255,255,255,0.03);
+}
+*{box-sizing:border-box;font-family:Inter,Arial,Helvetica,sans-serif}
+html,body{height:100%;margin:0;background:radial-gradient(circle at 10% 10%,#07112a 0%,#050509 50%),var(--bg);color:#fff;-webkit-tap-highlight-color:transparent;}
+header{position:fixed;top:0;left:0;right:0;height:64px;display:flex;align-items:center;justify-content:space-between;padding:8px 12px;gap:12px;backdrop-filter:blur(6px);background:linear-gradient(180deg,rgba(0,0,0,0.55),rgba(0,0,0,0.35));border-bottom:1px solid rgba(255,255,255,0.03);z-index:1000;}
+.title{font-weight:700;font-size:18px;display:flex;gap:10px;align-items:center;}
+.header-right{display:flex;gap:10px;align-items:center;}
+#coinBig{background:var(--panel);padding:8px 12px;border-radius:10px;font-weight:700;color:gold;min-width:110px;text-align:center;}
+#restartHeaderBtn,#startBtn{padding:8px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:700;}
+#restartHeaderBtn{background:var(--glass);}
+#startBtn{background:var(--panel);color:#fff;}
+main{padding-top:78px;display:flex;gap:12px;align-items:flex-start;justify-content:center;width:100%;}
+.game-wrap{width:100%;max-width:1000px;display:flex;flex-direction:column;align-items:center;gap:10px;padding:10px;}
+canvas{background:linear-gradient(180deg,#07101a,#0b0b0f);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.6);width:100%;height:auto;display:block;}
+.controls{display:flex;gap:10px;justify-content:center;width:100%;margin-top:6px;}
+.ctrl-btn{flex:1;max-width:120px;padding:14px;border-radius:12px;font-size:20px;border:none;cursor:pointer;background:linear-gradient(90deg,#222,#111);color:#fff;touch-action:none;user-select:none}
+.ctrl-btn.big{flex:2;max-width:240px}
+.sidebar{width:320px;max-width:36%;min-width:260px;display:flex;flex-direction:column;gap:12px;padding:8px}
+.panel{background:var(--panel);padding:10px;border-radius:12px;min-height:60px;overflow:hidden;}
+.panel h3{margin:0 0 8px 0;font-size:16px}
+#leaderboard ol{padding-left:18px;margin:0;max-height:250px;overflow:auto;}
+#leaderboard li{padding:6px 8px;border-radius:8px;margin-bottom:6px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent)}
+.highest{color:#0ff;font-weight:800;border-left:4px solid #0ff;padding-left:6px}
+#commandPrompt{display:flex;flex-direction:column;gap:6px;}
+#cmdInput{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:#fff}
+#commandLog{max-height:160px;overflow:auto;font-family:monospace;font-size:13px;padding:6px;background:rgba(0,0,0,0.12);border-radius:8px}
+#gameOverPopup{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(0);background:rgba(0,0,0,0.9);padding:20px;border-radius:12px;z-index:2000;min-width:260px;text-align:center;transition:all .18s ease}
+#gameOverPopup.show{transform:translate(-50%,-50%) scale(1)}
+#gameOverPopup button{margin-top:8px;padding:8px 12px;border-radius:8px;border:none;cursor:pointer}
+@media(max-width:900px){.sidebar{position:fixed;right:10px;top:84px;width:290px;z-index:900;max-height:60vh;overflow:auto;}main{padding-bottom:120px;}}
+@media(max-width:600px){header{height:72px;padding:10px 12px}.controls{position:fixed;left:10px;right:10px;bottom:12px;z-index:1000}.sidebar{display:none}.game-wrap{padding-bottom:80px}}
+.muted{opacity:0.7;font-size:13px}
+.flexrow{display:flex;align-items:center;gap:8px}
 </style>
 </head>
 <body>
-
 <header>
   <div class="title">
     <div>GBG Infinite Runner</div>
     <div class="muted">— Play & Compete</div>
   </div>
-
   <div class="header-right">
     <div id="coinBig">Coins: <span id="coinCount">0</span></div>
     <button id="startBtn">Play Now</button>
@@ -80,7 +60,6 @@
 <main>
   <div class="game-wrap">
     <canvas id="gameCanvas" width="900" height="420"></canvas>
-
     <div class="controls" id="mobileControls" aria-hidden="false">
       <button class="ctrl-btn" id="leftBtn">⬅️</button>
       <button class="ctrl-btn big" id="jumpBtn">⬆️ Jump</button>
@@ -88,8 +67,7 @@
       <button class="ctrl-btn" id="pauseBtn">⏸️</button>
       <button class="ctrl-btn" id="restartBtn">🔄</button>
     </div>
-
-    <div id="infoLine" class="muted" style="text-align:center; margin-top:6px">Use touch or Arrow keys. Enter name on Play.</div>
+    <div id="infoLine" class="muted" style="text-align:center;margin-top:6px">Use touch or Arrow keys. Enter name on Play.</div>
   </div>
 
   <aside class="sidebar">
@@ -101,7 +79,7 @@
 
     <div class="panel" id="coinsPanel">
       <h3>Your Coins</h3>
-      <div id="homeCoinDisplay" style="font-size:20px; font-weight:700">You have <span id="homeCoins">0</span> coins</div>
+      <div id="homeCoinDisplay" style="font-size:20px;font-weight:700">You have <span id="homeCoins">0</span> coins</div>
       <div style="margin-top:8px" class="muted">Coins persist between sessions.</div>
     </div>
 
@@ -109,9 +87,7 @@
       <h3>GBG Commands</h3>
       <input id="cmdInput" placeholder="Type command (eg. gbg.speed 8) and press Enter" />
       <div id="commandLog"></div>
-      <div style="margin-top:8px" class="muted">
-        Useful commands: gbg.speed, gbg.scroll, gbg.enemySpeed, gbg.coin, gbg.enemy, gbg.reset, gbg.clearScores, gbg.invincible, gbg.addCoins, gbg.jump, gbg.pause
-      </div>
+      <div style="margin-top:8px" class="muted">Commands: gbg.speed, gbg.enemySpeed, gbg.coin, gbg.enemy, gbg.reset, gbg.clearScores, gbg.invincible, gbg.addCoins, gbg.jump, gbg.pause</div>
     </div>
   </aside>
 </main>
@@ -119,440 +95,184 @@
 <div id="gameOverPopup">
   <h2 id="goTitle">Game Over</h2>
   <p id="finalScore">You scored: 0</p>
-  <div style="display:flex; gap:8px; justify-content:center">
+  <div style="display:flex;gap:8px;justify-content:center">
     <button id="playAgainBtn">Play Again</button>
     <button id="closePopupBtn">Close</button>
   </div>
 </div>
 
 <script>
-/* -------------------------
-   Variables & persistence
-   ------------------------- */
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-
 let w = canvas.width, h = canvas.height;
 function resizeCanvas(){
-  // keep a 16:7-ish area but fit width
-  const maxWidth = Math.min(window.innerWidth - 24, 1000);
-  canvas.style.width = maxWidth + 'px';
-  // set internal resolution for crispness
-  const deviceRatio = window.devicePixelRatio || 1;
-  const styleWidth = maxWidth;
-  const styleHeight = Math.floor(styleWidth * 420 / 900);
-  canvas.width = Math.floor(styleWidth * deviceRatio);
-  canvas.height = Math.floor(styleHeight * deviceRatio);
-  canvas.style.height = styleHeight + 'px';
-  canvas.getContext('2d').scale(deviceRatio, deviceRatio);
-  w = styleWidth; h = styleHeight;
+  const maxWidth = Math.min(window.innerWidth-24,1000);
+  canvas.style.width=maxWidth+'px';
+  const deviceRatio = window.devicePixelRatio||1;
+  const styleWidth=maxWidth;
+  const styleHeight=Math.floor(styleWidth*420/900);
+  canvas.width=Math.floor(styleWidth*deviceRatio);
+  canvas.height=Math.floor(styleHeight*deviceRatio);
+  canvas.style.height=styleHeight+'px';
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.scale(deviceRatio,deviceRatio);
+  w=styleWidth; h=styleHeight;
 }
-window.addEventListener('resize', ()=>{ resizeCanvas(); draw(); });
-resizeCanvas();
+window.addEventListener('resize',resizeCanvas); resizeCanvas();
 
 /* Game state */
-let gameStarted = false;
-let paused = false;
-let speed = 6;        // player horizontal speed
-let scrollSpeed = 2;  // coin vertical speed (not background)
-let enemySpeed = 2.5;
-let scoreThisRun = 0;
-let playerCoins = parseInt(localStorage.getItem('playerCoins')||'0');
-let highScores = JSON.parse(localStorage.getItem('highScores')||'[]');
-let playerName = localStorage.getItem('playerName') || null;
-let invincible = false;
-let jumpStrength = 12;
-
-document.getElementById('coinCount').innerText = playerCoins;
-document.getElementById('homeCoins').innerText = playerCoins;
+let gameStarted=false, paused=false;
+let speed=6, scrollSpeed=2, enemySpeed=2.5;
+let scoreThisRun=0, playerCoins=parseInt(localStorage.getItem('playerCoins')||'0');
+let highScores=JSON.parse(localStorage.getItem('highScores')||'[]');
+let playerName=localStorage.getItem('playerName')||null;
+let invincible=false, jumpStrength=12;
 
 /* Entities */
-let player = { x: 120, y: 0, w: 48, h: 48, vy:0, onGround:false };
-let coins = [];
-let enemies = [];
-const coinSize = 18, enemySize = 38;
+let player={x:120,y:0,w:48,h:48,vy:0,onGround:false};
+let coins=[], enemies=[];
+const coinSize=18, enemySize=38;
 
 /* Controls */
-const keys = {};
-window.addEventListener('keydown', e => { keys[e.key]=true; if(e.key===' '){ e.preventDefault(); } });
-window.addEventListener('keyup', e => { keys[e.key]=false; });
+const keys={};
+window.addEventListener('keydown',e=>{keys[e.key]=true;if(e.key===' '){e.preventDefault();}});
+window.addEventListener('keyup',e=>{keys[e.key]=false;});
 
 /* Mobile buttons */
-const leftBtn = document.getElementById('leftBtn');
-const rightBtn = document.getElementById('rightBtn');
-const jumpBtn = document.getElementById('jumpBtn');
-const pauseBtn = document.getElementById('pauseBtn');
-const restartBtn = document.getElementById('restartBtn');
-const restartHeaderBtn = document.getElementById('restartHeaderBtn');
+const leftBtn=document.getElementById('leftBtn');
+const rightBtn=document.getElementById('rightBtn');
+const jumpBtn=document.getElementById('jumpBtn');
+const pauseBtn=document.getElementById('pauseBtn');
+const restartBtn=document.getElementById('restartBtn');
+const restartHeaderBtn=document.getElementById('restartHeaderBtn');
 
-function touchSet(key, isDown){ return (ev)=>{ ev.preventDefault(); keys[key]=isDown; }; }
-leftBtn.addEventListener('touchstart', touchSet('ArrowLeft', true)); leftBtn.addEventListener('touchend', touchSet('ArrowLeft', false));
-rightBtn.addEventListener('touchstart', touchSet('ArrowRight', true)); rightBtn.addEventListener('touchend', touchSet('ArrowRight', false));
-jumpBtn.addEventListener('touchstart', function(e){ e.preventDefault(); doJump(); }, {passive:false});
-pauseBtn.addEventListener('click', ()=> togglePause());
-restartBtn.addEventListener('click', ()=> restartGame());
-restartHeaderBtn.addEventListener('click', ()=> restartGame());
+function touchSet(key,isDown){return e=>{e.preventDefault(); keys[key]=isDown;}};
+leftBtn.addEventListener('touchstart',touchSet('ArrowLeft',true)); leftBtn.addEventListener('touchend',touchSet('ArrowLeft',false));
+rightBtn.addEventListener('touchstart',touchSet('ArrowRight',true)); rightBtn.addEventListener('touchend',touchSet('ArrowRight',false));
+jumpBtn.addEventListener('touchstart',e=>{e.preventDefault(); doJump();},{passive:false});
+jumpBtn.addEventListener('click',e=>{e.preventDefault(); doJump();});
+pauseBtn.addEventListener('click',()=>togglePause());
+restartBtn.addEventListener('click',()=>restartGame());
+restartHeaderBtn.addEventListener('click',()=>restartGame());
 
-/* Start / Play Now */
-document.getElementById('startBtn').addEventListener('click', ()=> {
+/* Start / Play */
+const startBtn=document.getElementById('startBtn');
+startBtn.addEventListener('click',()=>{
   if(!playerName){
-    let name = prompt('Enter your unique name (no spaces recommended):') || ('Player' + Math.floor(Math.random()*999));
-    name = name.trim().slice(0,20);
-    if(!name) name = 'Player' + Math.floor(Math.random()*999);
-    // ensure uniqueness by appending number if conflict
-    if(highScores.find(h=>h.name===name)){
-      name = name + '_' + Math.floor(Math.random()*90+10);
-    }
-    playerName = name;
-    localStorage.setItem('playerName', playerName);
+    let name=prompt('Enter your unique name:')||('Player'+Math.floor(Math.random()*999));
+    name=name.trim().slice(0,20);
+    if(!name) name='Player'+Math.floor(Math.random()*999);
+    if(highScores.find(h=>h.name===name)) name=name+'_'+Math.floor(Math.random()*90+10);
+    playerName=name; localStorage.setItem('playerName',playerName);
   }
   startGame();
 });
-
-/* Command input handling */
-const cmdInput = document.getElementById('cmdInput');
-const commandLog = document.getElementById('commandLog');
-function logCommand(text){ const p=document.createElement('div'); p.innerText = text; commandLog.prepend(p); if(commandLog.childElementCount>60) commandLog.removeChild(commandLog.lastChild); }
-cmdInput.addEventListener('keydown', function(e){
-  if(e.key === 'Enter'){ executeCommand(this.value.trim()); this.value=''; }
+startBtn.addEventListener('dblclick',()=>{
+  const newName=prompt('Change player name:')||'';
+  if(newName.trim()){playerName=newName.trim().slice(0,20);localStorage.setItem('playerName',playerName);logCommand('Name changed to '+playerName);}
 });
 
-/* Command executor - 10+ commands */
+/* Command input */
+const cmdInput=document.getElementById('cmdInput');
+const commandLog=document.getElementById('commandLog');
+function logCommand(text){const p=document.createElement('div');p.innerText=text;commandLog.prepend(p);if(commandLog.childElementCount>60) commandLog.removeChild(commandLog.lastChild);}
+cmdInput.addEventListener('keydown',e=>{if(e.key==='Enter'){executeCommand(cmdInput.value.trim());cmdInput.value='';}});
+
 function executeCommand(cmd){
-  if(!cmd) return;
-  logCommand('> ' + cmd);
-  const parts = cmd.split(/\s+/);
-  const c = parts[0].toLowerCase();
-  const arg = parts[1];
+  if(!cmd) return; logCommand('> '+cmd);
+  const parts=cmd.split(/\s+/); const c=parts[0].toLowerCase(); const arg=parts[1];
   switch(c){
-    case 'gbg.speed':
-      { const v = parseFloat(arg); if(!isNaN(v) && v>0){ speed = v; logCommand('Player speed set to '+v); } else logCommand('Invalid speed'); } break;
-    case 'gbg.scroll':
-      { const v = parseFloat(arg); if(!isNaN(v)){ scrollSpeed = v; logCommand('Scroll speed set to '+v); } else logCommand('Invalid'); } break;
-    case 'gbg.enemyspeed':
-      { const v = parseFloat(arg); if(!isNaN(v)){ enemySpeed = v; logCommand('Enemy speed set to '+v); } else logCommand('Invalid'); } break;
-    case 'gbg.coin':
-      { const v = parseInt(arg)||1; for(let i=0;i<v;i++) spawnCoin(-Math.random()*h*0.6); logCommand('Spawned '+v+' coins'); } break;
-    case 'gbg.enemy':
-      { const v = parseInt(arg)||1; for(let i=0;i<v;i++) spawnEnemy(-Math.random()*h*0.8); logCommand('Spawned '+v+' enemies'); } break;
-    case 'gbg.reset':
-      restartGame(); logCommand('Game reset'); break;
-    case 'gbg.clearscores':
-      highScores = []; localStorage.setItem('highScores', JSON.stringify(highScores)); renderLeaderboard(); logCommand('Leaderboard cleared'); break;
-    case 'gbg.invincible':
-      if(arg==='on' || arg==='true'){ invincible = true; logCommand('Invincible ON'); } else { invincible = false; logCommand('Invincible OFF'); } break;
-    case 'gbg.addcoins':
-    case 'gbg.coins':
-      { const v = parseInt(arg)||0; playerCoins += v; localStorage.setItem('playerCoins', playerCoins); updateCoinDisplay(); logCommand('Added '+v+' coins'); } break;
-    case 'gbg.jump':
-      { const v = parseFloat(arg); if(!isNaN(v) && v>0){ jumpStrength = v; logCommand('Jump strength set to '+v); } else logCommand('Invalid'); } break;
-    case 'gbg.pause':
-      if(arg==='on' || arg==='true'){ paused=true; logCommand('Paused'); } else { paused=false; logCommand('Resumed'); } break;
-    default:
-      logCommand('Unknown command: '+c);
+    case 'gbg.speed':{ const v=parseFloat(arg); if(!isNaN(v)&&v>0){speed=v;logCommand('Player speed set to '+v);} else logCommand('Invalid speed');} break;
+    case 'gbg.scroll':{ const v=parseFloat(arg); if(!isNaN(v)){scrollSpeed=v;logCommand('Scroll speed set to '+v);} else logCommand('Invalid');} break;
+    case 'gbg.enemyspeed':{ const v=parseFloat(arg); if(!isNaN(v)){enemySpeed=v;logCommand('Enemy speed set to '+v);} else logCommand('Invalid');} break;
+    case 'gbg.coin':{ const v=parseInt(arg)||1; for(let i=0;i<v;i++) spawnCoin(-Math.random()*h*0.6); logCommand('Spawned '+v+' coins');} break;
+    case 'gbg.enemy':{ const v=parseInt(arg)||1; for(let i=0;i<v;i++) spawnEnemy(-Math.random()*h*0.8); logCommand('Spawned '+v+' enemies');} break;
+    case 'gbg.reset':restartGame();logCommand('Game reset'); break;
+    case 'gbg.clearscores':highScores=[];localStorage.setItem('highScores',JSON.stringify(highScores));renderLeaderboard();logCommand('Leaderboard cleared'); break;
+    case 'gbg.invincible':if(arg==='on'||arg==='true'){invincible=true;logCommand('Invincible ON');} else {invincible=false;logCommand('Invincible OFF');} break;
+    case 'gbg.addcoins':{const v=parseInt(arg)||0; addCoins(v); logCommand('Added '+v+' coins');} break;
+    case 'gbg.jump':{const v=parseFloat(arg); if(!isNaN(v)&&v>0){jumpStrength=v;logCommand('Jump strength set to '+v);} else logCommand('Invalid');} break;
+    case 'gbg.pause':if(arg==='on'||arg==='true'){paused=true;logCommand('Paused');} else {paused=false;logCommand('Resumed');} break;
+    default: logCommand('Unknown command: '+c);
   }
 }
 
-/* -------------------------
-   Spawn helpers
-   ------------------------- */
-function spawnCoin(y){
-  const x = Math.random() * (w - coinSize - 20) + 10;
-  const yy = (typeof y === 'number') ? y : (-Math.random()*h - 20);
-  coins.push({ x, y: yy });
-}
-function spawnEnemy(y){
-  const x = Math.random() * (w - enemySize - 20) + 10;
-  const yy = (typeof y === 'number') ? y : (-Math.random()*h - 20);
-  enemies.push({ x, y: yy, w: enemySize, h: enemySize });
-}
+/* Spawn helpers */
+function spawnCoin(y){coins.push({x:Math.random()*(w-coinSize-20)+10,y:(typeof y==='number'?y:-Math.random()*h-20)});}
+function spawnEnemy(y){enemies.push({x:Math.random()*(w-enemySize-20)+10,y:(typeof y==='number'?y:-Math.random()*h-20),w:enemySize,h:enemySize});}
+function spawnInitial(){coins=[];enemies=[];for(let i=0;i<8;i++) spawnCoin(-Math.random()*h*2);for(let i=0;i<4;i++) spawnEnemy(-Math.random()*h*2);}
 
-/* initial population */
-function spawnInitial(){
-  coins = []; enemies = [];
-  for(let i=0;i<8;i++) spawnCoin(-Math.random()*h*2);
-  for(let i=0;i<4;i++) spawnEnemy(-Math.random()*h*2);
-}
+/* Physics */
+const gravity=0.8;
+function doJump(){if(player.onGround){player.vy=-jumpStrength;player.onGround=false;}}
 
-/* -------------------------
-   Game logic & physics
-   ------------------------- */
-const gravity = 0.8;
-function doJump(){
-  if(player.onGround){
-    player.vy = -jumpStrength;
-    player.onGround = false;
-  }
-}
-
+/* Update */
 function update(){
-  if(!gameStarted || paused) return;
-
-  // controls
-  if(keys['ArrowLeft'] || keys['a']) player.x -= speed;
-  if(keys['ArrowRight'] || keys['d']) player.x += speed;
-  if(keys['ArrowUp'] || keys['w']) { doJump(); keys['ArrowUp'] = false; }
-
-  // bounds
-  if(player.x < 6) player.x = 6;
-  if(player.x + player.w > w - 6) player.x = w - 6 - player.w;
-
-  // vertical physics
-  player.vy += gravity;
-  player.y += player.vy;
-  if(player.y + player.h >= h - 10){
-    player.y = h - 10 - player.h;
-    player.vy = 0;
-    player.onGround = true;
-  } else {
-    player.onGround = false;
+  if(!gameStarted||paused) return;
+  if(keys['ArrowLeft']||keys['a']) player.x-=speed;
+  if(keys['ArrowRight']||keys['d']) player.x+=speed;
+  if(keys['ArrowUp']||keys['w']){ doJump(); keys['ArrowUp']=false; }
+  if(player.x<6) player.x=6; if(player.x+player.w>w-6) player.x=w-6-player.w;
+  player.vy+=gravity; player.y+=player.vy;
+  player.onGround=player.y+player.h>=h-10;
+  if(player.onGround){player.y=h-10-player.h; player.vy=0;}
+  for(let i=coins.length-1;i>=0;i--){
+    coins[i].y+=scrollSpeed+1;
+    if(coins[i].y>h+40){coins.splice(i,1); spawnCoin();}
+    else if(collideRect(player.x,player.y,player.w,player.h,coins[i].x,coins[i].y,coinSize,coinSize)){coins.splice(i,1); addCoins(1); scoreThisRun++; spawnCoin(-50);}
   }
-
-  // coins move downward
-  for(let i = coins.length-1; i>=0; i--){
-    coins[i].y += scrollSpeed + 1;
-    if(coins[i].y > h + 40){ coins.splice(i,1); spawnCoin(); }
-    else {
-      if(collideRect(player.x, player.y, player.w, player.h, coins[i].x, coins[i].y, coinSize, coinSize)){
-        coins.splice(i,1); addCoins(1); scoreThisRun++; spawnCoin(-50);
-      }
-    }
-  }
-
-  // enemies move downward
-  for(let i = enemies.length-1; i>=0; i--){
-    enemies[i].y += enemySpeed;
-    if(enemies[i].y > h + 60){ enemies.splice(i,1); spawnEnemy(-Math.random()*h*0.5); }
-    else {
-      if(!invincible && collideRect(player.x, player.y, player.w, player.h, enemies[i].x, enemies[i].y, enemies[i].w, enemies[i].h)){
-        // hit
-        endGame();
-      }
-    }
+  for(let i=enemies.length-1;i>=0;i--){
+    enemies[i].y+=enemySpeed;
+    if(enemies[i].y>h+60){enemies.splice(i,1); spawnEnemy(-Math.random()*h*0.5);}
+    else if(!invincible && collideRect(player.x,player.y,player.w,player.h,enemies[i].x,enemies[i].y,enemies[i].w,enemies[i].h)){endGame();}
   }
 }
 
-function collideRect(ax,ay,aw,ah, bx,by,bw,bh){
-  return ax < bx + bw && ax + aw > bx && ay < by + bh && ay + ah > by;
-}
+function collideRect(ax,ay,aw,ah,bx,by,bw,bh){return ax<bx+bw && ax+aw>bx && ay<by+bh && ay+ah>by;}
 
-/* -------------------------
-   Draw
-   ------------------------- */
+/* Draw */
 function draw(){
-  // clear
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-
-  // background (simple)
-  ctx.save();
-  ctx.fillStyle = '#07101a';
-  ctx.fillRect(0,0,w,h);
-  ctx.restore();
-
-  // ground
-  ctx.fillStyle = '#071922';
-  ctx.fillRect(0, h-10, w, 10);
-
-  // player
-  ctx.fillStyle = '#ff4466';
-  ctx.fillRect(player.x, player.y, player.w, player.h);
-  // player eye
-  ctx.fillStyle = '#fff'; ctx.fillRect(player.x + 8, player.y + 12, 8, 8);
-
-  // coins
-  ctx.fillStyle = '#ffd54d';
-  coins.forEach(c => { ctx.fillRect(c.x, c.y, coinSize, coinSize); ctx.strokeStyle='#b8860b'; ctx.strokeRect(c.x, c.y, coinSize, coinSize); });
-
-  // enemies
-  ctx.fillStyle = '#72d572';
-  enemies.forEach(e => { ctx.fillRect(e.x, e.y, e.w, e.h); ctx.fillStyle='#2e7d32'; ctx.fillRect(e.x+6, e.y+6, e.w-12, e.h-12); ctx.fillStyle='#72d572'; });
-
-  // score display
-  ctx.fillStyle = '#fff';
-  ctx.font = '16px Arial';
-  ctx.fillText('Score: ' + scoreThisRun, 12, 24);
-  ctx.fillText('Player: ' + (playerName || 'Guest'), 12, 44);
-  if(invincible){ ctx.fillStyle = '#0ff'; ctx.fillText('INVINCIBLE', w - 120, 24); }
+  ctx.clearRect(0,0,w,h);
+  ctx.fillStyle='#07101a'; ctx.fillRect(0,0,w,h);
+  ctx.fillStyle='#071922'; ctx.fillRect(0,h-10,w,10);
+  ctx.fillStyle='#ff4466'; ctx.fillRect(player.x,player.y,player.w,player.h);
+  ctx.fillStyle='#fff'; ctx.fillRect(player.x+8,player.y+12,8,8);
+  ctx.fillStyle='#ffd54d'; coins.forEach(c=>{ctx.fillRect(c.x,c.y,coinSize,coinSize); ctx.strokeStyle='#b8860b'; ctx.strokeRect(c.x,c.y,coinSize,coinSize);});
+  ctx.fillStyle='#72d572'; enemies.forEach(e=>{ctx.fillRect(e.x,e.y,e.w,e.h); ctx.fillStyle='#2e7d32'; ctx.fillRect(e.x+6,e.y+6,e.w-12,e.h-12); ctx.fillStyle='#72d572';});
+  ctx.fillStyle='#fff'; ctx.font='16px Arial'; ctx.fillText('Score: '+scoreThisRun,12,24); ctx.fillText('Player: '+(playerName||'Guest'),12,44);
+  if(invincible){ctx.fillStyle='#0ff';ctx.fillText('INVINCIBLE',w-120,24);}
 }
 
-/* -------------------------
-   Game Loop
-   ------------------------- */
+/* Game loop */
 let rafId;
-function gameLoop(){
-  update();
-  draw();
-  rafId = requestAnimationFrame(gameLoop);
-}
+function gameLoop(){update(); draw(); rafId=requestAnimationFrame(gameLoop);}
 
-/* -------------------------
-   Start / End / Restart
-   ------------------------- */
-function startGame(){
-  // init
-  gameStarted = true;
-  paused = false;
-  scoreThisRun = 0;
-  player.x = Math.max(12, w/6);
-  player.y = h - 10 - player.h;
-  player.vy = 0; player.onGround = true;
-  spawnInitial();
-  document.getElementById('startBtn').style.display = 'none';
-  document.getElementById('gameOverPopup').classList.remove('show');
-  document.getElementById('infoLine').innerText = 'Game started — Good luck!';
-  cancelAnimationFrame(rafId);
-  gameLoop();
-}
+/* Start / End / Restart */
+function startGame(){gameStarted=true;paused=false;scoreThisRun=0;player.x=Math.max(12,w/6);player.y=h-10-player.h;player.vy=0;player.onGround=true;spawnInitial();startBtn.style.display='none';document.getElementById('gameOverPopup').classList.remove('show');document.getElementById('infoLine').innerText='Game started — Good luck!';cancelAnimationFrame(rafId);gameLoop();}
+function endGame(){gameStarted=false;cancelAnimationFrame(rafId);document.getElementById('finalScore').innerText='You scored: '+scoreThisRun;document.getElementById('goTitle').innerText=(playerName||'Player')+' — Game Over';document.getElementById('gameOverPopup').classList.add('show');
+if(playerName){const existing=highScores.find(h=>h.name===playerName);if(existing) existing.score=Math.max(existing.score,scoreThisRun); else highScores.push({name:playerName,score:scoreThisRun});} else {highScores.push({name:'Guest'+Math.floor(Math.random()*999),score:scoreThisRun});}
+const map={};highScores.forEach(h=>{if(!map[h.name]||h.score>map[h.name].score) map[h.name]=h;});highScores=Object.values(map).sort((a,b)=>b.score-a.score).slice(0,50);localStorage.setItem('highScores',JSON.stringify(highScores)); renderLeaderboard();}
 
-function endGame(){
-  gameStarted = false;
-  cancelAnimationFrame(rafId);
-  // show popup and save score
-  document.getElementById('finalScore').innerText = 'You scored: ' + scoreThisRun;
-  document.getElementById('goTitle').innerText = (playerName || 'Player') + ' — Game Over';
-  document.getElementById('gameOverPopup').classList.add('show');
+function restartGame(){document.getElementById('gameOverPopup').classList.remove('show');scoreThisRun=0;spawnInitial();player.x=Math.max(12,w/6);player.y=h-10-player.h;player.vy=0;gameStarted=true;paused=false;cancelAnimationFrame(rafId);gameLoop();}
 
-  // save to leaderboard
-  if(playerName){
-    const existing = highScores.find(h=>h.name === playerName);
-    if(existing) existing.score = Math.max(existing.score, scoreThisRun);
-    else highScores.push({ name: playerName, score: scoreThisRun });
-  } else {
-    const guest = 'Guest' + Math.floor(Math.random()*999);
-    highScores.push({ name: guest, score: scoreThisRun });
-  }
-  // keep top unique by name (highest)
-  const map = {};
-  highScores.forEach(h => { if(!map[h.name] || h.score > map[h.name].score) map[h.name] = h; });
-  highScores = Object.values(map);
-  highScores.sort((a,b)=>b.score - a.score);
-  highScores = highScores.slice(0,50); // keep some history
-  localStorage.setItem('highScores', JSON.stringify(highScores));
+document.getElementById('playAgainBtn').addEventListener('click',()=>restartGame());
+document.getElementById('closePopupBtn').addEventListener('click',()=>document.getElementById('gameOverPopup').classList.remove('show'));
 
-  renderLeaderboard();
-}
+function togglePause(){paused=!paused; pauseBtn.innerText=paused?'▶️ Resume':'⏸️';}
 
-/* Restart */
-function restartGame(){
-  document.getElementById('gameOverPopup').classList.remove('show');
-  document.getElementById('startBtn').style.display = 'none';
-  scoreThisRun = 0;
-  spawnInitial();
-  player.x = Math.max(12, w/6);
-  player.y = h - 10 - player.h;
-  player.vy = 0;
-  gameStarted = true;
-  paused = false;
-  cancelAnimationFrame(rafId);
-  gameLoop();
-}
+/* Coins UI */
+function addCoins(amount){playerCoins+=amount;if(playerCoins<0) playerCoins=0;localStorage.setItem('playerCoins',playerCoins);updateCoinDisplay();}
+function updateCoinDisplay(){document.getElementById('coinCount').innerText=playerCoins;document.getElementById('homeCoins').innerText=playerCoins;}
+function renderLeaderboard(){const list=document.getElementById('scoreList');list.innerHTML='';const top=highScores.slice(0,10);const maxScore=top.length?top[0].score:0;top.forEach(h=>{const li=document.createElement('li');li.innerText=h.name+' — '+h.score;if(h.score===maxScore) li.classList.add('highest');list.appendChild(li);});}
 
-/* popup buttons */
-document.getElementById('playAgainBtn').addEventListener('click', ()=> { restartGame(); });
-document.getElementById('closePopupBtn').addEventListener('click', ()=> { document.getElementById('gameOverPopup').classList.remove('show'); });
-
-/* Pause toggle */
-function togglePause(){ paused = !paused; pauseBtn.innerText = paused ? '▶️ Resume' : '⏸️'; }
-
-/* -------------------------
-   Coins & leaderboard UI
-   ------------------------- */
-function addCoins(amount){
-  playerCoins += amount;
-  localStorage.setItem('playerCoins', playerCoins);
-  updateCoinDisplay();
-}
-
-function updateCoinDisplay(){
-  document.getElementById('coinCount').innerText = playerCoins;
-  document.getElementById('homeCoins').innerText = playerCoins;
-}
-
-function renderLeaderboard(){
-  const list = document.getElementById('scoreList');
-  list.innerHTML = '';
-  const top = highScores.slice(0,10);
-  const maxScore = top.length ? top[0].score : 0;
-  top.forEach(h => {
-    const li = document.createElement('li');
-    li.innerText = h.name + ' — ' + h.score;
-    if(h.score === maxScore) li.classList.add('highest');
-    list.appendChild(li);
-  });
-}
-
-/* -------------------------
-   Game tick helpers
-   ------------------------- */
-function addCoins(n){ addCoinsToBalance(n); }
-function addCoinsToBalance(n){
-  playerCoins += n;
-  if(playerCoins < 0) playerCoins = 0;
-  localStorage.setItem('playerCoins', playerCoins);
-  updateCoinDisplay();
-}
-
-/* collision and coin collection already handled above */
-
-/* -------------------------
-   Utility & init
-   ------------------------- */
-function init(){
-  resizeCanvas();
-  renderLeaderboard();
-  updateCoinDisplay();
-  // pre-spawn some items
-  spawnInitial();
-  // keyboard shortcuts
-  window.addEventListener('keydown', (e)=>{
-    if(e.key === 'r'){ restartGame(); }
-    if(e.key === 'p'){ togglePause(); }
-    if(e.key === ' '){ doJump(); }
-  });
-}
+/* Init */
+function init(){resizeCanvas();renderLeaderboard();updateCoinDisplay();spawnInitial();window.addEventListener('keydown',e=>{if(e.key==='r') restartGame(); if(e.key==='p') togglePause(); if(e.key===' ') doJump();});}
 init();
 
-/* Hook touch fallback: click on canvas jump */
-canvas.addEventListener('click', (e)=> { if(!gameStarted) startGame(); else doJump(); });
+/* UI loop even when paused */
+(function uiLoop(){draw(); requestAnimationFrame(uiLoop);})();
 
-/* simple autop-run of game loop if started previously? no. Wait for Play Now. */
-
-/* run loop to keep rendering even when paused to show UI */
-(function uiLoop(){
-  draw();
-  requestAnimationFrame(uiLoop);
-})();
-
-/* Customize spawn/collection for scoring */
-function addCoins(n){
-  playerCoins += n;
-  localStorage.setItem('playerCoins', playerCoins);
-  updateCoinDisplay();
-}
-/* We used addCoins on coin pickup earlier; ensure it's defined only once. */
-
-/* Connected command to actual actions in update loop already done in executeCommand */
-
-/* Add collision pickup scoring: already implemented in update() */
-
-/* Edge: ensure duplicate function names handled - final cleanup above. */
-
-/* ensure mobile buttons also trigger jump via click */
-jumpBtn.addEventListener('click', (e)=> { e.preventDefault(); doJump(); });
-
-/* ensure start button shows existing name or asks for new name if wants to change */
-document.getElementById('startBtn').addEventListener('dblclick', ()=>{
-  const newName = prompt('Change player name: (leave empty to cancel)') || '';
-  if(newName.trim()){
-    playerName = newName.trim().slice(0,20);
-    localStorage.setItem('playerName', playerName);
-    logCommand('Name changed to ' + playerName);
-  }
-});
-
-/* Make sure some commands that change coins are visible to users via command log */
 logCommand('Welcome! Type gbg commands or tap Play Now.');
-
 </script>
 </body>
 </html>
