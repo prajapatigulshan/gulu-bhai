@@ -1,244 +1,174 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GBG Infinite Runner</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>GBG Infinite Runner - Final</title>
 <style>
-:root{
-  --accent: linear-gradient(90deg, #ff4d4d, #ffb84d, #ffd54d, #4de0ff);
-  --bg:#0b0b0f;
-  --panel:rgba(255,255,255,0.04);
-  --glass:rgba(255,255,255,0.03);
-}
-*{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif;margin:0;padding:0;}
-html,body{height:100%;background:radial-gradient(circle at 10% 10%,#07112a 0%,#050509 50%),var(--bg);color:#fff;}
-header{position:fixed;top:0;left:0;right:0;height:64px;display:flex;align-items:center;justify-content:space-between;padding:8px 12px;gap:12px;backdrop-filter:blur(6px);background:linear-gradient(180deg,rgba(0,0,0,0.55),rgba(0,0,0,0.35));border-bottom:1px solid rgba(255,255,255,0.03);z-index:1000;}
-.title{font-weight:700;font-size:18px;}
-.header-right{display:flex;gap:10px;align-items:center;}
-header button{padding:8px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:700;background:var(--panel);color:#fff;}
-header button:hover{background:var(--glass);}
-header button#homeBtn{background:#333;color:#0ff;}
-header button#homeBtn:hover{background:#0aa;color:#fff;}
-main{padding-top:78px;display:flex;gap:12px;align-items:flex-start;justify-content:center;width:100%;}
-.game-wrap{width:100%;max-width:1000px;display:flex;flex-direction:column;align-items:center;gap:10px;padding:10px;}
-canvas{background:linear-gradient(180deg,#07101a,#0b0b0f);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.6);width:100%;height:auto;display:block;}
-.controls{display:flex;gap:10px;justify-content:center;width:100%;margin-top:6px;}
-.ctrl-btn{flex:1;max-width:120px;padding:14px;border-radius:12px;font-size:20px;border:none;cursor:pointer;background:linear-gradient(90deg,#222,#111);color:#fff;user-select:none;}
-.ctrl-btn.big{flex:2;max-width:240px;}
-.sidebar{width:320px;max-width:36%;min-width:260px;display:flex;flex-direction:column;gap:12px;padding:8px;}
-.panel{background:var(--panel);padding:10px;border-radius:12px;min-height:60px;overflow:hidden;}
-.panel h3{margin:0 0 8px 0;font-size:16px;}
-#leaderboard ol{padding-left:18px;margin:0;max-height:250px;overflow:auto;}
-#leaderboard li{padding:6px 8px;border-radius:8px;margin-bottom:6px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);}
-.highest{color:#0ff;font-weight:800;border-left:4px solid #0ff;padding-left:6px;}
-#commandPrompt{display:flex;flex-direction:column;gap:6px;}
-#cmdInput{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:#fff;}
-#commandLog{max-height:160px;overflow:auto;font-family:monospace;font-size:13px;padding:6px;background:rgba(0,0,0,0.12);border-radius:8px;}
-#gameOverPopup{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(0);background:rgba(0,0,0,0.9);padding:20px;border-radius:12px;z-index:2000;min-width:260px;text-align:center;transition:all .18s ease;}
-#gameOverPopup.show{transform:translate(-50%,-50%) scale(1);}
-#gameOverPopup button{margin-top:8px;padding:8px 12px;border-radius:8px;border:none;cursor:pointer;}
-.muted{opacity:0.7;font-size:13px;}
-.flexrow{display:flex;align-items:center;gap:8px;}
+  :root{
+    --accent: linear-gradient(90deg,#ff4d4d,#ffb84d,#ffd54d,#4de0ff);
+    --bg:#0b0b0f;
+    --panel:rgba(255,255,255,0.04);
+    --glass:rgba(255,255,255,0.03);
+  }
+  *{box-sizing:border-box;font-family:Inter,Arial,Helvetica,sans-serif}
+  html,body{height:100%;margin:0;background:radial-gradient(circle at 10% 10%, #07112a 0%, #050509 50%),var(--bg); color:#fff; -webkit-tap-highlight-color:transparent}
+  header{
+    position:fixed; top:0; left:0; right:0; height:64px; display:flex; align-items:center; justify-content:space-between;
+    padding:8px 12px; gap:12px; backdrop-filter:blur(6px); background:linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.35));
+    border-bottom:1px solid rgba(255,255,255,0.03); z-index:1000;
+  }
+  .title{font-weight:700; font-size:18px; display:flex; gap:10px; align-items:center;}
+  .header-right{display:flex; gap:10px; align-items:center;}
+  #coinBig{background:var(--panel); padding:8px 12px; border-radius:10px; font-weight:700; color:gold; min-width:110px; text-align:center}
+  #scoreBig{background:var(--panel); padding:8px 12px; border-radius:10px; font-weight:700; color:#0ff; min-width:110px; text-align:center}
+  #startBtn,#restartHeaderBtn,#homeBtn{padding:8px 12px; border-radius:10px; border:none; cursor:pointer; font-weight:700}
+  #restartHeaderBtn{background:var(--glass);}
+  #startBtn{background:var(--panel); color:#fff}
+  #homeBtn{background:var(--glass);}
+  main{ padding-top:78px; display:flex; gap:12px; align-items:flex-start; justify-content:center; width:100%; }
+  .game-wrap{ width:100%; max-width:1000px; display:flex; flex-direction:column; align-items:center; gap:10px; padding:10px }
+  canvas{ background:linear-gradient(180deg,#07101a,#0b0b0f); border-radius:12px; box-shadow:0 10px 30px rgba(0,0,0,0.6); width:100%; height:auto; display:block; }
+  .controls{ display:flex; gap:10px; justify-content:center; width:100%; margin-top:6px; }
+  .ctrl-btn{ flex:1; max-width:120px; padding:14px; border-radius:12px; font-size:20px; border:none; cursor:pointer; background:linear-gradient(90deg,#222,#111); color:#fff; touch-action:none; user-select:none}
+  .ctrl-btn.big{ flex:2; max-width:240px }
+  .sidebar{ width:320px; max-width:36%; min-width:260px; display:flex; flex-direction:column; gap:12px; padding:8px }
+  .panel{ background:var(--panel); padding:10px; border-radius:12px; min-height:60px; overflow:hidden; }
+  .panel h3{ margin:0 0 8px 0; font-size:16px }
+  #leaderboard ol{ padding-left:18px; margin:0; max-height:250px; overflow:auto; }
+  #leaderboard li{ padding:6px 8px; border-radius:8px; margin-bottom:6px; background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent) }
+  .highest{ color:#0ff; font-weight:800; border-left:4px solid #0ff; padding-left:6px }
+  #commandPrompt{ display:flex; flex-direction:column; gap:6px; }
+  #cmdInput{ width:100%; padding:8px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background:transparent; color:#fff }
+  #commandLog{ max-height:160px; overflow:auto; font-family:monospace; font-size:13px; padding:6px; background:rgba(0,0,0,0.12); border-radius:8px }
+  #gameOverPopup{ position:fixed; left:50%; top:50%; transform:translate(-50%,-50%) scale(0); background:rgba(0,0,0,0.9); padding:20px; border-radius:12px; z-index:2000; min-width:260px; text-align:center; transition:all .18s ease }
+  #gameOverPopup.show{ transform:translate(-50%,-50%) scale(1) }
+  #gameOverPopup button{ margin-top:8px; padding:8px 12px; border-radius:8px; border:none; cursor:pointer }
+  @media (max-width:900px){ .sidebar{ position:fixed; right:10px; top:84px; width:290px; z-index:900; max-height:60vh; overflow:auto; } main{ padding-bottom:120px; } }
+  @media (max-width:600px){ header{ height:72px; padding:10px 12px } .controls{ position:fixed; left:10px; right:10px; bottom:12px; z-index:1000; } .sidebar{ display:none } .game-wrap{ padding-bottom:80px } }
+  .muted{ opacity:0.7; font-size:13px }
+  .flexrow{ display:flex; align-items:center; gap:8px }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="title">GBG Infinite Runner</div>
+  <div class="title">
+    <div>GBG Infinite Runner</div>
+    <div class="muted">— Play & Compete</div>
+  </div>
   <div class="header-right">
-    <div>Coins: <span id="coinCount">0</span></div>
+    <div id="coinBig">Coins: <span id="coinCount">0</span></div>
+    <div id="scoreBig">Score: <span id="scoreCount">0</span></div>
     <button id="startBtn">Play Now</button>
-    <button id="homeBtn" onclick="goHome()">Home</button>
+    <button id="restartHeaderBtn" title="Restart Game">🔄 Restart</button>
+    <button id="homeBtn" title="Home Page">🏠 Home</button>
   </div>
 </header>
 
 <main>
-<div class="game-wrap">
-  <canvas id="gameCanvas" width="900" height="420"></canvas>
-  <div class="controls" id="mobileControls">
-    <button class="ctrl-btn" id="leftBtn">⬅️</button>
-    <button class="ctrl-btn big" id="jumpBtn">⬆️ Jump</button>
-    <button class="ctrl-btn" id="rightBtn">➡️</button>
-    <button class="ctrl-btn" id="pauseBtn">⏸️</button>
-    <button class="ctrl-btn" id="restartBtn">🔄</button>
-  </div>
-  <div id="infoLine" class="muted" style="text-align:center;margin-top:6px">Use touch or Arrow keys. Enter name on Play.</div>
-</div>
-
-<aside class="sidebar">
-  <div class="panel" id="leaderboard">
-    <h3>Leaderboard (India / State / Top 100)</h3>
-    <ol id="scoreList"></ol>
-    <div style="margin-top:8px" class="muted">Highest score highlighted.</div>
+  <div class="game-wrap">
+    <canvas id="gameCanvas" width="900" height="420"></canvas>
+    <div class="controls" id="mobileControls">
+      <button class="ctrl-btn" id="leftBtn">⬅️</button>
+      <button class="ctrl-btn big" id="jumpBtn">⬆️ Jump</button>
+      <button class="ctrl-btn" id="rightBtn">➡️</button>
+      <button class="ctrl-btn" id="pauseBtn">⏸️</button>
+      <button class="ctrl-btn" id="restartBtn">🔄</button>
+    </div>
+    <div id="infoLine" class="muted" style="text-align:center; margin-top:6px">Use touch or Arrow keys.</div>
   </div>
 
-  <div class="panel" id="coinsPanel">
-    <h3>Your Coins</h3>
-    <div id="homeCoinDisplay" style="font-size:20px;font-weight:700">You have <span id="homeCoins">0</span> coins</div>
-    <div style="margin-top:8px" class="muted">Coins persist between sessions.</div>
-  </div>
-</aside>
+  <aside class="sidebar">
+    <div class="panel" id="leaderboard">
+      <h3>Leaderboard (India Top 100)</h3>
+      <ol id="scoreList"></ol>
+      <div style="margin-top:8px" class="muted">Highest score highlighted.</div>
+    </div>
+  </aside>
 </main>
 
 <div id="gameOverPopup">
   <h2 id="goTitle">Game Over</h2>
   <p id="finalScore">You scored: 0</p>
-  <div style="display:flex;gap:8px;justify-content:center">
+  <div style="display:flex; gap:8px; justify-content:center">
     <button id="playAgainBtn">Play Again</button>
     <button id="closePopupBtn">Close</button>
   </div>
 </div>
 
 <script>
-// ------------------- Variables -----------------
 const canvas=document.getElementById('gameCanvas'),ctx=canvas.getContext('2d');
-let w=canvas.width,h=canvas.height;
+let w=canvas.width,h=canvas.height;function resizeCanvas(){const maxWidth=Math.min(window.innerWidth-24,1000);canvas.style.width=maxWidth+'px';const deviceRatio=window.devicePixelRatio||1;const styleWidth=maxWidth;const styleHeight=Math.floor(styleWidth*420/900);canvas.width=Math.floor(styleWidth*deviceRatio);canvas.height=Math.floor(styleHeight*deviceRatio);canvas.style.height=styleHeight+'px';canvas.getContext('2d').scale(deviceRatio,deviceRatio);w=styleWidth;h=styleHeight;}window.addEventListener('resize',()=>{resizeCanvas();draw();});resizeCanvas();
 
-function resizeCanvas(){
-  const maxWidth=Math.min(window.innerWidth-24,1000);
-  canvas.style.width=maxWidth+'px';
-  const deviceRatio=window.devicePixelRatio||1;
-  const styleWidth=maxWidth,styleHeight=Math.floor(styleWidth*420/900);
-  canvas.width=Math.floor(styleWidth*deviceRatio);
-  canvas.height=Math.floor(styleHeight*deviceRatio);
-  canvas.style.height=styleHeight+'px';
-  canvas.getContext('2d').scale(deviceRatio,deviceRatio);
-  w=styleWidth;h=styleHeight;
-}
-window.addEventListener('resize',resizeCanvas);
-resizeCanvas();
-
-// ------------------- Game state -----------------
-let gameStarted=false,paused=false,speed=6,scrollSpeed=2,enemySpeed=2.5,scoreThisRun=0;
-let playerCoins=parseInt(localStorage.getItem('playerCoins')||'0');
+let gameStarted=false,paused=false,speed=6,scrollSpeed=2,enemySpeed=2.5,scoreThisRun=0,playerCoins=parseInt(localStorage.getItem('playerCoins')||'0'),playerName=localStorage.getItem('playerName')||null,invincible=false,jumpStrength=12;
 let highScores=JSON.parse(localStorage.getItem('highScores')||'[]');
-let playerName=localStorage.getItem('playerName')||null;
-let playerCountry=localStorage.getItem('playerCountry')||null;
-let playerState=localStorage.getItem('playerState')||null;
-let invincible=false,jumpStrength=12;
 
-// ------------------- Player -----------------
-let player={x:120,y:0,w:48,h:48,vy:0,onGround:false};
-let coins=[],enemies=[];
-const coinSize=18,enemySize=38;
+document.getElementById('coinCount').innerText=playerCoins;
+document.getElementById('scoreCount').innerText=scoreThisRun;
+
+let player={x:120,y:0,w:48,h:48,vy:0,onGround:false},coins=[],enemies=[],coinSize=18,enemySize=38;
+
 const keys={};
+window.addEventListener('keydown',e=>{keys[e.key]=true;if(e.key===' '){e.preventDefault();}});
+window.addEventListener('keyup',e=>{keys[e.key]=false;});
 
-// ------------------- Mobile Controls -----------------
-function touchSet(key,isDown){return ev=>{ev.preventDefault();keys[key]=isDown;}}
-document.getElementById('leftBtn').addEventListener('touchstart',touchSet('ArrowLeft',true));document.getElementById('leftBtn').addEventListener('touchend',touchSet('ArrowLeft',false));
-document.getElementById('rightBtn').addEventListener('touchstart',touchSet('ArrowRight',true));document.getElementById('rightBtn').addEventListener('touchend',touchSet('ArrowRight',false));
-document.getElementById('jumpBtn').addEventListener('touchstart',e=>{e.preventDefault();doJump();},{passive:false});
-document.getElementById('pauseBtn').addEventListener('click',()=>togglePause());
-document.getElementById('restartBtn').addEventListener('click',()=>restartGame());
+const leftBtn=document.getElementById('leftBtn'),rightBtn=document.getElementById('rightBtn'),jumpBtn=document.getElementById('jumpBtn'),pauseBtn=document.getElementById('pauseBtn'),restartBtn=document.getElementById('restartBtn'),restartHeaderBtn=document.getElementById('restartHeaderBtn'),homeBtn=document.getElementById('homeBtn');
 
-// ------------------- Start / Name Prompt -----------------
-document.getElementById('startBtn').addEventListener('click',()=>{
-  if(!playerName){
-    let name;
-    while(true){
-      name=prompt('Enter unique player name:')||('Player'+Math.floor(Math.random()*999));
-      name=name.trim().slice(0,20);
-      if(!highScores.find(h=>h.name===name)) break;
-      alert('Name exists! Choose another.');
-    }
-    playerName=name;
-    localStorage.setItem('playerName',playerName);
-    let country=prompt('Enter your country:')||'India';
-    let state=prompt('Enter your state:')||'Unknown';
-    playerCountry=country;playerState=state;
-    localStorage.setItem('playerCountry',playerCountry);
-    localStorage.setItem('playerState',playerState);
-  }
-  startGame();
-});
+function touchSet(key,isDown){return (ev)=>{ev.preventDefault();keys[key]=isDown;}}
+leftBtn.addEventListener('touchstart',touchSet('ArrowLeft',true));leftBtn.addEventListener('touchend',touchSet('ArrowLeft',false));
+rightBtn.addEventListener('touchstart',touchSet('ArrowRight',true));rightBtn.addEventListener('touchend',touchSet('ArrowRight',false));
+jumpBtn.addEventListener('touchstart',function(e){e.preventDefault();doJump();},{passive:false});
+pauseBtn.addEventListener('click',()=>togglePause());
+restartBtn.addEventListener('click',()=>restartGame());
+restartHeaderBtn.addEventListener('click',()=>restartGame());
+homeBtn.addEventListener('click',()=>{window.location.href='index.html';});
 
-// ------------------- Home Button -----------------
-function goHome(){window.location.href='index.html';}
+document.getElementById('startBtn').addEventListener('click',()=>{if(!playerName){let name=prompt('Enter unique name:');name=name.trim().slice(0,20);if(!name)name='Player'+Math.floor(Math.random()*999);while(highScores.find(h=>h.name===name)){name=name+'_'+Math.floor(Math.random()*90+10);}playerName=name;localStorage.setItem('playerName',playerName);}startGame();});
 
-// ------------------- Game Loop -----------------
+function spawnCoin(y){const x=Math.random()*(w-coinSize-20)+10;const yy=(typeof y==='number')?y:(-Math.random()*h-20);coins.push({x,y:yy});}
+function spawnEnemy(y){const x=Math.random()*(w-enemySize-20)+10;const yy=(typeof y==='number')?y:(-Math.random()*h-20);enemies.push({x,y:yy,w:enemySize,h:enemySize});}
+function spawnInitial(){coins=[];enemies=[];for(let i=0;i<8;i++)spawnCoin(-Math.random()*h*2);for(let i=0;i<4;i++)spawnEnemy(-Math.random()*h*2);}
+
 const gravity=0.8;
 function doJump(){if(player.onGround){player.vy=-jumpStrength;player.onGround=false;}}
 
-function spawnCoin(y){const x=Math.random()*(w-coinSize-20)+10,yy=(typeof y==='number'?y:-Math.random()*h-20);coins.push({x,y:yy});}
-function spawnEnemy(y){const x=Math.random()*(w-enemySize-20)+10,yy=(typeof y==='number'?y:-Math.random()*h-20);enemies.push({x,y:yy,w:enemySize,h:enemySize});}
+function update(){if(!gameStarted||paused)return;if(keys['ArrowLeft']||keys['a'])player.x-=speed;if(keys['ArrowRight']||keys['d'])player.x+=speed;if(keys['ArrowUp']||keys['w']){doJump();keys['ArrowUp']=false;}if(player.x<6)player.x=6;if(player.x+player.w>w-6)player.x=w-6-player.w;player.vy+=gravity;player.y+=player.vy;if(player.y+player.h>=h-10){player.y=h-10-player.h;player.vy=0;player.onGround=true;}else{player.onGround=false;}
 
-function spawnInitial(){coins=[];enemies=[];for(let i=0;i<8;i++)spawnCoin(-Math.random()*h*2);for(let i=0;i<4;i++)spawnEnemy(-Math.random()*h*2);}
+for(let i=coins.length-1;i>=0;i--){coins[i].y+=scrollSpeed+1;if(coins[i].y>h+40){coins.splice(i,1);spawnCoin();}else{if(collideRect(player.x,player.y,player.w,player.h,coins[i].x,coins[i].y,coinSize,coinSize)){coins.splice(i,1);scoreThisRun++;spawnCoin(-50);}}}
 
-function update(){
-  if(!gameStarted||paused)return;
-  if(keys['ArrowLeft']||keys['a'])player.x-=speed;
-  if(keys['ArrowRight']||keys['d'])player.x+=speed;
-  if(keys['ArrowUp']||keys['w']){doJump();keys['ArrowUp']=false;}
-  if(player.x<6)player.x=6;if(player.x+player.w>w-6)player.x=w-6-player.w;
-  player.vy+=gravity;player.y+=player.vy;
-  if(player.y+player.h>=h-10){player.y=h-10-player.h;player.vy=0;player.onGround=true;}else{player.onGround=false;}
+for(let i=enemies.length-1;i>=0;i--){enemies[i].y+=scrollSpeed+enemySpeed;if(enemies[i].y>h+50)enemies.splice(i,1),spawnEnemy(-50);else{if(collideRect(player.x,player.y,player.w,player.h,enemies[i].x,enemies[i].y,enemies[i].w,enemies[i].h)&&!invincible){endGame();}}}
 
-  // coins
-  for(let i=coins.length-1;i>=0;i--){
-    coins[i].y+=scrollSpeed+1;
-    if(coins[i].y>h+40){coins.splice(i,1);spawnCoin();}
-    else{if(collideRect(player.x,player.y,player.w,player.h,coins[i].x,coins[i].y,coinSize,coinSize)){coins.splice(i,1);scoreThisRun++;spawnCoin(-50);}}
-  }
+scoreThisRun++;playerCoins++;document.getElementById('coinCount').innerText=playerCoins;document.getElementById('scoreCount').innerText=scoreThisRun;localStorage.setItem('playerCoins',playerCoins);requestAnimationFrame(update);draw();}
 
-  // enemies
-  for(let i=enemies.length-1;i>=0;i--){
-    enemies[i].y+=enemySpeed;
-    if(enemies[i].y>h+60){enemies.splice(i,1);spawnEnemy(-Math.random()*h*0.5);}
-    else{if(!invincible&&collideRect(player.x,player.y,player.w,player.h,enemies[i].x,enemies[i].y,enemies[i].w,enemies[i].h)){endGame();}}
-  }
-}
+function collideRect(x1,y1,w1,h1,x2,y2,w2,h2){return x1<w2+x2&&x1+w1>x2&&y1<h2+y2&&y1+h1>y2;}
 
-function collideRect(ax,ay,aw,ah,bx,by,bw,bh){return ax<bx+bw&&ax+aw>bx&&ay<by+bh&&ay+ah>by;}
+function draw(){ctx.clearRect(0,0,w,h);ctx.fillStyle='#0ff';ctx.fillRect(player.x,player.y,player.w,player.h);ctx.fillStyle='gold';coins.forEach(c=>ctx.fillRect(c.x,c.y,coinSize,coinSize));ctx.fillStyle='red';enemies.forEach(e=>ctx.fillRect(e.x,e.y,e.w,e.h));}
 
-function draw(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  ctx.fillStyle='#07101a';ctx.fillRect(0,0,w,h);
-  ctx.fillStyle='#071922';ctx.fillRect(0,h-10,w,10);
-  ctx.fillStyle='#ff4466';ctx.fillRect(player.x,player.y,player.w,player.h);
-  ctx.fillStyle='#fff';ctx.font='bold 14px Arial';
-  for(const c of coins){ctx.fillStyle='#ff0';ctx.fillRect(c.x,c.y,coinSize,coinSize);}
-  for(const e of enemies){ctx.fillStyle='#f00';ctx.fillRect(e.x,e.y,e.w,e.h);}
-  ctx.fillStyle='#0ff';ctx.fillText('Score: '+scoreThisRun,8,20);
-  ctx.fillStyle='#ff0';ctx.fillText('Coins: '+playerCoins,8,40);
-}
+function startGame(){gameStarted=true;paused=false;scoreThisRun=0;player.x=120;player.y=h-60;spawnInitial();update();}
 
-function gameLoop(){update();draw();requestAnimationFrame(gameLoop);}
-gameLoop();
-
-// ------------------- Game Control -----------------
 function togglePause(){paused=!paused;}
-function restartGame(){scoreThisRun=0;spawnInitial();}
 
-// ------------------- Game Over -----------------
-function endGame(){
-  gameStarted=false;
-  playerCoins+=scoreThisRun;localStorage.setItem('playerCoins',playerCoins);
-  document.getElementById('homeCoins').innerText=playerCoins;
-  highScores.push({name:playerName,country:playerCountry,state:playerState,score:scoreThisRun});
+function endGame(){gameStarted=false;showGameOver();updateLeaderboard(playerName,scoreThisRun);}
+
+function restartGame(){scoreThisRun=0;player.x=120;player.y=h-60;coins=[];enemies=[];spawnInitial();update();}
+
+function showGameOver(){document.getElementById('gameOverPopup').classList.add('show');document.getElementById('finalScore').innerText='You scored: '+scoreThisRun;}
+
+document.getElementById('playAgainBtn').addEventListener('click',()=>{document.getElementById('gameOverPopup').classList.remove('show');restartGame();});
+document.getElementById('closePopupBtn').addEventListener('click',()=>{document.getElementById('gameOverPopup').classList.remove('show');});
+
+function updateLeaderboard(name,score){
+  let existing=highScores.find(h=>h.name===name);
+  if(existing){if(score>existing.score)existing.score=score;}else{highScores.push({name:name,score:score});}
   highScores.sort((a,b)=>b.score-a.score);
-  if(highScores.length>100)highScores=highScores.slice(0,100);
+  if(highScores.length>100)highScores.length=100;
   localStorage.setItem('highScores',JSON.stringify(highScores));
-  showLeaderboard();
-  document.getElementById('finalScore').innerText='You scored: '+scoreThisRun;
-  document.getElementById('gameOverPopup').classList.add('show');
+  renderLeaderboard();
 }
 
-document.getElementById('playAgainBtn').addEventListener('click',()=>{
-  document.getElementById('gameOverPopup').classList.remove('show');
-  scoreThisRun=0;gameStarted=true;spawnInitial();
-});
-document.getElementById('closePopupBtn').addEventListener('click',()=>document.getElementById('gameOverPopup').classList.remove('show'));
-
-// ------------------- Leaderboard -----------------
-function showLeaderboard(){
-  const ol=document.getElementById('scoreList');ol.innerHTML='';
-  highScores.forEach((p,i)=>{
-    const li=document.createElement('li');li.innerText=`${i+1}. ${p.name} [${p.state}] - ${p.score}`;
-    if(i===0)li.classList.add('highest');ol.appendChild(li);
-  });
-}
-showLeaderboard();
+function renderLeaderboard(){const ol=document.getElementById('scoreList');ol.innerHTML='';highScores.forEach((h,i)=>{let li=document.createElement('li');li.innerText=`${i+1}. ${h.name} — ${h.score}`;if(i===0)li.classList.add('highest');ol.appendChild(li);});}
+renderLeaderboard();
 </script>
 </body>
 </html>
