@@ -1,47 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
-<title>GBG Infinite Runner</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>GBG Infinite Runner - FINAL RGB</title>
 <style>
-:root{
-  --accent: linear-gradient(90deg,#ff4d4d,#ffb84d,#ffd54d,#4de0ff);
-  --bg:#0b0b0f;
-  --panel:rgba(255,255,255,0.04);
-  --glass:rgba(255,255,255,0.03);
-}
-*{box-sizing:border-box;font-family:Arial,sans-serif;}
-html,body{height:100%;margin:0;background:radial-gradient(circle at 10% 10%,#07112a 0%,#050509 50%),var(--bg);color:#fff;-webkit-tap-highlight-color:transparent;}
-header{position:fixed;top:0;left:0;right:0;height:64px;display:flex;align-items:center;justify-content:space-between;padding:8px 12px;gap:12px;backdrop-filter:blur(6px);background:linear-gradient(180deg,rgba(0,0,0,0.55),rgba(0,0,0,0.35));border-bottom:1px solid rgba(255,255,255,0.03);z-index:1000;}
-.title{font-weight:700;font-size:18px;}
-.header-right{display:flex;gap:10px;align-items:center;}
-#coinBig{background:var(--panel);padding:8px 12px;border-radius:10px;font-weight:700;color:gold;min-width:110px;text-align:center;}
-#restartHeaderBtn,#startBtn{padding:8px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:700;}
-#restartHeaderBtn{background:var(--glass);}
-#startBtn{background:var(--panel);color:#fff;}
-main{padding-top:78px;display:flex;gap:12px;align-items:flex-start;justify-content:center;width:100%;}
-.game-wrap{width:100%;max-width:1000px;display:flex;flex-direction:column;align-items:center;gap:10px;padding:10px;}
-canvas{background:linear-gradient(180deg,#07101a,#0b0b0f);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.6);width:100%;height:auto;display:block;}
-.controls{display:flex;gap:10px;justify-content:center;width:100%;margin-top:6px;}
-.ctrl-btn{flex:1;max-width:120px;padding:14px;border-radius:12px;font-size:20px;border:none;cursor:pointer;background:linear-gradient(90deg,#222,#111);color:#fff;touch-action:none;user-select:none}
-.ctrl-btn.big{flex:2;max-width:240px}
-.sidebar{width:320px;max-width:36%;min-width:260px;display:flex;flex-direction:column;gap:12px;padding:8px}
-.panel{background:var(--panel);padding:10px;border-radius:12px;min-height:60px;overflow:hidden;}
-.panel h3{margin:0 0 8px 0;font-size:16px}
-#leaderboard ol{padding-left:18px;margin:0;max-height:250px;overflow:auto;}
-#leaderboard li{padding:6px 8px;border-radius:8px;margin-bottom:6px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent)}
-.highest{color:#0ff;font-weight:800;border-left:4px solid #0ff;padding-left:6px}
-#gameOverPopup{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(0);background:rgba(0,0,0,0.9);padding:20px;border-radius:12px;z-index:2000;min-width:260px;text-align:center;transition:all .18s ease}
-#gameOverPopup.show{transform:translate(-50%,-50%) scale(1)}
-#gameOverPopup button{margin-top:8px;padding:8px 12px;border-radius:8px;border:none;cursor:pointer}
-@media(max-width:900px){.sidebar{position:fixed;right:10px;top:84px;width:290px;z-index:900;max-height:60vh;overflow:auto;}main{padding-bottom:120px;}}
-@media(max-width:600px){header{height:72px;padding:10px 12px}.controls{position:fixed;left:10px;right:10px;bottom:12px;z-index:1000}.sidebar{display:none}.game-wrap{padding-bottom:80px}}
-.muted{opacity:0.7;font-size:13px}
-.flexrow{display:flex;align-items:center;gap:8px}
+  :root{
+    --bg:#0b0b0f;
+    --accent:linear-gradient(90deg,#ff4d4d,#ffb84d,#ffd54d,#4de0ff,#ff4d4d);
+    --panel:rgba(255,255,255,0.03);
+    --glass:rgba(255,255,255,0.05);
+    --rgb:#0ff;
+  }
+  *{box-sizing:border-box;font-family:Arial,sans-serif;}
+  html,body{margin:0;height:100%;background:radial-gradient(circle at 10% 10%,#07112a 0%,#050509 50%),var(--bg);color:#fff;overflow:hidden;}
+  header{position:fixed;top:0;left:0;right:0;height:64px;display:flex;align-items:center;justify-content:space-between;padding:8px 12px;gap:12px;background:linear-gradient(180deg,rgba(0,0,0,0.6),rgba(0,0,0,0.35));border-bottom:1px solid rgba(255,255,255,0.05);z-index:1000;}
+  .title{font-weight:700;font-size:18px;display:flex;gap:10px;align-items:center;background:-webkit-linear-gradient(45deg,#ff4d4d,#ffd54d,#0ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+  .header-right{display:flex;gap:10px;align-items:center;}
+  #coinBig{background:var(--panel);padding:8px 12px;border-radius:10px;font-weight:700;color:gold;min-width:110px;text-align:center;}
+  #startBtn,#restartHeaderBtn{padding:8px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:700;background:var(--panel);color:#fff;}
+  main{padding-top:78px;display:flex;gap:12px;align-items:flex-start;justify-content:center;width:100%;}
+  .game-wrap{width:100%;max-width:1000px;display:flex;flex-direction:column;align-items:center;gap:10px;padding:10px;}
+  canvas{background:linear-gradient(180deg,#07101a,#0b0b0f);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.6);width:100%;height:auto;display:block;}
+  .controls{display:flex;gap:10px;justify-content:center;width:100%;margin-top:6px;}
+  .ctrl-btn{flex:1;max-width:120px;padding:14px;border-radius:12px;font-size:20px;border:none;cursor:pointer;background:linear-gradient(90deg,#222,#111);color:#fff;touch-action:none;user-select:none;}
+  .ctrl-btn.big{flex:2;max-width:240px;}
+  .sidebar{width:320px;max-width:36%;min-width:260px;display:flex;flex-direction:column;gap:12px;padding:8px;}
+  .panel{background:var(--panel);padding:10px;border-radius:12px;min-height:60px;overflow:hidden;}
+  .panel h3{margin:0 0 8px 0;font-size:16px;}
+  #leaderboard ol{padding-left:18px;margin:0;max-height:250px;overflow:auto;}
+  #leaderboard li{padding:6px 8px;border-radius:8px;margin-bottom:6px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);}
+  .highest{color:#0ff;font-weight:800;border-left:4px solid #0ff;padding-left:6px;}
+  #gameOverPopup{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(0);background:rgba(0,0,0,0.95);padding:20px;border-radius:12px;z-index:2000;min-width:260px;text-align:center;transition:all .18s ease;}
+  #gameOverPopup.show{transform:translate(-50%,-50%) scale(1);}
+  #gameOverPopup button{margin-top:8px;padding:8px 12px;border-radius:8px;border:none;cursor:pointer;}
+  @media (max-width:900px){.sidebar{position:fixed;right:10px;top:84px;width:290px;z-index:900;max-height:60vh;overflow:auto;}main{padding-bottom:120px;}}
+  @media (max-width:600px){header{height:72px;padding:10px 12px;}.controls{position:fixed;left:10px;right:10px;bottom:12px;z-index:1000;}.sidebar{display:none}.game-wrap{padding-bottom:80px}}
+  .muted{opacity:0.7;font-size:13px;}
 </style>
 </head>
 <body>
+
 <header>
   <div class="title">GBG Infinite Runner</div>
   <div class="header-right">
@@ -61,12 +60,18 @@ canvas{background:linear-gradient(180deg,#07101a,#0b0b0f);border-radius:12px;box
       <button class="ctrl-btn" id="pauseBtn">⏸️</button>
       <button class="ctrl-btn" id="restartBtn">🔄</button>
     </div>
+    <div id="infoLine" class="muted" style="text-align:center;margin-top:6px;">Use touch or Arrow keys</div>
   </div>
 
   <aside class="sidebar">
     <div class="panel" id="leaderboard">
-      <h3>Leaderboard (Top 10)</h3>
+      <h3>Leaderboard (Top 100)</h3>
       <ol id="scoreList"></ol>
+      <div class="muted" style="margin-top:8px;">Top scores shown by Global / Country / State</div>
+    </div>
+    <div class="panel" id="coinsPanel">
+      <h3>Your Coins</h3>
+      <div id="homeCoinDisplay" style="font-size:20px;font-weight:700">Coins: <span id="homeCoins">0</span></div>
     </div>
   </aside>
 </main>
@@ -81,115 +86,120 @@ canvas{background:linear-gradient(180deg,#07101a,#0b0b0f);border-radius:12px;box
 </div>
 
 <script>
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
-let w = canvas.width, h = canvas.height;
-function resizeCanvas(){
-  const maxWidth = Math.min(window.innerWidth-24,1000);
-  canvas.style.width=maxWidth+'px';
-  const deviceRatio = window.devicePixelRatio||1;
-  const styleWidth=maxWidth;
-  const styleHeight=Math.floor(styleWidth*420/900);
-  canvas.width=Math.floor(styleWidth*deviceRatio);
-  canvas.height=Math.floor(styleHeight*deviceRatio);
-  canvas.style.height=styleHeight+'px';
-  ctx.setTransform(1,0,0,1,0,0);
-  ctx.scale(deviceRatio,deviceRatio);
-  w=styleWidth; h=styleHeight;
-}
-window.addEventListener('resize',resizeCanvas); resizeCanvas();
+// ---------- Variables & Persistence ----------
+const canvas=document.getElementById('gameCanvas'), ctx=canvas.getContext('2d');
+let w=canvas.width, h=canvas.height;
+function resizeCanvas(){const maxWidth=Math.min(window.innerWidth-24,1000);canvas.style.width=maxWidth+'px';const ratio=window.devicePixelRatio||1;const styleHeight=Math.floor(maxWidth*420/900);canvas.width=Math.floor(maxWidth*ratio);canvas.height=Math.floor(styleHeight*ratio);canvas.style.height=styleHeight+'px';ctx.scale(ratio,ratio);w=canvas.width/ratio;h=canvas.height/ratio;}
+window.addEventListener('resize',()=>{resizeCanvas();draw();});resizeCanvas();
 
-let gameStarted=false, paused=false;
-let speed=6, scrollSpeed=2, enemySpeed=2.5;
-let scoreThisRun=0;
-let playerCoins=parseInt(localStorage.getItem('playerCoins')||'0');
-let highScores=JSON.parse(localStorage.getItem('highScores')||'[]');
-let playerName='THE REAL GBG 😎';
-let invincible=false, jumpStrength=12;
+let gameStarted=false,paused=false,speed=6,scrollSpeed=2,enemySpeed=2.5,scoreThisRun=0,playerCoins=parseInt(localStorage.getItem('playerCoins')||'0'),highScores=JSON.parse(localStorage.getItem('highScores')||'[]');
+let playerName='THE REAL GBG',country='India',state='Gujarat';let invincible=false,jumpStrength=12;
 
-let player={x:120,y:0,w:48,h:48,vy:0,onGround:false};
-let coins=[], enemies=[];
-const coinSize=18, enemySize=38;
+document.getElementById('coinCount').innerText=playerCoins;document.getElementById('homeCoins').innerText=playerCoins;
 
+// ---------- Entities ----------
+let player={x:120,y:0,w:48,h:48,vy:0,onGround:false};let coins=[];let enemies=[];const coinSize=18,enemySize=38;
+
+// ---------- Controls ----------
 const keys={};
 window.addEventListener('keydown',e=>{keys[e.key]=true;if(e.key===' '){e.preventDefault();}});
 window.addEventListener('keyup',e=>{keys[e.key]=false;});
 
-const leftBtn=document.getElementById('leftBtn');
-const rightBtn=document.getElementById('rightBtn');
-const jumpBtn=document.getElementById('jumpBtn');
-const pauseBtn=document.getElementById('pauseBtn');
-const restartBtn=document.getElementById('restartBtn');
-const restartHeaderBtn=document.getElementById('restartHeaderBtn');
-
-function touchSet(key,isDown){return e=>{e.preventDefault(); keys[key]=isDown;}};
-leftBtn.addEventListener('touchstart',touchSet('ArrowLeft',true)); leftBtn.addEventListener('touchend',touchSet('ArrowLeft',false));
-rightBtn.addEventListener('touchstart',touchSet('ArrowRight',true)); rightBtn.addEventListener('touchend',touchSet('ArrowRight',false));
-jumpBtn.addEventListener('touchstart',e=>{e.preventDefault(); doJump();},{passive:false});
-jumpBtn.addEventListener('click',e=>{e.preventDefault(); doJump();});
+// Mobile
+const leftBtn=document.getElementById('leftBtn'),rightBtn=document.getElementById('rightBtn'),jumpBtn=document.getElementById('jumpBtn');
+const pauseBtn=document.getElementById('pauseBtn'),restartBtn=document.getElementById('restartBtn'),restartHeaderBtn=document.getElementById('restartHeaderBtn');
+function touchSet(key,isDown){return ev=>{ev.preventDefault();keys[key]=isDown;}}
+leftBtn.addEventListener('touchstart',touchSet('ArrowLeft',true));leftBtn.addEventListener('touchend',touchSet('ArrowLeft',false));
+rightBtn.addEventListener('touchstart',touchSet('ArrowRight',true));rightBtn.addEventListener('touchend',touchSet('ArrowRight',false));
+jumpBtn.addEventListener('touchstart',e=>{e.preventDefault();doJump();},{passive:false});
 pauseBtn.addEventListener('click',()=>togglePause());
 restartBtn.addEventListener('click',()=>restartGame());
 restartHeaderBtn.addEventListener('click',()=>restartGame());
 
-document.getElementById('startBtn').addEventListener('click',()=>startGame());
+// Start button
+document.getElementById('startBtn').addEventListener('click',()=>{startGame();});
 
-function addCoins(amount){playerCoins+=amount;if(playerCoins<0) playerCoins=0;localStorage.setItem('playerCoins',playerCoins);document.getElementById('coinCount').innerText=playerCoins;}
-addCoins(0);
+// ---------- Spawns ----------
+function spawnCoin(y){const x=Math.random()*(w-coinSize-20)+10;const yy=typeof y==='number'?y:-Math.random()*h*0.6;coins.push({x,y:yy});}
+function spawnEnemy(y){const x=Math.random()*(w-enemySize-20)+10;const yy=typeof y==='number'?y:-Math.random()*h*0.8;enemies.push({x,y:yy,w:enemySize,h:enemySize});}
+function spawnInitial(){coins=[];enemies=[];for(let i=0;i<8;i++)spawnCoin(-Math.random()*h*2);for(let i=0;i<4;i++)spawnEnemy(-Math.random()*h*2);}
 
-function spawnCoin(y){coins.push({x:Math.random()*(w-coinSize-20)+10,y:(typeof y==='number'?y:-Math.random()*h-20)});}
-function spawnEnemy(y){enemies.push({x:Math.random()*(w-enemySize-20)+10,y:(typeof y==='number'?y:-Math.random()*h-20),w:enemySize,h:enemySize});}
-function spawnInitial(){coins=[];enemies=[];for(let i=0;i<8;i++) spawnCoin(-Math.random()*h*2);for(let i=0;i<4;i++) spawnEnemy(-Math.random()*h*2);}
-
+// ---------- Physics ----------
 const gravity=0.8;
 function doJump(){if(player.onGround){player.vy=-jumpStrength;player.onGround=false;}}
 
-function update(){
-  if(!gameStarted||paused) return;
-  if(keys['ArrowLeft']||keys['a']) player.x-=speed;
-  if(keys['ArrowRight']||keys['d']) player.x+=speed;
-  if(keys['ArrowUp']||keys['w']){ doJump(); keys['ArrowUp']=false; }
-  if(player.x<6) player.x=6; if(player.x+player.w>w-6) player.x=w-6-player.w;
-  player.vy+=gravity; player.y+=player.vy;
-  player.onGround=player.y+player.h>=h-10;
-  if(player.onGround){player.y=h-10-player.h; player.vy=0;}
-  for(let i=coins.length-1;i>=0;i--){
-    coins[i].y+=scrollSpeed+1;
-    if(coins[i].y>h+40){coins.splice(i,1); spawnCoin();}
-    else if(collideRect(player.x,player.y,player.w,player.h,coins[i].x,coins[i].y,coinSize,coinSize)){coins.splice(i,1); addCoins(1); scoreThisRun++; spawnCoin(-50);}
-  }
-  for(let i=enemies.length-1;i>=0;i--){
-    enemies[i].y+=enemySpeed;
-    if(enemies[i].y>h+60){enemies.splice(i,1); spawnEnemy(-Math.random()*h*0.5);}
-    else if(!invincible && collideRect(player.x,player.y,player.w,player.h,enemies[i].x,enemies[i].y,enemies[i].w,enemies[i].h)){endGame();}
-  }
-}
+// ---------- Update ----------
+function update(){if(!gameStarted||paused)return;
+if(keys['ArrowLeft']||keys['a'])player.x-=speed;if(keys['ArrowRight']||keys['d'])player.x+=speed;if(keys['ArrowUp']||keys['w']){doJump();keys['ArrowUp']=false;}
+if(player.x<6)player.x=6;if(player.x+player.w>w-6)player.x=w-6-player.w;
+player.vy+=gravity;player.y+=player.vy;if(player.y+player.h>=h-10){player.y=h-10-player.h;player.vy=0;player.onGround=true;}else{player.onGround=false;}
 
-function collideRect(ax,ay,aw,ah,bx,by,bw,bh){return ax<bx+bw && ax+aw>bx && ay<by+bh && ay+ah>by;}
+// Coins
+for(let i=coins.length-1;i>=0;i--){coins[i].y+=scrollSpeed+1;if(coins[i].y>h+40){coins.splice(i,1);spawnCoin();}else{if(collideRect(player.x,player.y,player.w,player.h,coins[i].x,coins[i].y,coinSize,coinSize)){coins.splice(i,1);scoreThisRun++;spawnCoin(-50);}}}
 
+// Enemies
+for(let i=enemies.length-1;i>=0;i--){enemies[i].y+=enemySpeed;if(enemies[i].y>h+60){enemies.splice(i,1);spawnEnemy(-Math.random()*h*0.5);}else{if(!invincible&&collideRect(player.x,player.y,player.w,player.h,enemies[i].x,enemies[i].y,enemies[i].w,enemies[i].h)){endGame();}}}}
+
+// Collision
+function collideRect(ax,ay,aw,ah,bx,by,bw,bh){return ax<bx+bw&&ax+aw>bx&&ay<by+bh&&ay+ah>by;}
+
+// ---------- Draw ----------
 function draw(){
-  ctx.clearRect(0,0,w,h);
-  ctx.fillStyle='#07101a'; ctx.fillRect(0,0,w,h);
-  ctx.fillStyle='#071922'; ctx.fillRect(0,h-10,w,10);
-  ctx.fillStyle='#ff4466'; ctx.fillRect(player.x,player.y,player.w,player.h);
-  ctx.fillStyle='#ffd54d'; coins.forEach(c=>{ctx.fillRect(c.x,c.y,coinSize,coinSize); ctx.strokeStyle='#b8860b'; ctx.strokeRect(c.x,c.y,coinSize,coinSize);});
-  ctx.fillStyle='#72d572'; enemies.forEach(e=>{ctx.fillRect(e.x,e.y,e.w,e.h); ctx.fillStyle='#2e7d32'; ctx.fillRect(e.x+6,e.y+6,e.w-12,e.h-12); ctx.fillStyle='#72d572';});
-  ctx.fillStyle='#fff'; ctx.font='16px Arial'; ctx.fillText('Score: '+scoreThisRun,12,24); ctx.fillText('Player: '+playerName,12,44);
-  if(invincible){ctx.fillStyle='#0ff';ctx.fillText('INVINCIBLE',w-120,24);}
+ctx.clearRect(0,0,canvas.width,canvas.height);
+ctx.fillStyle='#07101a';ctx.fillRect(0,0,w,h);
+// ground
+ctx.fillStyle='#071922';ctx.fillRect(0,h-10,w,10);
+// player
+ctx.fillStyle='#ff4466';ctx.fillRect(player.x,player.y,player.w,player.h);
+ctx.fillStyle='#fff';ctx.fillRect(player.x+8,player.y+12,8,8);
+// coins
+ctx.fillStyle='#ffd54d';coins.forEach(c=>{ctx.fillRect(c.x,c.y,coinSize,coinSize);ctx.strokeStyle='#b8860b';ctx.strokeRect(c.x,c.y,coinSize,coinSize);});
+// enemies
+ctx.fillStyle='#72d572';enemies.forEach(e=>{ctx.fillRect(e.x,e.y,e.w,e.h);ctx.fillStyle='#2e7d32';ctx.fillRect(e.x+6,e.y+6,e.w-12,e.h-12);ctx.fillStyle='#72d572';});
+// score
+ctx.fillStyle='#fff';ctx.font='16px Arial';ctx.fillText('Score: '+scoreThisRun,12,24);
+ctx.fillText('Player: '+playerName,12,44);
+ctx.fillText('Coins: '+playerCoins,w-100,24);
+if(invincible){ctx.fillStyle='#0ff';ctx.fillText('INVINCIBLE',w-120,44);}
 }
 
+// ---------- Game loop ----------
 let rafId;
-function gameLoop(){update(); draw(); rafId=requestAnimationFrame(gameLoop);}
-function startGame(){gameStarted=true;paused=false;scoreThisRun=0;player.x=Math.max(12,w/6);player.y=h-10-player.h;player.vy=0;player.onGround=true;spawnInitial();document.getElementById('startBtn').style.display='none';document.getElementById('gameOverPopup').classList.remove('show');cancelAnimationFrame(rafId);gameLoop();}
-function endGame(){gameStarted=false;cancelAnimationFrame(rafId);document.getElementById('finalScore').innerText='You scored: '+scoreThisRun;document.getElementById('goTitle').innerText=playerName+' — Game Over';
-const existing=highScores.find(h=>h.name===playerName); if(existing) existing.score=Math.max(existing.score,scoreThisRun); else highScores.push({name:playerName,score:scoreThisRun});
-highScores.sort((a,b)=>b.score-a.score); localStorage.setItem('highScores',JSON.stringify(highScores)); renderLeaderboard(); document.getElementById('gameOverPopup').classList.add('show');}
-function restartGame(){document.getElementById('gameOverPopup').classList.remove('show');scoreThisRun=0;spawnInitial();player.x=Math.max(12,w/6);player.y=h-10-player.h;player.vy=0;gameStarted=true;paused=false;cancelAnimationFrame(rafId);gameLoop();}
-document.getElementById('playAgainBtn').addEventListener('click',()=>restartGame());
-document.getElementById('closePopupBtn').addEventListener('click',()=>document.getElementById('gameOverPopup').classList.remove('show'));
-function togglePause(){paused=!paused; pauseBtn.innerText=paused?'▶️ Resume':'⏸️';}
-function renderLeaderboard(){const list=document.getElementById('scoreList');list.innerHTML='';const top=highScores.slice(0,10);const maxScore=top.length?top[0].score:0;top.forEach(h=>{const li=document.createElement('li');li.innerText=h.name+' — '+h.score;if(h.score===maxScore) li.classList.add('highest');list.appendChild(li);});}
+function gameLoop(){update();draw();rafId=requestAnimationFrame(gameLoop);}
 
-(function uiLoop(){draw(); requestAnimationFrame(uiLoop);})();
+// ---------- Start / End / Restart ----------
+function startGame(){gameStarted=true;paused=false;scoreThisRun=0;player.x=Math.max(12,w/6);player.y=h-10-player.h;player.vy=0;player.onGround=true;spawnInitial();document.getElementById('startBtn').style.display='none';document.getElementById('gameOverPopup').classList.remove('show');cancelAnimationFrame(rafId);gameLoop();}
+function endGame(){gameStarted=false;cancelAnimationFrame(rafId);document.getElementById('finalScore').innerText='You scored: '+scoreThisRun;document.getElementById('goTitle').innerText=playerName+' — Game Over';document.getElementById('gameOverPopup').classList.add('show');saveScore();}
+function restartGame(){startGame();}
+function togglePause(){paused=!paused;}
+
+// ---------- Leaderboard ----------
+function saveScore(){
+  // coins separate
+  playerCoins+=scoreThisRun;localStorage.setItem('playerCoins',playerCoins);document.getElementById('coinCount').innerText=playerCoins;document.getElementById('homeCoins').innerText=playerCoins;
+  // highscore save
+  const entry={player:playerName,country,state,score:scoreThisRun,date:new Date().toISOString()};
+  highScores.push(entry);
+  highScores.sort((a,b)=>b.score-a.score);
+  if(highScores.length>100)highScores=highScores.slice(0,100);
+  localStorage.setItem('highScores',JSON.stringify(highScores));
+  updateLeaderboard();
+}
+
+function updateLeaderboard(){
+  const list=document.getElementById('scoreList');
+  list.innerHTML='';
+  highScores.forEach((e,i)=>{
+    const li=document.createElement('li');
+    li.innerHTML=`${i+1}. ${e.player} - ${e.score} pts (${e.country}, ${e.state})`;
+    if(e.player===playerName && e.score===scoreThisRun) li.classList.add('highest');
+    list.appendChild(li);
+  });
+}
+
+// ---------- Initial Leaderboard ----------
+updateLeaderboard();
 </script>
+
 </body>
 </html>
