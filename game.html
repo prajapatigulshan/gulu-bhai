@@ -1,278 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GBG Infinite Runner - Final</title>
 <style>
-:root{
-  --accent: linear-gradient(90deg,#ff4d4d,#ffb84d,#ffd54d,#4de0ff);
-  --bg:#0b0b0f;
-  --panel:rgba(255,255,255,0.04);
-  --glass:rgba(255,255,255,0.03);
-}
-*{box-sizing:border-box;font-family:Inter,Arial,Helvetica,sans-serif}
-html,body{height:100%;margin:0;background:radial-gradient(circle at 10% 10%,#07112a 0%,#050509 50%),var(--bg);color:#fff}
-header{
-  position:fixed;top:0;left:0;right:0;height:64px;display:flex;align-items:center;justify-content:space-between;
-  padding:8px 12px;gap:12px;backdrop-filter:blur(6px);background:linear-gradient(180deg, rgba(0,0,0,0.55), rgba(0,0,0,0.35));
-  border-bottom:1px solid rgba(255,255,255,0.03);z-index:1000;
-}
-.title{font-weight:700;font-size:18px;display:flex;gap:10px;align-items:center;}
-.header-right{display:flex;gap:10px;align-items:center;}
-#coinBig{background:var(--panel);padding:8px 12px;border-radius:10px;font-weight:700;color:gold;min-width:110px;text-align:center}
-#restartHeaderBtn,#startBtn{padding:8px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
-#restartHeaderBtn{background:var(--glass);}
-#startBtn{background:var(--panel);color:#fff}
-main{padding-top:78px;display:flex;gap:12px;align-items:flex-start;justify-content:center;width:100%;}
-.game-wrap{width:100%;max-width:1000px;display:flex;flex-direction:column;align-items:center;gap:10px;padding:10px}
-canvas{background:linear-gradient(180deg,#07101a,#0b0b0f);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.6);width:100%;height:auto;display:block}
-.controls{display:flex;gap:10px;justify-content:center;width:100%;margin-top:6px;}
-.ctrl-btn{flex:1;max-width:120px;padding:14px;border-radius:12px;font-size:20px;border:none;cursor:pointer;background:linear-gradient(90deg,#222,#111);color:#fff;touch-action:none;user-select:none}
-.ctrl-btn.big{flex:2;max-width:240px}
-.sidebar{width:320px;max-width:36%;min-width:260px;display:flex;flex-direction:column;gap:12px;padding:8px}
-.panel{background:var(--panel);padding:10px;border-radius:12px;min-height:60px;overflow:hidden}
-.panel h3{margin:0 0 8px 0;font-size:16px}
-#leaderboard ol{padding-left:18px;margin:0;max-height:250px;overflow:auto;}
-#leaderboard li{padding:6px 8px;border-radius:8px;margin-bottom:6px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent)}
-.highest{color:#0ff;font-weight:800;border-left:4px solid #0ff;padding-left:6px}
-#commandPrompt{display:flex;flex-direction:column;gap:6px;}
-#cmdInput{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:#fff}
-#commandLog{max-height:160px;overflow:auto;font-family:monospace;font-size:13px;padding:6px;background:rgba(0,0,0,0.12);border-radius:8px}
-#gameOverPopup{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(0);background:rgba(0,0,0,0.9);padding:20px;border-radius:12px;z-index:2000;min-width:260px;text-align:center;transition:all .18s ease }
-#gameOverPopup.show{transform:translate(-50%,-50%) scale(1)}
-#gameOverPopup button{margin-top:8px;padding:8px 12px;border-radius:8px;border:none;cursor:pointer}
-@media(max-width:900px){.sidebar{position:fixed;right:10px;top:84px;width:290px;z-index:900;max-height:60vh;overflow:auto;}main{padding-bottom:120px;}}
-@media(max-width:600px){header{height:72px;padding:10px 12px}.controls{position:fixed;left:10px;right:10px;bottom:12px;z-index:1000;}.sidebar{display:none}.game-wrap{padding-bottom:80px}}
-.muted{opacity:0.7;font-size:13px}
-.flexrow{display:flex;align-items:center;gap:8px}
+  body{margin:0;font-family:Arial;color:#fff;background:#050509;}
+  header{position:fixed;top:0;left:0;right:0;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 12px;background:linear-gradient(180deg,#111,#000);z-index:1000;box-shadow:0 4px 10px rgba(0,0,0,0.5);}
+  header .title{font-weight:700;font-size:18px;background:linear-gradient(90deg,red,orange,yellow,green,cyan,blue,violet);-webkit-background-clip:text;color:transparent;}
+  header .header-right{display:flex;gap:10px;align-items:center;}
+  header button{padding:8px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:700;background:#111;color:#fff;}
+  main{padding-top:78px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+  canvas{border-radius:12px;background:linear-gradient(180deg,#07101a,#0b0b0f);width:900px;height:420px;box-shadow:0 10px 30px rgba(0,0,0,0.6);}
+  .sidebar{width:320px;display:flex;flex-direction:column;gap:12px;}
+  .panel{background:rgba(255,255,255,0.05);padding:10px;border-radius:12px;}
+  .panel h3{margin:0 0 8px 0;font-size:16px;}
+  #leaderboard ol{padding-left:18px;margin:0;max-height:250px;overflow:auto;}
+  #leaderboard li{padding:6px 8px;margin-bottom:6px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent);border-radius:8px;}
+  .highest{color:#0ff;font-weight:800;border-left:4px solid #0ff;padding-left:6px;}
+  .controls{display:flex;gap:10px;justify-content:center;margin-top:6px;}
+  .ctrl-btn{flex:1;padding:14px;border-radius:12px;font-size:20px;border:none;cursor:pointer;background:linear-gradient(90deg,#222,#111);color:#fff;}
+  .ctrl-btn.big{flex:2;}
 </style>
 </head>
 <body>
 <header>
-<div class="title">
-  <div>GBG Infinite Runner</div>
-  <div class="muted">— Play & Compete</div>
-</div>
-<div class="header-right">
-  <div id="coinBig">Coins: <span id="coinCount">0</span></div>
-  <button id="startBtn">Play Now</button>
-  <button id="restartHeaderBtn" title="Restart Game">🔄 Restart</button>
-</div>
+  <div class="title">GBG Infinite Runner</div>
+  <div class="header-right">
+    <div>Coins: <span id="coinCount">0</span></div>
+    <button id="startBtn">Play Now</button>
+  </div>
 </header>
 <main>
-<div class="game-wrap">
   <canvas id="gameCanvas" width="900" height="420"></canvas>
-  <div class="controls" id="mobileControls" aria-hidden="false">
-    <button class="ctrl-btn" id="leftBtn">⬅️</button>
-    <button class="ctrl-btn big" id="jumpBtn">⬆️ Jump</button>
-    <button class="ctrl-btn" id="rightBtn">➡️</button>
-    <button class="ctrl-btn" id="pauseBtn">⏸️</button>
-    <button class="ctrl-btn" id="restartBtn">🔄</button>
-  </div>
-  <div id="infoLine" class="muted" style="text-align:center; margin-top:6px">Use touch or Arrow keys. Enter name on Play.</div>
-</div>
-<aside class="sidebar">
-<div class="panel" id="leaderboard">
-  <h3>Leaderboard (Top 100 India)</h3>
-  <ol id="scoreList"></ol>
-  <div style="margin-top:8px" class="muted">Highest score highlighted</div>
-</div>
-<div class="panel" id="coinsPanel">
-  <h3>Your Coins</h3>
-  <div id="homeCoinDisplay" style="font-size:20px;font-weight:700">You have <span id="homeCoins">0</span> coins</div>
-  <div style="margin-top:8px" class="muted">Coins persist between sessions</div>
-</div>
-<div class="panel" id="commandPrompt">
-  <h3>GBG Commands</h3>
-  <input id="cmdInput" placeholder="Type command (eg. gbg.speed 8) and press Enter" />
-  <div id="commandLog"></div>
-  <div style="margin-top:8px" class="muted">Commands: gbg.speed, gbg.scroll, gbg.enemySpeed, gbg.addCoins, gbg.jump, gbg.pause, gbg.invincible</div>
-</div>
-</aside>
+  <aside class="sidebar">
+    <div class="panel" id="leaderboard">
+      <h3>Leaderboard</h3>
+      <ol id="scoreList"></ol>
+    </div>
+  </aside>
 </main>
-<div id="gameOverPopup">
-  <h2 id="goTitle">Game Over</h2>
-  <p id="finalScore">You scored: 0</p>
-  <div style="display:flex;gap:8px;justify-content:center">
-    <button id="playAgainBtn">Play Again</button>
-    <button id="closePopupBtn">Close</button>
-  </div>
-</div>
-
 <script>
-/* ------------- Canvas & Resize ------------- */
-const canvas=document.getElementById('gameCanvas'); const ctx=canvas.getContext('2d');
+const canvas=document.getElementById('gameCanvas');
+const ctx=canvas.getContext('2d');
 let w=canvas.width,h=canvas.height;
-function resizeCanvas(){
-  const maxWidth=Math.min(window.innerWidth-24,1000);
-  canvas.style.width=maxWidth+'px';
-  const deviceRatio=window.devicePixelRatio||1;
-  const styleWidth=maxWidth; const styleHeight=Math.floor(styleWidth*420/900);
-  canvas.width=Math.floor(styleWidth*deviceRatio); canvas.height=Math.floor(styleHeight*deviceRatio);
-  canvas.style.height=styleHeight+'px';
-  canvas.getContext('2d').scale(deviceRatio,deviceRatio); w=styleWidth; h=styleHeight;
-}
-window.addEventListener('resize',()=>{resizeCanvas(); draw();});
-resizeCanvas();
+function resizeCanvas(){canvas.style.width=Math.min(window.innerWidth-24,1000)+'px';}
+window.addEventListener('resize',resizeCanvas);resizeCanvas();
 
-/* -------- Game State -------- */
-let gameStarted=false,paused=false,speed=6,scrollSpeed=2,enemySpeed=2.5,scoreThisRun=0,jumpStrength=12;
-let playerCoins=parseInt(localStorage.getItem('playerCoins')||'0');
+/* ---------------- Game Variables ---------------- */
+let playerName=null;
+let playerCoins=0;
+let scoreThisRun=0;
 let highScores=JSON.parse(localStorage.getItem('highScores')||'[]');
-let playerName=localStorage.getItem('playerName')||null;
-let invincible=false;
+let gameStarted=false;
+let player={x:120,y:h-58,w:48,h:48,vy:0,onGround:true};
+let coins=[],enemies=[];
+const gravity=0.8,speed=6,jumpStrength=12;
+const coinSize=18,enemySize=38;
 
-/* Entities */
-let player={x:120,y:0,w:48,h:48,vy:0,onGround:false};
-let coins=[],enemies=[]; const coinSize=18,enemySize=38;
-
-/* Controls */
+/* ---------------- Input ---------------- */
 const keys={};
-window.addEventListener('keydown',e=>{keys[e.key]=true;if(e.key===' '){e.preventDefault();}});
-window.addEventListener('keyup',e=>{keys[e.key]=false;});
+window.addEventListener('keydown',e=>keys[e.key]=true);
+window.addEventListener('keyup',e=>keys[e.key]=false);
+canvas.addEventListener('click',()=>gameStarted?doJump():startGame());
 
-/* Mobile buttons */
-const leftBtn=document.getElementById('leftBtn'); const rightBtn=document.getElementById('rightBtn'); const jumpBtn=document.getElementById('jumpBtn');
-const pauseBtn=document.getElementById('pauseBtn'); const restartBtn=document.getElementById('restartBtn'); const restartHeaderBtn=document.getElementById('restartHeaderBtn');
-function touchSet(key,isDown){return ev=>{ev.preventDefault();keys[key]=isDown;}}
-leftBtn.addEventListener('touchstart',touchSet('ArrowLeft',true)); leftBtn.addEventListener('touchend',touchSet('ArrowLeft',false));
-rightBtn.addEventListener('touchstart',touchSet('ArrowRight',true)); rightBtn.addEventListener('touchend',touchSet('ArrowRight',false));
-jumpBtn.addEventListener('touchstart',e=>{e.preventDefault(); doJump();},{passive:false});
-pauseBtn.addEventListener('click',()=> togglePause());
-restartBtn.addEventListener('click',()=> restartGame());
-restartHeaderBtn.addEventListener('click',()=> restartGame());
+/* ---------------- Player Actions ---------------- */
+function doJump(){if(player.onGround){player.vy=-jumpStrength;player.onGround=false;}}
 
-/* ---------------- Player Name Logic ---------------- */
-function getPlayerName(){
-  let name=prompt("Enter your Player Name:")||'Player'+Math.floor(Math.random()*999);
-  name=name.trim();
-  if(!name) return getPlayerName();
-  let exists=highScores.some(e=>e.player.toLowerCase()===name.toLowerCase());
-  if(exists){alert("Name already taken! Choose another."); return getPlayerName();}
-  return name;
-}
-
-/* ---------------- Start Game ---------------- */
-document.getElementById('startBtn').addEventListener('click',()=>{if(!playerName) playerName=getPlayerName(); startGame();});
-function startGame(){
-  gameStarted=true; paused=false; scoreThisRun=0;
-  player.x=Math.max(12,w/6); player.y=h-10-player.h; player.vy=0; player.onGround=true;
-  spawnInitial();
-  document.getElementById('startBtn').style.display='none';
-  document.getElementById('gameOverPopup').classList.remove('show');
-  cancelAnimationFrame(rafId); gameLoop();
-}
-
-/* ---------------- Commands ---------------- */
-const cmdInput=document.getElementById('cmdInput'); const commandLog=document.getElementById('commandLog');
-function logCommand(text){const p=document.createElement('div');p.innerText=text;commandLog.prepend(p);if(commandLog.childElementCount>60)commandLog.removeChild(commandLog.lastChild);}
-cmdInput.addEventListener('keydown',function(e){if(e.key==='Enter'){executeCommand(this.value.trim()); this.value='';}});
-
-function executeCommand(cmd){
-  if(!cmd) return; logCommand('> '+cmd);
-  const parts=cmd.split(/\s+/); const c=parts[0].toLowerCase(); const arg=parts[1];
-  switch(c){
-    case 'gbg.speed': speed=parseFloat(arg)||speed; logCommand('Speed: '+speed); break;
-    case 'gbg.scroll': scrollSpeed=parseFloat(arg)||scrollSpeed; logCommand('Scroll: '+scrollSpeed); break;
-    case 'gbg.enemyspeed': enemySpeed=parseFloat(arg)||enemySpeed; logCommand('EnemySpeed: '+enemySpeed); break;
-    case 'gbg.addcoins': addCoins(parseInt(arg)||0); logCommand('Coins added'); break;
-    case 'gbg.jump': jumpStrength=parseFloat(arg)||jumpStrength; logCommand('Jump: '+jumpStrength); break;
-    case 'gbg.pause': paused=arg==='on'||arg==='true'; logCommand(paused?'Paused':'Resumed'); break;
-    case 'gbg.invincible': invincible=arg==='on'||arg==='true'; logCommand(invincible?'Invincible ON':'OFF'); break;
-    default: logCommand('Unknown command: '+c);
-  }
-}
-
-/* ---------------- Spawns ---------------- */
-function spawnCoin(y){coins.push({x:w+20,y:y||Math.random()*(h-100)+50});}
-function spawnEnemy(y){enemies.push({x:w+20,y:y||h-50,vy:0});}
-function spawnInitial(){
-  coins=[]; enemies=[]; for(let i=0;i<5;i++){spawnCoin(); spawnEnemy();}
-}
+/* ---------------- Spawn ---------------- */
+function spawnCoin(y){coins.push({x:Math.random()*(w-coinSize-20)+10,y:y||-Math.random()*h*0.6});}
+function spawnEnemy(y){enemies.push({x:Math.random()*(w-enemySize-20)+10,y:y||-Math.random()*h*0.8,w:enemySize,h:enemySize});}
+function spawnInitial(){coins=[];enemies=[];for(let i=0;i<8;i++)spawnCoin(-Math.random()*h*2);for(let i=0;i<4;i++)spawnEnemy(-Math.random()*h*2);}
 
 /* ---------------- Game Loop ---------------- */
-let rafId;
-function gameLoop(){
-  if(!gameStarted||paused){rafId=requestAnimationFrame(gameLoop);return;}
-  update(); draw(); rafId=requestAnimationFrame(gameLoop);
-}
-
-/* ---------------- Update ---------------- */
 function update(){
-  // Player movement
-  if(keys['ArrowLeft']) player.x=Math.max(0,player.x-speed);
-  if(keys['ArrowRight']) player.x=Math.min(w-player.w,player.x+speed);
-  doGravity();
-  // Coins
-  coins.forEach(c=>{c.x-=scrollSpeed; if(collideRect(player,c,coinSize,coinSize)){scoreThisRun+=1; addCoins(1); coins.splice(coins.indexOf(c),1); spawnCoin();}});
-  // Enemies
-  enemies.forEach(e=>{e.x-=enemySpeed; if(collideRect(player,e,enemySize,enemySize)){if(!invincible) gameOver();}});
+  if(!gameStarted)return;
+  if(keys['ArrowLeft'])player.x-=speed;
+  if(keys['ArrowRight'])player.x+=speed;
+  if(keys['ArrowUp']){doJump();keys['ArrowUp']=false;}
+  if(player.x<6)player.x=6;if(player.x+player.w>w-6)player.x=w-6-player.w;
+  player.vy+=gravity;player.y+=player.vy;
+  if(player.y+player.h>=h-10){player.y=h-10-player.h;player.vy=0;player.onGround=true;}else player.onGround=false;
+
+  for(let i=coins.length-1;i>=0;i--){
+    coins[i].y+=2;
+    if(coins[i].y>h+40)coins.splice(i,1),spawnCoin();
+    else if(collide(player,coins[i])){coins.splice(i,1);addCoins(1);scoreThisRun++;spawnCoin(-50);}
+  }
+  for(let i=enemies.length-1;i>=0;i--){
+    enemies[i].y+=2.5;
+    if(enemies[i].y>h+60)enemies.splice(i,1),spawnEnemy(-Math.random()*h*0.5);
+    else if(collide(player,enemies[i]))endGame();
+  }
 }
+function collide(a,b){return a.x<a.x+a.w && a.x+a.w>b.x && a.y<a.y+a.h && a.y+a.h>b.y;}
 
 /* ---------------- Draw ---------------- */
 function draw(){
   ctx.clearRect(0,0,w,h);
-  // Background gradient RGB
-  let grad=ctx.createLinearGradient(0,0,w,0);
-  grad.addColorStop(0,'#ff4d4d'); grad.addColorStop(0.25,'#ffb84d'); grad.addColorStop(0.5,'#ffd54d'); grad.addColorStop(0.75,'#4de0ff'); grad.addColorStop(1,'#b84dff');
-  ctx.fillStyle=grad; ctx.fillRect(0,0,w,h);
-  // Player
-  ctx.fillStyle='#0ff'; ctx.fillRect(player.x,player.y,player.w,player.h);
-  // Coins
-  coins.forEach(c=>{ctx.fillStyle='gold'; ctx.beginPath(); ctx.arc(c.x,c.y,coinSize/2,0,Math.PI*2); ctx.fill();});
-  // Enemies
-  enemies.forEach(e=>{ctx.fillStyle='red'; ctx.fillRect(e.x,e.y,enemySize,enemySize);});
-  // Score
-  ctx.fillStyle='#fff'; ctx.font='18px Arial'; ctx.fillText('Score: '+scoreThisRun,10,24);
-  ctx.fillText('Coins: '+playerCoins,10,46);
+  ctx.fillStyle='#07101a';ctx.fillRect(0,0,w,h);
+  ctx.fillStyle='#071922';ctx.fillRect(0,h-10,w,10);
+  ctx.fillStyle='#ff4466';ctx.fillRect(player.x,player.y,player.w,player.h);
+  ctx.fillStyle='#fff';ctx.fillRect(player.x+8,player.y+12,8,8);
+  ctx.fillStyle='#ffd54d';coins.forEach(c=>{ctx.fillRect(c.x,c.y,coinSize,coinSize);ctx.strokeStyle='#b8860b';ctx.strokeRect(c.x,c.y,coinSize,coinSize);});
+  ctx.fillStyle='#72d572';enemies.forEach(e=>{ctx.fillRect(e.x,e.y,e.w,e.h);ctx.fillStyle='#2e7d32';ctx.fillRect(e.x+6,e.y+6,e.w-12,e.h-12);ctx.fillStyle='#72d572';});
+  ctx.fillStyle='#fff';ctx.font='16px Arial';ctx.fillText('Score: '+scoreThisRun,12,24);
+  ctx.fillText('Coins: '+playerCoins,12,44);
+  ctx.fillText('Player: '+(playerName||'Guest'),12,64);
 }
 
-/* ---------------- Collision ---------------- */
-function collideRect(a,b,w2,h2){return a.x<a.x+w2 && a.x+a.w>w2 && a.y<a.y+h2 && a.y+a.h> b.y;}
+/* ---------------- Game Loop ---------------- */
+let rafId;
+function gameLoop(){update();draw();rafId=requestAnimationFrame(gameLoop);}
 
-/* ---------------- Gravity & Jump ---------------- */
-function doGravity(){
-  if(!player.onGround){player.vy+=0.6; player.y+=player.vy; if(player.y+h>=h){player.y=h-player.h;player.onGround=true;player.vy=0;}}
+/* ---------------- Start / End ---------------- */
+function startGame(){
+  if(!playerName){
+    let name=prompt('Enter unique name:')||'Player'+Math.floor(Math.random()*999);name=name.trim().slice(0,20);
+    if(highScores.find(h=>h.name===name))return alert('Name exists, choose another!');
+    playerName=name;localStorage.setItem('playerName',playerName);
+  }
+  gameStarted=true;scoreThisRun=0;player.x=w/6;player.y=h-10-player.h;player.vy=0;player.onGround=true;
+  spawnInitial();cancelAnimationFrame(rafId);gameLoop();
 }
-function doJump(){if(player.onGround){player.vy=-jumpStrength;player.onGround=false;}}
-
-/* ---------------- Coins ---------------- */
-function addCoins(num){playerCoins+=num; localStorage.setItem('playerCoins',playerCoins); document.getElementById('coinCount').innerText=playerCoins; document.getElementById('homeCoins').innerText=playerCoins;}
-
-/* ---------------- Game Over ---------------- */
-function gameOver(){
-  gameStarted=false;
-  saveScore();
-  document.getElementById('finalScore').innerText='You scored: '+scoreThisRun;
-  document.getElementById('gameOverPopup').classList.add('show');
-  document.getElementById('startBtn').style.display='inline-block';
-  updateLeaderboard();
+function endGame(){
+  gameStarted=false;cancelAnimationFrame(rafId);
+  saveScore();renderLeaderboard();alert('Game Over! Your score: '+scoreThisRun);
 }
-document.getElementById('playAgainBtn').addEventListener('click',()=>{document.getElementById('gameOverPopup').classList.remove('show'); startGame();});
-document.getElementById('closePopupBtn').addEventListener('click',()=>{document.getElementById('gameOverPopup').classList.remove('show');});
+function addCoins(n){playerCoins+=n;localStorage.setItem('playerCoins',playerCoins);}
 
 /* ---------------- Leaderboard ---------------- */
 function saveScore(){
-  let existing=highScores.find(e=>e.player===playerName);
-  if(existing){if(scoreThisRun>existing.score) existing.score=scoreThisRun; else existing.score+=scoreThisRun;}
-  else{highScores.push({player:playerName,score:scoreThisRun,state:'Gujarat',country:'India'});}
-  highScores.sort((a,b)=>b.score-a.score); localStorage.setItem('highScores',JSON.stringify(highScores));
+  if(!playerName)return;
+  const existing=highScores.find(h=>h.name===playerName);
+  if(existing)existing.score=Math.max(existing.score,scoreThisRun);
+  else highScores.push({name:playerName,score:scoreThisRun});
+  highScores.sort((a,b)=>b.score-a.score);
+  localStorage.setItem('highScores',JSON.stringify(highScores));
 }
-function updateLeaderboard(){
-  const ol=document.getElementById('scoreList'); ol.innerHTML='';
-  highScores.slice(0,100).forEach((e,i)=>{
-    const li=document.createElement('li');
-    li.innerHTML=`${i+1}. <span class="${i===0?'highest':''}">${e.player}</span> — Score: ${e.score} (${e.state}, ${e.country})`;
-    ol.appendChild(li);
+function renderLeaderboard(){
+  const list=document.getElementById('scoreList');list.innerHTML='';
+  highScores.slice(0,100).forEach((h,i)=>{
+    const li=document.createElement('li');li.innerText=`${i+1}. ${h.name} — ${h.score}`;
+    if(i===0)li.classList.add('highest');list.appendChild(li);
   });
 }
 
-/* Initial UI */
-document.getElementById('coinCount').innerText=playerCoins;
-document.getElementById('homeCoins').innerText=playerCoins;
-updateLeaderboard();
-
+/* ---------------- Init ---------------- */
+function init(){renderLeaderboard();playerCoins=parseInt(localStorage.getItem('playerCoins')||'0');document.getElementById('coinCount').innerText=playerCoins;}
+init();
 </script>
 </body>
 </html>
