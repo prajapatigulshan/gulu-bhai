@@ -6,34 +6,43 @@ const filesToCache = [
   '/maps.html',
   '/mods.html',
   '/game.html',
-  '/style.css',   // agar alag CSS file hai
+  '/style.css',
   '/manifest.json',
   '/icons/icon-192.png',
   '/icons/icon-512.png'
 ];
 
-self.addEventListener('install', (e) => {
-  e.waitUntil(
+// Install Service Worker and cache files
+self.addEventListener('install', (event) => {
+  event.waitUntil(
     caches.open(cacheName).then((cache) => {
+      console.log('Caching files...');
       return cache.addAll(filesToCache);
     })
   );
 });
 
-self.addEventListener('activate', (e) => {
-  e.waitUntil(
+// Activate Service Worker and clean old caches
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
     caches.keys().then((keys) => {
-      return Promise.all(keys.map((key) => {
-        if(key !== cacheName) return caches.delete(key);
-      }));
+      return Promise.all(
+        keys.map((key) => {
+          if (key !== cacheName) {
+            console.log('Removing old cache:', key);
+            return caches.delete(key);
+          }
+        })
+      );
     })
   );
 });
 
-self.addEventListener('fetch', (e) => {
-  e.respondWith(
-    caches.match(e.request).then((response) => {
-      return response || fetch(e.request);
+// Fetch files from cache first, then network
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    caches.match(event.request).then((response) => {
+      return response || fetch(event.request);
     })
   );
 });
