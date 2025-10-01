@@ -9,7 +9,8 @@ const filesToCache = [
   '/style.css',
   '/manifest.json',
   '/icons/icon-192.png',
-  '/icons/icon-512.png'
+  '/icons/icon-512.png',
+  '/GBG_Store.zip'  // Downloadable file added to cache
 ];
 
 // Install Service Worker and cache files
