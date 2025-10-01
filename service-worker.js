@@ -1,25 +1,39 @@
-const CACHE_NAME = "gbg-minecraft-store-v1";
-const urlsToCache = [
-  "./",
-  "./index.html",
-  "./style.css",
-  "./script.js"
+const cacheName = 'gbg-store-v1';
+const filesToCache = [
+  '/',
+  '/index.html',
+  '/skins.html',
+  '/maps.html',
+  '/mods.html',
+  '/game.html',
+  '/style.css',   // agar alag CSS file hai
+  '/manifest.json',
+  '/icons/icon-192.png',
+  '/icons/icon-512.png'
 ];
 
-// Install
-self.addEventListener("install", event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(urlsToCache);
+self.addEventListener('install', (e) => {
+  e.waitUntil(
+    caches.open(cacheName).then((cache) => {
+      return cache.addAll(filesToCache);
     })
   );
 });
 
-// Fetch
-self.addEventListener("fetch", event => {
-  event.respondWith(
-    caches.match(event.request).then(response => {
-      return response || fetch(event.request);
+self.addEventListener('activate', (e) => {
+  e.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(keys.map((key) => {
+        if(key !== cacheName) return caches.delete(key);
+      }));
+    })
+  );
+});
+
+self.addEventListener('fetch', (e) => {
+  e.respondWith(
+    caches.match(e.request).then((response) => {
+      return response || fetch(e.request);
     })
   );
 });
