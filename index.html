@@ -4,6 +4,18 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>GBG MINECRAFT STORE</title>
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="manifest.json">
+
+<!-- Service Worker -->
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("service-worker.js")
+    .then(() => console.log("Service Worker Registered!"));
+}
+</script>
+
 <style>
   body {
     margin: 0;
@@ -18,155 +30,31 @@
     flex-direction: column;
     align-items: center;
   }
-  @keyframes bgRGB {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-  @keyframes rgbMove {
-    0% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
-  }
-  .rgb-text {
-    background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-size: 400%;
-    animation: rgbMove 8s linear infinite;
-    font-weight: bold;
-  }
+  @keyframes bgRGB { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+  @keyframes rgbMove { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+  .rgb-text { background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 400%; animation: rgbMove 8s linear infinite; font-weight: bold; }
 
-  header {
-    background: rgba(0,0,0,0.85);
-    padding: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-    box-shadow: 0 0 15px #00ffc8;
-  }
-
+  header { background: rgba(0,0,0,0.85); padding: 15px; display: flex; align-items: center; justify-content: space-between; position: fixed; top: 0; left: 0; width: 100%; z-index: 1000; box-shadow: 0 0 15px #00ffc8; }
   .menu-btn { font-size:28px; cursor:pointer; color:white; }
-  .logo span {
-    font-size:26px;
-    font-weight:bold;
-    background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-size: 400%;
-    animation: rgbMove 8s linear infinite;
-  }
-  
+  .logo span { font-size:26px; font-weight:bold; background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-size: 400%; animation: rgbMove 8s linear infinite; }
   .top-actions { display:flex; gap:12px; align-items:center; }
-  .top-actions button {
-    background: linear-gradient(135deg, red, orange, yellow, green, cyan, blue, violet);
-    padding: 8px 18px; border:none; border-radius:50% 10% 50% 10%;
-    cursor:pointer; font-weight:bold;
-    animation: rgbMove 8s linear infinite; color:white;
-    box-shadow:0 0 15px #00ffc8;
-  }
-  #coinBalance {
-    font-weight:bold; font-size:18px;
-    background: linear-gradient(90deg, yellow, orange);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-  }
+  .top-actions button { background: linear-gradient(135deg, red, orange, yellow, green, cyan, blue, violet); padding: 8px 18px; border:none; border-radius:50% 10% 50% 10%; cursor:pointer; font-weight:bold; animation: rgbMove 8s linear infinite; color:white; box-shadow:0 0 15px #00ffc8; }
+  #coinBalance { font-weight:bold; font-size:18px; background: linear-gradient(90deg, yellow, orange); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-  .sidebar {
-    height: 100%;
-    width: 0;
-    position: fixed;
-    top: 0;
-    left: 0;
-    background-color: rgba(0,0,0,0.95);
-    overflow-x: hidden;
-    overflow-y: auto;
-    transition: 0.4s;
-    padding-top: 60px;
-    z-index: 1500;
-    box-shadow: 0 0 25px #00ffc8;
-  }
-  .sidebar a {
-    display:block;
-    color:white;
-    padding:12px 25px;
-    text-decoration:none;
-    font-size:20px;
-    margin:5px 0;
-    border-radius:6px;
-    transition:0.3s;
-  }
-  .sidebar a:hover {
-    background: rgba(255,255,255,0.1);
-    box-shadow:0 0 15px #00ffc8;
-    background-image: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red);
-    -webkit-background-clip:text;
-    -webkit-text-fill-color:transparent;
-    background-size:400%;
-    animation: rgbMove 6s linear infinite;
-  }
+  .sidebar { height: 100%; width: 0; position: fixed; top: 0; left: 0; background-color: rgba(0,0,0,0.95); overflow-x: hidden; overflow-y: auto; transition: 0.4s; padding-top: 60px; z-index: 1500; box-shadow: 0 0 25px #00ffc8; }
+  .sidebar a { display:block; color:white; padding:12px 25px; text-decoration:none; font-size:20px; margin:5px 0; border-radius:6px; transition:0.3s; }
+  .sidebar a:hover { background: rgba(255,255,255,0.1); box-shadow:0 0 15px #00ffc8; background-image: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet, red); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-size:400%; animation: rgbMove 6s linear infinite; }
   .close-btn { position:absolute; top:20px; right:25px; font-size:30px; cursor:pointer; color:white; }
 
-  .content {
-    margin-top: 120px;
-    padding:20px;
-    text-align:center;
-    max-width:1200px;
-    width:100%;
-  }
-  .options {
-    display:flex;
-    justify-content:center;
-    gap:30px;
-    margin-top:40px;
-    flex-wrap:wrap;
-  }
-  .card {
-    background: rgba(0,0,0,0.6);
-    border-radius:12px;
-    padding:20px;
-    width:200px;
-    text-align:center;
-    transition: transform 0.4s ease, box-shadow 0.4s ease;
-    box-shadow:0 0 15px rgba(0,0,0,0.7);
-  }
-  .card a {
-    display:inline-block;
-    margin-top:10px;
-    padding:8px 12px;
-    border-radius:6px;
-    text-decoration:none;
-    background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet);
-    color:white;
-    animation:rgbMove 8s linear infinite;
-  }
-  .card:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 25px #00ffc8;
-  }
+  .content { margin-top: 120px; padding:20px; text-align:center; max-width:1200px; width:100%; }
+  .options { display:flex; justify-content:center; gap:30px; margin-top:40px; flex-wrap:wrap; }
+  .card { background: rgba(0,0,0,0.6); border-radius:12px; padding:20px; width:200px; text-align:center; transition: transform 0.4s ease, box-shadow 0.4s ease; box-shadow:0 0 15px rgba(0,0,0,0.7); }
+  .card a { display:inline-block; margin-top:10px; padding:8px 12px; border-radius:6px; text-decoration:none; background: linear-gradient(90deg, red, orange, yellow, green, cyan, blue, violet); color:white; animation:rgbMove 8s linear infinite; }
+  .card:hover { transform: scale(1.1); box-shadow: 0 0 25px #00ffc8; }
 
-  /* LOGIN / PROFILE */
-  #loginBox, #userBox {
-    position: fixed; top: 60px; right: 20px;
-    background: rgba(0,0,0,0.85); padding:20px; border-radius:15px; text-align:center; width:250px;
-    z-index:2000;
-    box-shadow:0 0 25px #00ffc8;
-  }
+  #loginBox, #userBox { position: fixed; top: 60px; right: 20px; background: rgba(0,0,0,0.85); padding:20px; border-radius:15px; text-align:center; width:250px; z-index:2000; box-shadow:0 0 25px #00ffc8; }
   #userBox { display:none; }
-  button.logout-btn {
-    margin-top:10px;
-    padding:8px 12px;
-    border:none;
-    border-radius:6px;
-    cursor:pointer;
-    animation:rgbMove 8s linear infinite;
-    background:linear-gradient(90deg, red,orange,yellow,green,cyan,blue,violet);
-    color:white;
-  }
+  button.logout-btn { margin-top:10px; padding:8px 12px; border:none; border-radius:6px; cursor:pointer; animation:rgbMove 8s linear infinite; background:linear-gradient(90deg, red,orange,yellow,green,cyan,blue,violet); color:white; }
 </style>
 </head>
 <body>
@@ -176,7 +64,7 @@
   <div class="logo"><span>GBG</span></div>
   <div class="top-actions">
     <span id="coinBalance">Coins: 0</span>
-    <button onclick="openSubscription()">⭐ Subscription</button>
+    <button onclick="window.location.href='subscription.html'">⭐ Subscription</button>
   </div>
 </header>
 
@@ -189,6 +77,7 @@
   <a href="mods.html">🔧 Mods</a>
   <a href="contact.html">📞 Contact</a>
   <a href="game.html">🎯 Play Game</a>
+  <a href="subscription.html">💎 Subscription</a>
 </div>
 
 <div class="content">
@@ -235,49 +124,48 @@
 
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
-  function openMenu(){ document.getElementById("sidebar").style.width="250px"; }
-  function closeMenu(){ document.getElementById("sidebar").style.width="0"; }
-  function openSubscription(){ alert("🚀 Subscription Page Coming Soon!"); }
+function openMenu(){ document.getElementById("sidebar").style.width="250px"; }
+function closeMenu(){ document.getElementById("sidebar").style.width="0"; }
 
-  function decodeJwt(token){
-    try{
-      const base64Url = token.split('.')[1];
-      const base64 = base64Url.replace(/-/g,'+').replace(/_/g,'/');
-      return JSON.parse(atob(base64));
-    }catch(e){ return null; }
-  }
+function decodeJwt(token){
+  try{
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g,'+').replace(/_/g,'/');
+    return JSON.parse(atob(base64));
+  }catch(e){ return null; }
+}
 
-  function handleLogin(response){
-    const data = decodeJwt(response.credential);
-    if(!data) return;
-    localStorage.setItem("user", JSON.stringify(data));
-    showUser(data);
-  }
+function handleLogin(response){
+  const data = decodeJwt(response.credential);
+  if(!data) return;
+  localStorage.setItem("user", JSON.stringify(data));
+  showUser(data);
+}
 
-  function showUser(data){
-    document.getElementById("loginBox").style.display="none";
-    document.getElementById("userBox").style.display="block";
-    document.getElementById("userName").innerText="Welcome, "+data.name;
-    document.getElementById("userEmail").innerText=data.email;
-    document.getElementById("userPic").src=data.picture;
-  }
+function showUser(data){
+  document.getElementById("loginBox").style.display="none";
+  document.getElementById("userBox").style.display="block";
+  document.getElementById("userName").innerText="Welcome, "+data.name;
+  document.getElementById("userEmail").innerText=data.email;
+  document.getElementById("userPic").src=data.picture;
+}
 
-  function logout(){
-    localStorage.removeItem("user");
-    document.getElementById("loginBox").style.display="block";
-    document.getElementById("userBox").style.display="none";
-  }
+function logout(){
+  localStorage.removeItem("user");
+  document.getElementById("loginBox").style.display="block";
+  document.getElementById("userBox").style.display="none";
+}
 
-  const savedUser = localStorage.getItem("user");
-  if(savedUser) showUser(JSON.parse(savedUser));
+const savedUser = localStorage.getItem("user");
+if(savedUser) showUser(JSON.parse(savedUser));
 
-  // Update coin balance from game
-  function updateCoinBalance(){
-    let coins = parseInt(localStorage.getItem('playerCoins'))||0;
-    document.getElementById('coinBalance').innerText='Coins: '+coins;
-  }
-  setInterval(updateCoinBalance, 1000);
-  updateCoinBalance();
+// Update coin balance from game
+function updateCoinBalance(){
+  let coins = parseInt(localStorage.getItem('playerCoins'))||0;
+  document.getElementById('coinBalance').innerText='Coins: '+coins;
+}
+setInterval(updateCoinBalance, 1000);
+updateCoinBalance();
 </script>
 </body>
 </html>
